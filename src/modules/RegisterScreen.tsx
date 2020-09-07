@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { RouterProps } from 'react-router';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import { firebaseConfig } from '../firebase';
 
 interface Props extends RouterProps {}
 
@@ -36,14 +34,36 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function RegisterScreen(p: Props) {
     const classes = useStyles();
 
+    const handleRegister = React.useCallback(
+        async (event) => {
+            event.preventDefault();
+            const { email, password } = event.target.elements;
+            try {
+                await firebaseConfig
+                    .auth()
+                    .createUserWithEmailAndPassword(
+                        email.value,
+                        password.value
+                    );
+                p.history.push('/');
+            } catch (error) {
+                alert(error);
+            }
+        },
+        [p.history]
+    );
+
     return (
         <Container component="main" maxWidth="xs">
-            <CssBaseline />
             <div className={classes.paper}>
                 <Typography component="h1" variant="h5">
                     Register
                 </Typography>
-                <form className={classes.form} noValidate>
+                <form
+                    className={classes.form}
+                    noValidate
+                    onSubmit={handleRegister}
+                >
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -64,7 +84,6 @@ export default function RegisterScreen(p: Props) {
                         label="Password"
                         type="password"
                         id="password"
-                        autoComplete="current-password"
                     />
                     <Button
                         type="submit"
@@ -73,20 +92,8 @@ export default function RegisterScreen(p: Props) {
                         color="primary"
                         className={classes.submit}
                     >
-                        Sign In
+                        Register
                     </Button>
-                    <Grid container>
-                        <Grid item xs>
-                            <Link href="/home" variant="body2">
-                                Continue as a guest
-                            </Link>
-                        </Grid>
-                        <Grid item>
-                            <Link href="/register" variant="body2">
-                                {"Don't have an account? Sign Up"}
-                            </Link>
-                        </Grid>
-                    </Grid>
                 </form>
             </div>
         </Container>

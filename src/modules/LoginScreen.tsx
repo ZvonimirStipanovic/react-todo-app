@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { RouterProps } from 'react-router';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import { firebaseConfig } from '../firebase';
 
 interface Props extends RouterProps {}
 
@@ -36,14 +36,28 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function LoginScreen(p: Props) {
     const classes = useStyles();
 
+    const handleLogin = React.useCallback(
+        async (event) => {
+            event.preventDefault();
+            const { email, password } = event.target.elements;
+            try {
+                await firebaseConfig
+                    .auth()
+                    .signInWithEmailAndPassword(email.value, password.value);
+                p.history.push('/');
+            } catch (error) {
+                alert(error);
+            }
+        },
+        [p.history]
+    );
     return (
         <Container component="main" maxWidth="xs">
-            <CssBaseline />
             <div className={classes.paper}>
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                <form className={classes.form} noValidate>
+                <form className={classes.form} onSubmit={handleLogin}>
                     <TextField
                         variant="outlined"
                         margin="normal"
