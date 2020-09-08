@@ -9,6 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { firebaseConfig } from '../firebase';
 import firebase from 'firebase';
+import { guestLogin } from '../router/login';
 
 interface Props extends RouterProps {}
 
@@ -53,7 +54,9 @@ export default function LoginScreen(p: Props) {
         [p.history]
     );
 
-    const handleLoginWithFacebook = () => {
+    const handleGuestClick = React.useCallback(() => guestLogin(), []);
+
+    const handleLoginWithFacebook = React.useCallback(() => {
         const provider = new firebase.auth.FacebookAuthProvider();
         provider.setCustomParameters({
             display: 'popup',
@@ -67,7 +70,7 @@ export default function LoginScreen(p: Props) {
             .catch((error) => {
                 console.log('ERR', error);
             });
-    };
+    }, []);
 
     return (
         <Container component="main" maxWidth="xs">
@@ -118,7 +121,11 @@ export default function LoginScreen(p: Props) {
                     </Button>
                     <Grid container>
                         <Grid item xs>
-                            <Link href="/home" variant="body2">
+                            <Link
+                                href="/"
+                                variant="body2"
+                                onClick={handleGuestClick}
+                            >
                                 Continue as a guest
                             </Link>
                         </Grid>
