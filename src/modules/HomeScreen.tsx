@@ -8,6 +8,8 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { logout, login, isLoggedIn } from '../router/login';
 import LoginModal from '../common/LoginModal';
 import { firebaseConfig } from '../firebase';
+import { List, Paper } from '@material-ui/core';
+import TodoListItem from '../common/TodoListItem';
 
 interface Props extends RouterProps {}
 
@@ -129,6 +131,11 @@ export default function HomeScreen(p: Props) {
             </AppBar>
             {loginModal}
             {registerModal}
+            <Paper style={{ margin: 16 }}>
+                <List style={{ overflow: 'hidden' }}>
+                    <TodoListItem text="HAHAH"></TodoListItem>
+                </List>
+            </Paper>
         </div>
     );
 }
