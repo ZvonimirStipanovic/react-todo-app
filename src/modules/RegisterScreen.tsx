@@ -59,11 +59,7 @@ export default function RegisterScreen(p: Props) {
                 <Typography component="h1" variant="h5">
                     Register
                 </Typography>
-                <form
-                    className={classes.form}
-                    noValidate
-                    onSubmit={handleRegister}
-                >
+                <form className={classes.form} onSubmit={handleRegister}>
                     <TextField
                         variant="outlined"
                         margin="normal"

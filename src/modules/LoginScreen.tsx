@@ -8,6 +8,7 @@ import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { firebaseConfig } from '../firebase';
+import firebase from 'firebase';
 
 interface Props extends RouterProps {}
 
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
             marginTop: theme.spacing(1),
         },
         submit: {
-            margin: theme.spacing(3, 0, 2),
+            margin: theme.spacing(1, 0, 1),
         },
     })
 );
@@ -51,6 +52,23 @@ export default function LoginScreen(p: Props) {
         },
         [p.history]
     );
+
+    const handleLoginWithFacebook = () => {
+        const provider = new firebase.auth.FacebookAuthProvider();
+        provider.setCustomParameters({
+            display: 'popup',
+        });
+        firebaseConfig
+            .auth()
+            .signInWithPopup(provider)
+            .then((result) => {
+                console.log('SUCC');
+            })
+            .catch((error) => {
+                console.log('ERR', error);
+            });
+    };
+
     return (
         <Container component="main" maxWidth="xs">
             <div className={classes.paper}>
@@ -88,6 +106,15 @@ export default function LoginScreen(p: Props) {
                         className={classes.submit}
                     >
                         Sign In
+                    </Button>
+                    <Button
+                        onClick={handleLoginWithFacebook}
+                        fullWidth
+                        variant="contained"
+                        color="secondary"
+                        className={classes.submit}
+                    >
+                        Sign in with Facebook
                     </Button>
                     <Grid container>
                         <Grid item xs>
