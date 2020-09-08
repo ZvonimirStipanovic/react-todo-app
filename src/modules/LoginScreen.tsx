@@ -9,7 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { firebaseConfig } from '../firebase';
 import firebase from 'firebase';
-import { guestLogin } from '../router/login';
+import { guestLogin, login } from '../router/login';
 
 interface Props extends RouterProps {}
 
@@ -46,6 +46,7 @@ export default function LoginScreen(p: Props) {
                 await firebaseConfig
                     .auth()
                     .signInWithEmailAndPassword(email.value, password.value);
+                login(email.value + password.value);
                 p.history.push('/');
             } catch (error) {
                 alert(error);

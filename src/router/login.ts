@@ -12,6 +12,7 @@ export const logout = () => {
 export const guestLogin = () => {
     localStorage.setItem(GUEST_TOKEN, 'guest');
 };
-export const isLogin = () => (localStorage.getItem(LOGIN_TOKEN) ? true : false);
+export const isLoggedIn = () =>
+    localStorage.getItem(LOGIN_TOKEN) ? true : false;
 export const isGuest = () => (localStorage.getItem(GUEST_TOKEN) ? true : false);
 export const getToken = (token: string) => localStorage.getItem(token);
