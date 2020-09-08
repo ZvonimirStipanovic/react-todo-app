@@ -4,6 +4,7 @@ import LoginScreen from '../modules/LoginScreen';
 import RegisterScreen from '../modules/RegisterScreen';
 import PrivateRoute from './PrivateRoute';
 import HomeScreen from '../modules/HomeScreen';
+import AddScreen from '../modules/AddScreen';
 
 function MainRouter() {
     return (
@@ -11,6 +12,7 @@ function MainRouter() {
             <Route exact path="/register" component={RegisterScreen} />
             <Route exact path="/login" component={LoginScreen} />
             <PrivateRoute exact path="/" component={HomeScreen} />
+            <PrivateRoute exact path="/add" component={AddScreen} />
         </BrowserRouter>
     );
 }

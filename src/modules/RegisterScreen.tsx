@@ -6,6 +6,10 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { firebaseConfig } from '../firebase';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import { IconButton } from '@material-ui/core';
+import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
 
 interface Props extends RouterProps {}
 
@@ -53,45 +57,63 @@ export default function RegisterScreen(p: Props) {
         [p.history]
     );
 
+    const onBackClick = React.useCallback(() => p.history.goBack(), [
+        p.history,
+    ]);
+
     return (
-        <Container component="main" maxWidth="xs">
-            <div className={classes.paper}>
-                <Typography component="h1" variant="h5">
-                    Register
-                </Typography>
-                <form className={classes.form} onSubmit={handleRegister}>
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
-                        autoFocus
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                    />
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
+        <div>
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton
+                        aria-label="Back"
+                        onClick={onBackClick}
+                        style={{ marginRight: 8 }}
                     >
+                        <ArrowBackOutlinedIcon style={{ color: 'white' }} />
+                    </IconButton>
+                    <Typography variant="h6">Register</Typography>
+                </Toolbar>
+            </AppBar>
+            <Container component="main" maxWidth="xs">
+                <div className={classes.paper}>
+                    <Typography component="h1" variant="h5">
                         Register
-                    </Button>
-                </form>
-            </div>
-        </Container>
+                    </Typography>
+                    <form className={classes.form} onSubmit={handleRegister}>
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="email"
+                            label="Email Address"
+                            name="email"
+                            autoComplete="email"
+                            autoFocus
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type="password"
+                            id="password"
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
+                        >
+                            Register
+                        </Button>
+                    </form>
+                </div>
+            </Container>
+        </div>
     );
 }

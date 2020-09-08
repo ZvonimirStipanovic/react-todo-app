@@ -4,16 +4,17 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { logout, login, isLoggedIn } from '../router/login';
 import LoginModal from '../common/LoginModal';
 import { firebaseConfig } from '../firebase';
-import { List, Paper } from '@material-ui/core';
+import { List, Paper, IconButton, Grid } from '@material-ui/core';
 import TodoListItem from '../common/TodoListItem';
+import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 
 interface Props extends RouterProps {}
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
     createStyles({
         root: {
             flexGrow: 1,
@@ -108,7 +109,11 @@ export default function HomeScreen(p: Props) {
                 </Button>
             ) : (
                 <>
-                    <Button color="inherit" onClick={handleLoginButton}>
+                    <Button
+                        color="inherit"
+                        onClick={handleLoginButton}
+                        style={{ marginRight: 8 }}
+                    >
                         Log in
                     </Button>
                     <Button color="inherit" onClick={handleRegisterButton}>
@@ -117,6 +122,25 @@ export default function HomeScreen(p: Props) {
                 </>
             ),
         [isLoggedIn(), handleLoginButton, handleRegisterButton, handleLogout]
+    );
+
+    const onAddClick = React.useCallback(() => p.history.push('/add'), [
+        p.history,
+    ]);
+
+    const addButton = React.useMemo(
+        () => (
+            <Grid container justify="flex-end" alignItems="flex-end">
+                <IconButton
+                    aria-label="Add"
+                    onClick={onAddClick}
+                    style={{ margin: 16 }}
+                >
+                    <AddCircleOutlinedIcon color="primary" fontSize="large" />
+                </IconButton>
+            </Grid>
+        ),
+        [onAddClick]
     );
 
     return (
@@ -136,6 +160,7 @@ export default function HomeScreen(p: Props) {
                     <TodoListItem text="HAHAH"></TodoListItem>
                 </List>
             </Paper>
+            {addButton}
         </div>
     );
 }
