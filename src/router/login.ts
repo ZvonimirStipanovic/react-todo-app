@@ -1,5 +1,5 @@
 const GUEST_TOKEN: string = 'guesttoken';
-const LOGIN_TOKEN: string = 'logintoken';
+export const LOGIN_TOKEN: string = 'logintoken';
 
 export const login = (token: string) => {
     localStorage.setItem(LOGIN_TOKEN, token);
