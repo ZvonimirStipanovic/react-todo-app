@@ -10,6 +10,8 @@ import Typography from '@material-ui/core/Typography';
 import { firebaseConfig } from '../firebase';
 import firebase from 'firebase';
 import { guestLogin, login } from '../router/login';
+import { useDispatch } from 'react-redux';
+import { setUserId } from '../redux/user/actions';
 
 interface Props extends RouterProps {}
 
@@ -37,6 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function LoginScreen(p: Props) {
     const classes = useStyles();
+    const dispatch = useDispatch();
 
     const handleLogin = React.useCallback(
         async (event) => {
@@ -46,13 +49,15 @@ export default function LoginScreen(p: Props) {
                 await firebaseConfig
                     .auth()
                     .signInWithEmailAndPassword(email.value, password.value);
-                login(email.value + password.value);
+                const userId = await firebaseConfig.auth().currentUser?.uid;
+                dispatch(setUserId(userId));
+                login(userId ? userId : 'guest');
                 p.history.push('/');
             } catch (error) {
                 alert(error);
             }
         },
-        [p.history]
+        [p.history, dispatch]
     );
 
     const handleGuestClick = React.useCallback(() => guestLogin(), []);
@@ -62,15 +67,7 @@ export default function LoginScreen(p: Props) {
         provider.setCustomParameters({
             display: 'popup',
         });
-        firebaseConfig
-            .auth()
-            .signInWithPopup(provider)
-            .then((result) => {
-                console.log('SUCC');
-            })
-            .catch((error) => {
-                console.log('ERR', error);
-            });
+        firebaseConfig.auth().signInWithPopup(provider);
     }, []);
 
     return (

@@ -3,7 +3,6 @@ import { Route, Redirect } from 'react-router-dom';
 import { isGuest } from './login';
 
 const PrivateRoute = ({ component, ...rest }: any) => {
-    console.log('IS GUEST ? ', isGuest());
     return (
         <Route
             {...rest}
