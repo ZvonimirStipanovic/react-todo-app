@@ -5,11 +5,11 @@ import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import { firebaseConfig } from '../firebase';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import { IconButton } from '@material-ui/core';
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
+import service from '../service/service';
 
 interface Props extends RouterProps {}
 
@@ -42,17 +42,9 @@ export default function RegisterScreen(p: Props) {
         async (event) => {
             event.preventDefault();
             const { email, password } = event.target.elements;
-            try {
-                await firebaseConfig
-                    .auth()
-                    .createUserWithEmailAndPassword(
-                        email.value,
-                        password.value
-                    );
-                p.history.push('/');
-            } catch (error) {
-                alert(error);
-            }
+            service
+                .register(email.value, password.value)
+                .then(() => p.history.push('/'));
         },
         [p.history]
     );

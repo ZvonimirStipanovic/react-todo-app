@@ -8,7 +8,6 @@ import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
-import { useStore } from 'react-redux';
 import { LOGIN_TOKEN } from '../router/login';
 import { Task } from '../types/Task';
 import service from '../service/service';
@@ -17,7 +16,6 @@ interface Props extends RouterProps {}
 
 export default function AddScreen(p: Props) {
     const [category, setCategory] = useState('Home');
-    const store = useStore();
 
     const onBackClick = React.useCallback(() => p.history.goBack(), [
         p.history,
@@ -47,14 +45,13 @@ export default function AddScreen(p: Props) {
     }, []);
 
     const handleAddTodo = React.useCallback(
-        (event) => {
+        async (event) => {
             event.preventDefault();
             const { title, description, time } = event.target.elements;
-            let userId = store.getState().user.userId;
-            if (!userId) userId = localStorage.getItem(LOGIN_TOKEN);
+            const userId = await localStorage.getItem(LOGIN_TOKEN);
             const date = new Date().toISOString();
             const task = new Task(
-                userId,
+                userId!,
                 date,
                 title.value,
                 description.value,
@@ -64,7 +61,7 @@ export default function AddScreen(p: Props) {
             );
             service.addTask(task).then(() => p.history.push('/'));
         },
-        [category, p.history, store]
+        [category, p.history]
     );
 
     return (

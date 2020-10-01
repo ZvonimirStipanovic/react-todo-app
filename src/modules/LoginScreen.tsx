@@ -10,8 +10,6 @@ import Typography from '@material-ui/core/Typography';
 import { firebaseConfig } from '../firebase';
 import firebase from 'firebase';
 import { login } from '../router/login';
-import { useDispatch } from 'react-redux';
-import { setUserId } from '../redux/user/actions';
 import service from '../service/service';
 
 interface Props extends RouterProps {}
@@ -40,7 +38,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function LoginScreen(p: Props) {
     const classes = useStyles();
-    const dispatch = useDispatch();
 
     const handleLogin = React.useCallback(
         async (event) => {
@@ -48,12 +45,11 @@ export default function LoginScreen(p: Props) {
             const { email, password } = event.target.elements;
             service.login(email.value, password.value).then(async () => {
                 const userId = await firebaseConfig.auth().currentUser?.uid;
-                dispatch(setUserId(userId));
                 login(userId ? userId : 'guest');
                 p.history.push('/');
             });
         },
-        [p.history, dispatch]
+        [p.history]
     );
 
     const handleAnonymousLogin = React.useCallback(() => {

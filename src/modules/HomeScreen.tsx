@@ -7,12 +7,11 @@ import Button from '@material-ui/core/Button';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { logout, login, isLoggedIn, LOGIN_TOKEN } from '../router/login';
 import LoginModal from '../common/LoginModal';
-import { firebaseConfig } from '../firebase';
 import { List, Paper, IconButton, Grid } from '@material-ui/core';
 import TodoListItem from '../common/TodoListItem';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import { useStore, useDispatch } from 'react-redux';
-import { setFinishedTasks, setTasks } from '../redux/tasks/action';
+import { setFinishedTasks } from '../redux/tasks/action';
 import service from '../service/service';
 
 interface Props extends RouterProps {}
@@ -27,15 +26,17 @@ const useStyles = makeStyles(() =>
         },
     })
 );
+
 export default function HomeScreen(p: Props) {
     const store = useStore();
     const dispatch = useDispatch();
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [showRegisterModal, setShowRegisterModal] = useState(false);
+    const [tasks, setTasks] = useState([{}]);
 
     useEffect(() => {
-        let userId = store.getState().user.userId;
-        if (!userId) userId = localStorage.getItem(LOGIN_TOKEN);
+        let userId = 'userId';
+        userId = localStorage.getItem(LOGIN_TOKEN)!;
         service.getTasks(userId).then((res) => {
             let finishedTasks: Object[] = [];
             let tasks: Object[] = [];
@@ -45,11 +46,9 @@ export default function HomeScreen(p: Props) {
                 else tasks.push(data);
             });
             dispatch(setFinishedTasks(finishedTasks));
-            dispatch(setTasks(tasks));
+            setTasks(tasks);
         });
     }, [store, dispatch]);
-
-    const items = React.useMemo(() => store.getState().tasks.tasks, [store]);
 
     const classes = useStyles();
 
@@ -167,7 +166,7 @@ export default function HomeScreen(p: Props) {
             {registerModal}
             <Paper style={{ margin: 16 }}>
                 <List style={{ overflow: 'hidden' }}>
-                    {items.map((item: any) => (
+                    {tasks.map((item: any) => (
                         <TodoListItem
                             text={item.title}
                             description={item.description}

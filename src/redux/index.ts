@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
+import LoadingReducer from './loading';
 import tasksReducer from './tasks';
-import userReducer from './user';
 
 export default combineReducers({
-    user: userReducer,
     tasks: tasksReducer,
+    loading: LoadingReducer,
 });
