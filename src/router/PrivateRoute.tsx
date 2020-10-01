@@ -1,13 +1,13 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { isGuest } from './login';
+import { isLoggedIn } from './login';
 
 const PrivateRoute = ({ component, ...rest }: any) => {
     return (
         <Route
             {...rest}
             render={(props) =>
-                isGuest() ? (
+                isLoggedIn() ? (
                     React.createElement(component, props)
                 ) : (
                     <Redirect to="/login" />

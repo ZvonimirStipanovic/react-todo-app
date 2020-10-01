@@ -9,8 +9,9 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import { useStore } from 'react-redux';
-import { firebaseConfig } from '../firebase';
 import { LOGIN_TOKEN } from '../router/login';
+import { Task } from '../types/Task';
+import service from '../service/service';
 
 interface Props extends RouterProps {}
 
@@ -49,25 +50,19 @@ export default function AddScreen(p: Props) {
         (event) => {
             event.preventDefault();
             const { title, description, time } = event.target.elements;
-            const database = firebaseConfig.firestore();
             let userId = store.getState().user.userId;
             if (!userId) userId = localStorage.getItem(LOGIN_TOKEN);
             const date = new Date().toISOString();
-            database
-                .collection('users')
-                .doc(userId)
-                .collection('tasks')
-                .doc(date)
-                .set({
-                    userId: userId,
-                    taskId: date,
-                    title: title.value,
-                    description: description.value,
-                    category: category,
-                    time: time.value,
-                    isFinished: false,
-                });
-            p.history.push('/');
+            const task = new Task(
+                userId,
+                date,
+                title.value,
+                description.value,
+                category,
+                time.value,
+                false
+            );
+            service.addTask(task).then(() => p.history.push('/'));
         },
         [category, p.history, store]
     );

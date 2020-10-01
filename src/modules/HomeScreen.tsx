@@ -13,6 +13,7 @@ import TodoListItem from '../common/TodoListItem';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import { useStore, useDispatch } from 'react-redux';
 import { setFinishedTasks, setTasks } from '../redux/tasks/action';
+import service from '../service/service';
 
 interface Props extends RouterProps {}
 
@@ -33,25 +34,19 @@ export default function HomeScreen(p: Props) {
     const [showRegisterModal, setShowRegisterModal] = useState(false);
 
     useEffect(() => {
-        const database = firebaseConfig.firestore();
         let userId = store.getState().user.userId;
         if (!userId) userId = localStorage.getItem(LOGIN_TOKEN);
-        database
-            .collection('users')
-            .doc(userId)
-            .collection('tasks')
-            .get()
-            .then((res) => {
-                let finishedTasks: Object[] = [];
-                let tasks: Object[] = [];
-                res.forEach((document) => {
-                    const data = document.data();
-                    if (data.isFinished) finishedTasks.push(data);
-                    else tasks.push(data);
-                });
-                dispatch(setFinishedTasks(finishedTasks));
-                dispatch(setTasks(tasks));
+        service.getTasks(userId).then((res) => {
+            let finishedTasks: Object[] = [];
+            let tasks: Object[] = [];
+            res.forEach((document: any) => {
+                const data = document.data();
+                if (data.isFinished) finishedTasks.push(data);
+                else tasks.push(data);
             });
+            dispatch(setFinishedTasks(finishedTasks));
+            dispatch(setTasks(tasks));
+        });
     }, [store, dispatch]);
 
     const items = React.useMemo(() => store.getState().tasks.tasks, [store]);
@@ -70,32 +65,19 @@ export default function HomeScreen(p: Props) {
     const handleLogin = React.useCallback(async (event) => {
         event.preventDefault();
         const { email, password } = event.target.elements;
-        try {
-            await firebaseConfig
-                .auth()
-                .signInWithEmailAndPassword(email.value, password.value);
-            login(email.value + password.value);
-            setShowLoginModal(false);
-        } catch (error) {
-            alert(error);
-        }
+        service
+            .login(email.value, password.value)
+            .then(() => setShowLoginModal(false));
     }, []);
 
     const handleRegister = React.useCallback(async (event) => {
         event.preventDefault();
         const { email, password } = event.target.elements;
-        try {
-            await firebaseConfig
-                .auth()
-                .createUserWithEmailAndPassword(email.value, password.value);
-            await firebaseConfig
-                .auth()
-                .signInWithEmailAndPassword(email.value, password.value);
+        service.register(email.value, password.value).then(() => {
+            service.login(email.value, password.value);
             login(email.value + password.value);
             setShowRegisterModal(false);
-        } catch (error) {
-            alert(error);
-        }
+        });
     }, []);
 
     const loginModal = React.useMemo(

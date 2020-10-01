@@ -9,9 +9,10 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { firebaseConfig } from '../firebase';
 import firebase from 'firebase';
-import { guestLogin, login } from '../router/login';
+import { login } from '../router/login';
 import { useDispatch } from 'react-redux';
 import { setUserId } from '../redux/user/actions';
+import service from '../service/service';
 
 interface Props extends RouterProps {}
 
@@ -45,22 +46,19 @@ export default function LoginScreen(p: Props) {
         async (event) => {
             event.preventDefault();
             const { email, password } = event.target.elements;
-            try {
-                await firebaseConfig
-                    .auth()
-                    .signInWithEmailAndPassword(email.value, password.value);
+            service.login(email.value, password.value).then(async () => {
                 const userId = await firebaseConfig.auth().currentUser?.uid;
                 dispatch(setUserId(userId));
                 login(userId ? userId : 'guest');
                 p.history.push('/');
-            } catch (error) {
-                alert(error);
-            }
+            });
         },
         [p.history, dispatch]
     );
 
-    const handleGuestClick = React.useCallback(() => guestLogin(), []);
+    const handleAnonymousLogin = React.useCallback(() => {
+        firebaseConfig.auth().signInAnonymously();
+    }, []);
 
     const handleLoginWithFacebook = React.useCallback(() => {
         const provider = new firebase.auth.FacebookAuthProvider();
@@ -122,9 +120,9 @@ export default function LoginScreen(p: Props) {
                             <Link
                                 href="/"
                                 variant="body2"
-                                onClick={handleGuestClick}
+                                onClick={handleAnonymousLogin}
                             >
-                                Continue as a guest
+                                Sign in anonymously
                             </Link>
                         </Grid>
                         <Grid item>
