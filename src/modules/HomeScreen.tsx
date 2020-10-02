@@ -7,12 +7,13 @@ import Button from '@material-ui/core/Button';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { logout, login, isLoggedIn, LOGIN_TOKEN } from '../router/login';
 import LoginModal from '../common/LoginModal';
-import { List, Paper, IconButton, Grid } from '@material-ui/core';
+import { List, Paper, IconButton, Grid, TextField } from '@material-ui/core';
 import TodoListItem from '../common/TodoListItem';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import { useStore, useDispatch } from 'react-redux';
 import { setFinishedTasks } from '../redux/tasks/action';
 import service from '../service/service';
+import { Task } from '../types/Task';
 
 interface Props extends RouterProps {}
 
@@ -33,6 +34,7 @@ export default function HomeScreen(p: Props) {
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const [tasks, setTasks]: any = useState([{}]);
+    const [searchValue, setSearchValue] = useState('');
 
     useEffect(() => {
         let userId = 'userId';
@@ -171,6 +173,42 @@ export default function HomeScreen(p: Props) {
         [tasks, p.history]
     );
 
+    const onSearchChange = React.useCallback((event: any) => {
+        setSearchValue(event.target.value);
+    }, []);
+
+    const renderItems = React.useCallback(() => {
+        if (searchValue.length < 1)
+            return tasks.map((item: any) => (
+                <TodoListItem
+                    key={item.taskId}
+                    taskId={item.taskId}
+                    title={item.title}
+                    category={item.category}
+                    description={item.description}
+                    onDeleteClick={onDeleteItemClick}
+                    onEditClick={onEditClick}
+                />
+            ));
+        else {
+            const toRender = tasks.filter((item: Task) =>
+                item.title.toLowerCase().includes(searchValue)
+            );
+
+            return toRender.map((item: any) => (
+                <TodoListItem
+                    key={item.taskId}
+                    taskId={item.taskId}
+                    title={item.title}
+                    category={item.category}
+                    description={item.description}
+                    onDeleteClick={onDeleteItemClick}
+                    onEditClick={onEditClick}
+                />
+            ));
+        }
+    }, [searchValue, tasks, onDeleteItemClick, onEditClick]);
+
     return (
         <div className={classes.root}>
             <AppBar position="static">
@@ -183,20 +221,22 @@ export default function HomeScreen(p: Props) {
             </AppBar>
             {loginModal}
             {registerModal}
+            <div style={{ margin: 16 }}>
+                <TextField
+                    id="search"
+                    label="Search"
+                    placeholder="Search for a todo"
+                    fullWidth
+                    onChange={onSearchChange}
+                    margin="normal"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    variant="outlined"
+                />
+            </div>
             <Paper style={{ margin: 16 }}>
-                <List style={{ overflow: 'hidden' }}>
-                    {tasks.map((item: any) => (
-                        <TodoListItem
-                            key={item.taskId}
-                            taskId={item.taskId}
-                            title={item.title}
-                            category={item.category}
-                            description={item.description}
-                            onDeleteClick={onDeleteItemClick}
-                            onEditClick={onEditClick}
-                        />
-                    ))}
-                </List>
+                <List style={{ overflow: 'hidden' }}>{renderItems()}</List>
             </Paper>
             {addButton}
         </div>
