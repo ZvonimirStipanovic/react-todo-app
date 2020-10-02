@@ -43,6 +43,22 @@ class ErrorMiddleware implements Service {
             throw e;
         }
     }
+
+    public async deleteTask(taskId: string): Promise<boolean> {
+        try {
+            return await this.next.deleteTask(taskId);
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    public async updateTask(task: Task): Promise<boolean> {
+        try {
+            return await this.next.updateTask(task);
+        } catch (e) {
+            throw e;
+        }
+    }
 }
 
 export default ErrorMiddleware;

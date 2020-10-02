@@ -16,7 +16,7 @@ class LoadingMiddleware implements Service {
         this.dispatch(startLoading('getTasks'));
         try {
             const result = await this.next.getTasks(userId);
-            // this.dispatch(stopLoading('getTasks'));
+            this.dispatch(stopLoading('getTasks'));
             return result;
         } catch (e) {
             this.dispatch(stopLoading('getTasks'));
@@ -53,6 +53,28 @@ class LoadingMiddleware implements Service {
             return await this.next.register(email, pass);
         } catch (e) {
             this.dispatch(stopLoading('register'));
+            throw e;
+        }
+    }
+
+    public async deleteTask(taskId: string): Promise<boolean> {
+        this.dispatch(startLoading('deleteTask'));
+        try {
+            this.dispatch(stopLoading('deleteTask'));
+            return await this.next.deleteTask(taskId);
+        } catch (e) {
+            this.dispatch(stopLoading('deleteTask'));
+            throw e;
+        }
+    }
+
+    public async updateTask(task: Task): Promise<boolean> {
+        this.dispatch(startLoading('updateTask'));
+        try {
+            this.dispatch(stopLoading('updateTask'));
+            return await this.next.updateTask(task);
+        } catch (e) {
+            this.dispatch(stopLoading('updateTask'));
             throw e;
         }
     }

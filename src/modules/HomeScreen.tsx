@@ -32,7 +32,7 @@ export default function HomeScreen(p: Props) {
     const dispatch = useDispatch();
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [showRegisterModal, setShowRegisterModal] = useState(false);
-    const [tasks, setTasks] = useState([{}]);
+    const [tasks, setTasks]: any = useState([{}]);
 
     useEffect(() => {
         let userId = 'userId';
@@ -152,6 +152,25 @@ export default function HomeScreen(p: Props) {
         [onAddClick]
     );
 
+    const onDeleteItemClick = React.useCallback(
+        (taskId: string) => {
+            const newTasks = tasks.filter(
+                (task: any) => task.taskId !== taskId
+            );
+            setTasks(newTasks);
+            service.deleteTask(taskId);
+        },
+        [tasks]
+    );
+
+    const onEditClick = React.useCallback(
+        (taskId: string) => {
+            const task = tasks.filter((task: any) => task.taskId === taskId);
+            p.history.push('/update', { task: task });
+        },
+        [tasks, p.history]
+    );
+
     return (
         <div className={classes.root}>
             <AppBar position="static">
@@ -168,9 +187,14 @@ export default function HomeScreen(p: Props) {
                 <List style={{ overflow: 'hidden' }}>
                     {tasks.map((item: any) => (
                         <TodoListItem
-                            text={item.title}
+                            key={item.taskId}
+                            taskId={item.taskId}
+                            title={item.title}
+                            category={item.category}
                             description={item.description}
-                        ></TodoListItem>
+                            onDeleteClick={onDeleteItemClick}
+                            onEditClick={onEditClick}
+                        />
                     ))}
                 </List>
             </Paper>

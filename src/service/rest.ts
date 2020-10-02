@@ -2,6 +2,7 @@ import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { firebaseConfig } from '../firebase';
 import { Task } from '../types/Task';
 import { HTTPClient } from './client';
+import { getLoginToken } from '../router/login';
 import { ErrorType, Service, ServiceError } from './service';
 
 export class URL {
@@ -73,6 +74,40 @@ class REST implements Service {
             await firebaseConfig
                 .auth()
                 .createUserWithEmailAndPassword(email, pass);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    public async deleteTask(taskId: string): Promise<boolean> {
+        //REPLACE WITH AXIOS
+        const userId = getLoginToken()!;
+        const database = firebaseConfig.firestore();
+        try {
+            database
+                .collection('users')
+                .doc(userId)
+                .collection('tasks')
+                .doc(taskId)
+                .delete();
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    public async updateTask(task: Task): Promise<boolean> {
+        //REPLACE WITH AXIOS
+        const userId = getLoginToken()!;
+        const database = firebaseConfig.firestore();
+        try {
+            database
+                .collection('users')
+                .doc(userId)
+                .collection('tasks')
+                .doc(task.taskId)
+                .update(task);
             return true;
         } catch (e) {
             return false;

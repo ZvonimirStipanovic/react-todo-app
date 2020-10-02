@@ -22,6 +22,8 @@ export enum ErrorType {
 export interface Service {
     getTasks(userId: string): Promise<any>;
     addTask(task: Task): Promise<boolean>;
+    deleteTask(taskId: string): Promise<boolean>;
+    updateTask(task: Task): Promise<boolean>;
     login(email: string, pass: string): Promise<boolean>;
     register(email: string, pass: string): Promise<boolean>;
 }
