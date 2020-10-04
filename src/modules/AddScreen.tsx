@@ -8,7 +8,7 @@ import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
-import { LOGIN_TOKEN } from '../router/login';
+import { isGuest, LOGIN_TOKEN } from '../router/login';
 import { Task } from '../types/Task';
 import service from '../service/service';
 
@@ -59,7 +59,8 @@ export default function AddScreen(p: Props) {
                 time.value,
                 false
             );
-            service.addTask(task).then(() => p.history.push('/'));
+            const shouldCache = isGuest();
+            service.addTask(task, shouldCache).then(() => p.history.push('/'));
         },
         [category, p.history]
     );

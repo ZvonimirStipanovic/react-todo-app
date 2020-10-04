@@ -20,9 +20,17 @@ class ErrorMiddleware implements Service {
         }
     }
 
-    public async addTask(task: Task): Promise<boolean> {
+    public async addTask(task: Task, shouldCache: boolean): Promise<boolean> {
         try {
-            return await this.next.addTask(task);
+            return await this.next.addTask(task, shouldCache);
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    public async addTasks(tasks: Task[]): Promise<boolean> {
+        try {
+            return await this.next.addTasks(tasks);
         } catch (e) {
             throw e;
         }
@@ -63,6 +71,14 @@ class ErrorMiddleware implements Service {
     public async setTaskFinished(task: Task): Promise<boolean> {
         try {
             return await this.next.setTaskFinished(task);
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    public async getGuestTasks(): Promise<Task[]> {
+        try {
+            return await this.next.getGuestTasks();
         } catch (e) {
             throw e;
         }

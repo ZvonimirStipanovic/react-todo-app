@@ -5,7 +5,13 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
-import { logout, login, isLoggedIn, LOGIN_TOKEN } from '../router/login';
+import {
+    logout,
+    login,
+    isLoggedIn,
+    LOGIN_TOKEN,
+    isGuest,
+} from '../router/login';
 import LoginModal from '../common/LoginModal';
 import { List, Paper, IconButton, Grid, TextField } from '@material-ui/core';
 import TodoListItem from '../common/TodoListItem';
@@ -14,6 +20,7 @@ import { useStore, useDispatch } from 'react-redux';
 import { setFinishedTask, setFinishedTasks } from '../redux/tasks/action';
 import service from '../service/service';
 import { Task } from '../types/Task';
+import { firebaseConfig } from '../firebase';
 
 interface Props extends RouterProps {}
 
@@ -40,18 +47,32 @@ export default function HomeScreen(p: Props) {
     useEffect(() => {
         let userId = 'userId';
         userId = localStorage.getItem(LOGIN_TOKEN)!;
-        service.getTasks(userId).then((res) => {
-            let finishedTasks: Object[] = [];
-            let tasks: Object[] = [];
-            res.forEach((document: any) => {
-                const data = document.data();
-                if (data.isFinished) finishedTasks.push(data);
-                else tasks.push(data);
+        if (!isGuest())
+            service.getTasks(userId).then((res) => {
+                let finishedTasks: Object[] = [];
+                let tasks: Object[] = [];
+                res.forEach((document: any) => {
+                    const data = document.data();
+                    if (data.isFinished) finishedTasks.push(data);
+                    else tasks.push(data);
+                });
+                dispatch(setFinishedTasks(finishedTasks));
+                setTasks(tasks);
+                setLoading(false);
             });
-            dispatch(setFinishedTasks(finishedTasks));
-            setTasks(tasks);
-            setLoading(false);
-        });
+        else {
+            service.getGuestTasks().then((res: Task[]) => {
+                let finishedTasks: Object[] = [];
+                let tasks: Object[] = [];
+                res.forEach((task: Task) => {
+                    if (task.isFinished) finishedTasks.push(task);
+                    else tasks.push(task);
+                });
+                dispatch(setFinishedTasks(finishedTasks));
+                setTasks(tasks);
+                setLoading(false);
+            });
+        }
     }, [store, dispatch]);
 
     const classes = useStyles();
@@ -65,21 +86,60 @@ export default function HomeScreen(p: Props) {
         []
     );
 
-    const handleLogin = React.useCallback(async (event) => {
-        event.preventDefault();
-        const { email, password } = event.target.elements;
-        service
-            .login(email.value, password.value)
-            .then(() => setShowLoginModal(false));
-    }, []);
+    const handleLogin = React.useCallback(
+        async (event) => {
+            event.preventDefault();
+            const { email, password } = event.target.elements;
+            service.login(email.value, password.value).then(async () => {
+                const userId = await firebaseConfig.auth().currentUser?.uid;
+                login(userId ? userId : 'guest');
+                service
+                    .getGuestTasks()
+                    .then((res: Task[]) => service.addTasks(res))
+                    .then(() =>
+                        service.getTasks(userId!).then((res) => {
+                            let finishedTasks: Object[] = [];
+                            let tasks: Object[] = [];
+                            res.forEach((document: any) => {
+                                const data = document.data();
+                                if (data.isFinished) finishedTasks.push(data);
+                                else tasks.push(data);
+                            });
+                            dispatch(setFinishedTasks(finishedTasks));
+                            setTasks(tasks);
+                        })
+                    )
+                    .then(() => setShowLoginModal(false));
+            });
+        },
+        [dispatch]
+    );
 
     const handleRegister = React.useCallback(async (event) => {
         event.preventDefault();
         const { email, password } = event.target.elements;
         service.register(email.value, password.value).then(() => {
-            service.login(email.value, password.value);
-            login(email.value + password.value);
-            setShowRegisterModal(false);
+            service.login(email.value, password.value).then(async () => {
+                const userId = await firebaseConfig.auth().currentUser?.uid;
+                login(userId ? userId : 'guest');
+                service
+                    .getGuestTasks()
+                    .then((res: Task[]) => service.addTasks(res))
+                    .then(() =>
+                        service.getTasks(userId!).then((res) => {
+                            let finishedTasks: Object[] = [];
+                            let tasks: Object[] = [];
+                            res.forEach((document: any) => {
+                                const data = document.data();
+                                if (data.isFinished) finishedTasks.push(data);
+                                else tasks.push(data);
+                            });
+                            dispatch(setFinishedTasks(finishedTasks));
+                            setTasks(tasks);
+                        })
+                    )
+                    .then(() => setShowRegisterModal(false));
+            });
         });
     }, []);
 
@@ -116,11 +176,7 @@ export default function HomeScreen(p: Props) {
 
     const topRightButtons = React.useMemo(
         () =>
-            isLoggedIn() ? (
-                <Button color="inherit" onClick={handleLogout}>
-                    Log out
-                </Button>
-            ) : (
+            isGuest() ? (
                 <>
                     <Button
                         color="inherit"
@@ -133,9 +189,20 @@ export default function HomeScreen(p: Props) {
                         Register
                     </Button>
                 </>
+            ) : (
+                <Button color="inherit" onClick={handleLogout}>
+                    Log out
+                </Button>
             ),
-        // eslint-disable-next-line
-        [isLoggedIn(), handleLoginButton, handleRegisterButton, handleLogout]
+        [
+            // eslint-disable-next-line
+            isLoggedIn(),
+            // eslint-disable-next-line
+            isGuest(),
+            handleLoginButton,
+            handleRegisterButton,
+            handleLogout,
+        ]
     );
 
     const onAddClick = React.useCallback(() => p.history.push('/add'), [
@@ -213,6 +280,13 @@ export default function HomeScreen(p: Props) {
                 item.title.toLowerCase().includes(searchValue)
             );
 
+            if (toRender.length === 0)
+                return (
+                    <p style={{ margin: 12, color: 'gray' }}>
+                        There are no todo's
+                    </p>
+                );
+
             return toRender.map((item: any) => (
                 <TodoListItem
                     key={item.taskId + item.taskId}
@@ -222,6 +296,7 @@ export default function HomeScreen(p: Props) {
                     description={item.description}
                     onDeleteClick={onDeleteItemClick}
                     onEditClick={onEditClick}
+                    onCheckboxClick={onCheckboxClick}
                 />
             ));
         }
@@ -237,7 +312,18 @@ export default function HomeScreen(p: Props) {
                     {topRightButtons}
                 </Toolbar>
             </AppBar>
-
+            {isGuest() ? (
+                <p
+                    style={{
+                        margin: 16,
+                        fontSize: 24,
+                        color: 'red',
+                        textAlign: 'center',
+                    }}
+                >
+                    YOU ARE NOT LOGGED IN
+                </p>
+            ) : null}
             {loginModal}
             {registerModal}
             <div style={{ margin: 16 }}>

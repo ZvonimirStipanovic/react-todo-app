@@ -2,7 +2,7 @@ import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { firebaseConfig } from '../firebase';
 import { Task } from '../types/Task';
 import { HTTPClient } from './client';
-import { getLoginToken } from '../router/login';
+import { getLoginToken, GUEST_TASKS } from '../router/login';
 import { ErrorType, Service, ServiceError } from './service';
 
 export class URL {
@@ -42,8 +42,9 @@ class REST implements Service {
             .get();
     }
 
-    public async addTask(task: Task): Promise<boolean> {
+    public async addTask(task: Task, shouldCache: boolean): Promise<boolean> {
         //REPLACE WITH AXIOS
+        if (shouldCache) return true;
         const database = firebaseConfig.firestore();
         try {
             database
@@ -52,6 +53,27 @@ class REST implements Service {
                 .collection('tasks')
                 .doc(task.taskId)
                 .set({ ...task });
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    public async addTasks(tasks: Task[]): Promise<boolean> {
+        //REPLACE WITH AXIOS
+        const database = firebaseConfig.firestore();
+        const userId = getLoginToken()!;
+        try {
+            tasks.forEach((task: Task) => {
+                const newTask = { ...task, userId };
+                database
+                    .collection('users')
+                    .doc(userId)
+                    .collection('tasks')
+                    .doc(task.taskId)
+                    .set(newTask);
+            });
+            localStorage.removeItem(GUEST_TASKS);
             return true;
         } catch (e) {
             return false;
@@ -129,6 +151,12 @@ class REST implements Service {
         } catch (e) {
             return false;
         }
+    }
+
+    public async getGuestTasks(): Promise<Task[]> {
+        const tasks = localStorage.getItem(GUEST_TASKS);
+        if (tasks) return JSON.parse(tasks);
+        else return [];
     }
 
     private request(

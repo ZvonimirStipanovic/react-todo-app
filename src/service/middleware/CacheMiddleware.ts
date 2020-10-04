@@ -1,4 +1,5 @@
 import { Dispatch } from 'redux';
+import { GUEST_TASKS } from '../../router/login';
 import { Task } from '../../types/Task';
 import { Service } from '../service';
 
@@ -20,9 +21,26 @@ class CacheMiddleware implements Service {
         }
     }
 
-    public async addTask(task: Task): Promise<boolean> {
+    public async addTask(task: Task, shouldCache: boolean): Promise<boolean> {
         try {
-            return await this.next.addTask(task);
+            if (shouldCache) {
+                const tasks = localStorage.getItem(GUEST_TASKS);
+                if (tasks) {
+                    const parsed = JSON.parse(tasks);
+                    const newTasks = [...parsed, task];
+                    localStorage.setItem(GUEST_TASKS, JSON.stringify(newTasks));
+                } else
+                    localStorage.setItem(GUEST_TASKS, JSON.stringify([task]));
+            }
+            return await this.next.addTask(task, shouldCache);
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    public async addTasks(tasks: Task[]): Promise<boolean> {
+        try {
+            return await this.next.addTasks(tasks);
         } catch (e) {
             throw e;
         }
@@ -63,6 +81,14 @@ class CacheMiddleware implements Service {
     public async setTaskFinished(task: Task): Promise<boolean> {
         try {
             return await this.next.setTaskFinished(task);
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    public async getGuestTasks(): Promise<Task[]> {
+        try {
+            return await this.next.getGuestTasks();
         } catch (e) {
             throw e;
         }

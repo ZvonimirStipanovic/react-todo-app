@@ -21,10 +21,12 @@ export enum ErrorType {
 
 export interface Service {
     getTasks(userId: string): Promise<any>;
-    addTask(task: Task): Promise<boolean>;
+    addTask(task: Task, shouldCache: boolean): Promise<boolean>;
+    addTasks(tasks: Task[]): Promise<boolean>;
     deleteTask(taskId: string): Promise<boolean>;
     updateTask(task: Task): Promise<boolean>;
     setTaskFinished(task: Task): Promise<boolean>;
+    getGuestTasks(): Promise<Task[]>;
     login(email: string, pass: string): Promise<boolean>;
     register(email: string, pass: string): Promise<boolean>;
 }

@@ -24,13 +24,24 @@ class LoadingMiddleware implements Service {
         }
     }
 
-    public async addTask(task: Task): Promise<boolean> {
+    public async addTask(task: Task, shouldCache: boolean): Promise<boolean> {
         this.dispatch(startLoading('addTask'));
         try {
             this.dispatch(stopLoading('addTask'));
-            return await this.next.addTask(task);
+            return await this.next.addTask(task, shouldCache);
         } catch (e) {
             this.dispatch(stopLoading('addTask'));
+            throw e;
+        }
+    }
+
+    public async addTasks(tasks: Task[]): Promise<boolean> {
+        this.dispatch(startLoading('addTasks'));
+        try {
+            this.dispatch(stopLoading('addTasks'));
+            return await this.next.addTasks(tasks);
+        } catch (e) {
+            this.dispatch(stopLoading('addTasks'));
             throw e;
         }
     }
@@ -86,6 +97,17 @@ class LoadingMiddleware implements Service {
             return await this.next.setTaskFinished(task);
         } catch (e) {
             this.dispatch(stopLoading('setTaskFinished'));
+            throw e;
+        }
+    }
+
+    public async getGuestTasks(): Promise<Task[]> {
+        this.dispatch(startLoading('getGuestTasks'));
+        try {
+            this.dispatch(stopLoading('getGuestTasks'));
+            return await this.next.getGuestTasks();
+        } catch (e) {
+            this.dispatch(stopLoading('getGuestTasks'));
             throw e;
         }
     }

@@ -52,9 +52,13 @@ export default function LoginScreen(p: Props) {
         [p.history]
     );
 
-    const handleAnonymousLogin = React.useCallback(() => {
-        firebaseConfig.auth().signInAnonymously();
-    }, []);
+    const handleAnonymousLogin = React.useCallback(async () => {
+        await firebaseConfig.auth().signInAnonymously();
+        //const userId = await firebaseConfig.auth().currentUser?.uid;
+        //login(userId ? userId : 'UNKNOWN');
+        login('guest');
+        p.history.push('/');
+    }, [p.history]);
 
     const handleLoginWithFacebook = React.useCallback(() => {
         const provider = new firebase.auth.FacebookAuthProvider();
@@ -111,16 +115,16 @@ export default function LoginScreen(p: Props) {
                     >
                         Sign in with Facebook
                     </Button>
+                    <Button
+                        onClick={handleAnonymousLogin}
+                        fullWidth
+                        variant="contained"
+                        color="inherit"
+                        className={classes.submit}
+                    >
+                        Sign in anonymously
+                    </Button>
                     <Grid container>
-                        <Grid item xs>
-                            <Link
-                                href="/"
-                                variant="body2"
-                                onClick={handleAnonymousLogin}
-                            >
-                                Sign in anonymously
-                            </Link>
-                        </Grid>
                         <Grid item>
                             <Link href="/register" variant="body2">
                                 {"Don't have an account? Sign Up"}
