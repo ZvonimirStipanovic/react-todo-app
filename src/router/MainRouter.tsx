@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route } from 'react-router-dom';
 import LoginScreen from '../modules/LoginScreen';
 import RegisterScreen from '../modules/RegisterScreen';
 import PrivateRoute from './PrivateRoute';
@@ -21,6 +21,7 @@ function MainRouter() {
                 path="/finishedTasks"
                 component={FinishedTasksScreen}
             />
+            <Redirect to="/" />
         </BrowserRouter>
     );
 }
