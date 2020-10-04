@@ -78,6 +78,17 @@ class LoadingMiddleware implements Service {
             throw e;
         }
     }
+
+    public async setTaskFinished(task: Task): Promise<boolean> {
+        this.dispatch(startLoading('setTaskFinished'));
+        try {
+            this.dispatch(stopLoading('setTaskFinished'));
+            return await this.next.setTaskFinished(task);
+        } catch (e) {
+            this.dispatch(stopLoading('setTaskFinished'));
+            throw e;
+        }
+    }
 }
 
 export default LoadingMiddleware;

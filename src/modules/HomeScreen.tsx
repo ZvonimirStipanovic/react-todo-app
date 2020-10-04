@@ -11,7 +11,7 @@ import { List, Paper, IconButton, Grid, TextField } from '@material-ui/core';
 import TodoListItem from '../common/TodoListItem';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import { useStore, useDispatch } from 'react-redux';
-import { setFinishedTasks } from '../redux/tasks/action';
+import { setFinishedTask, setFinishedTasks } from '../redux/tasks/action';
 import service from '../service/service';
 import { Task } from '../types/Task';
 
@@ -35,6 +35,7 @@ export default function HomeScreen(p: Props) {
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const [tasks, setTasks]: any = useState([{}]);
     const [searchValue, setSearchValue] = useState('');
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         let userId = 'userId';
@@ -49,6 +50,7 @@ export default function HomeScreen(p: Props) {
             });
             dispatch(setFinishedTasks(finishedTasks));
             setTasks(tasks);
+            setLoading(false);
         });
     }, [store, dispatch]);
 
@@ -132,6 +134,7 @@ export default function HomeScreen(p: Props) {
                     </Button>
                 </>
             ),
+        // eslint-disable-next-line
         [isLoggedIn(), handleLoginButton, handleRegisterButton, handleLogout]
     );
 
@@ -177,6 +180,20 @@ export default function HomeScreen(p: Props) {
         setSearchValue(event.target.value);
     }, []);
 
+    const onCheckboxClick = React.useCallback(
+        (taskId: string) => {
+            const task = tasks.filter((task: any) => task.taskId === taskId);
+            const tasksLeft = tasks.filter(
+                (task: any) => task.taskId !== taskId
+            );
+            const finishedTask = { ...task[0], isFinished: true };
+            setTasks(tasksLeft);
+            dispatch(setFinishedTask(finishedTask));
+            service.setTaskFinished(finishedTask);
+        },
+        [tasks, dispatch]
+    );
+
     const renderItems = React.useCallback(() => {
         if (searchValue.length < 1)
             return tasks.map((item: any) => (
@@ -188,6 +205,7 @@ export default function HomeScreen(p: Props) {
                     description={item.description}
                     onDeleteClick={onDeleteItemClick}
                     onEditClick={onEditClick}
+                    onCheckboxClick={onCheckboxClick}
                 />
             ));
         else {
@@ -197,7 +215,7 @@ export default function HomeScreen(p: Props) {
 
             return toRender.map((item: any) => (
                 <TodoListItem
-                    key={item.taskId}
+                    key={item.taskId + item.taskId}
                     taskId={item.taskId}
                     title={item.title}
                     category={item.category}
@@ -207,7 +225,7 @@ export default function HomeScreen(p: Props) {
                 />
             ));
         }
-    }, [searchValue, tasks, onDeleteItemClick, onEditClick]);
+    }, [searchValue, tasks, onDeleteItemClick, onEditClick, onCheckboxClick]);
 
     return (
         <div className={classes.root}>
@@ -219,6 +237,7 @@ export default function HomeScreen(p: Props) {
                     {topRightButtons}
                 </Toolbar>
             </AppBar>
+
             {loginModal}
             {registerModal}
             <div style={{ margin: 16 }}>
@@ -235,9 +254,17 @@ export default function HomeScreen(p: Props) {
                     variant="outlined"
                 />
             </div>
-            <Paper style={{ margin: 16 }}>
-                <List style={{ overflow: 'hidden' }}>{renderItems()}</List>
-            </Paper>
+            <p
+                style={{ margin: 16, alignSelf: 'flex-end' }}
+                onClick={() => p.history.push('/finishedTasks')}
+            >
+                Finished todos
+            </p>
+            {loading ? null : tasks.length < 1 ? null : (
+                <Paper style={{ margin: 16 }}>
+                    <List style={{ overflow: 'hidden' }}>{renderItems()}</List>
+                </Paper>
+            )}
             {addButton}
         </div>
     );

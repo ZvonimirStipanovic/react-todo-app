@@ -20,7 +20,8 @@ interface Props {
     taskId: string;
     description?: string;
     onDeleteClick: (taskId: string) => void;
-    onEditClick: (taskId: string) => void;
+    onEditClick?: (taskId: string) => void;
+    onCheckboxClick?: (taskId: string) => void;
 }
 
 const TodoListItem = (p: Props) => {
@@ -46,11 +47,13 @@ const TodoListItem = (p: Props) => {
 
     return (
         <ListItem>
-            <Checkbox
-                color="primary"
-                //onClick={props.onCheckBoxToggle}
-                //checked={props.checked}
-            />
+            {p.onCheckboxClick && (
+                <Checkbox
+                    color="primary"
+                    onClick={() => p.onCheckboxClick!(p.taskId)}
+                />
+            )}
+
             <div
                 style={{
                     margin: 16,
@@ -62,12 +65,14 @@ const TodoListItem = (p: Props) => {
             </div>
             <ListItemText primary={p.title} secondary={p.description} />
             <ListItemSecondaryAction>
-                <IconButton
-                    aria-label="Edit"
-                    onClick={() => p.onEditClick(p.taskId)}
-                >
-                    <EditOutlinedIcon />
-                </IconButton>
+                {p.onEditClick && (
+                    <IconButton
+                        aria-label="Edit"
+                        onClick={() => p.onEditClick!(p.taskId)}
+                    >
+                        <EditOutlinedIcon />
+                    </IconButton>
+                )}
                 <IconButton
                     aria-label="Delete"
                     onClick={() => p.onDeleteClick(p.taskId)}

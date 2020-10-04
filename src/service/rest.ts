@@ -114,6 +114,23 @@ class REST implements Service {
         }
     }
 
+    public async setTaskFinished(task: any): Promise<boolean> {
+        //REPLACE WITH AXIOS
+        const userId = getLoginToken()!;
+        const database = firebaseConfig.firestore();
+        try {
+            database
+                .collection('users')
+                .doc(userId)
+                .collection('tasks')
+                .doc(task.taskId)
+                .update(task);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
     private request(
         endpoint: Function,
         req: AxiosRequestConfig

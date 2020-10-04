@@ -6,6 +6,7 @@ import PrivateRoute from './PrivateRoute';
 import HomeScreen from '../modules/HomeScreen';
 import AddScreen from '../modules/AddScreen';
 import UpdateScreen from '../modules/UpdateScreen';
+import FinishedTasksScreen from '../modules/FinishedTasksScreen';
 
 function MainRouter() {
     return (
@@ -15,6 +16,11 @@ function MainRouter() {
             <PrivateRoute exact path="/" component={HomeScreen} />
             <PrivateRoute exact path="/add" component={AddScreen} />
             <PrivateRoute exact path="/update" component={UpdateScreen} />
+            <PrivateRoute
+                exact
+                path="/finishedTasks"
+                component={FinishedTasksScreen}
+            />
         </BrowserRouter>
     );
 }

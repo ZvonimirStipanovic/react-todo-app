@@ -59,6 +59,14 @@ class CacheMiddleware implements Service {
             throw e;
         }
     }
+
+    public async setTaskFinished(task: Task): Promise<boolean> {
+        try {
+            return await this.next.setTaskFinished(task);
+        } catch (e) {
+            throw e;
+        }
+    }
 }
 
 export default CacheMiddleware;
