@@ -18,12 +18,14 @@ interface Props extends RouterProps {}
 
 export default function FinishedTasksScreen(p: Props) {
     const [tasks, setTasks]: any = useState([{}]);
+    const [loading, setLoading] = useState(true);
 
     const store = useStore();
     const dispatch = useDispatch();
 
     useEffect(() => {
         setTasks(store.getState().tasks.finishedTasks);
+        setLoading(false);
     }, [store]);
 
     const onBackClick = React.useCallback(() => p.history.goBack(), [
@@ -73,7 +75,7 @@ export default function FinishedTasksScreen(p: Props) {
                     <Typography variant="h6">Finished Todos</Typography>
                 </Toolbar>
             </AppBar>
-            {tasks.length < 1 ? null : (
+            {loading ? null : tasks.length < 1 ? null : (
                 <Paper style={{ margin: 16 }}>
                     <List style={{ overflow: 'hidden' }}>{toRender()}</List>
                 </Paper>

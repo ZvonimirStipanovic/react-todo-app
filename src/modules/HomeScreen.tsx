@@ -20,6 +20,7 @@ import { useStore, useDispatch } from 'react-redux';
 import { setFinishedTask, setFinishedTasks } from '../redux/tasks/action';
 import service from '../service/service';
 import { Task } from '../types/Task';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { firebaseConfig } from '../firebase';
 
 interface Props extends RouterProps {}
@@ -115,33 +116,37 @@ export default function HomeScreen(p: Props) {
         [dispatch]
     );
 
-    const handleRegister = React.useCallback(async (event) => {
-        event.preventDefault();
-        const { email, password } = event.target.elements;
-        service.register(email.value, password.value).then(() => {
-            service.login(email.value, password.value).then(async () => {
-                const userId = await firebaseConfig.auth().currentUser?.uid;
-                login(userId ? userId : 'guest');
-                service
-                    .getGuestTasks()
-                    .then((res: Task[]) => service.addTasks(res))
-                    .then(() =>
-                        service.getTasks(userId!).then((res) => {
-                            let finishedTasks: Object[] = [];
-                            let tasks: Object[] = [];
-                            res.forEach((document: any) => {
-                                const data = document.data();
-                                if (data.isFinished) finishedTasks.push(data);
-                                else tasks.push(data);
-                            });
-                            dispatch(setFinishedTasks(finishedTasks));
-                            setTasks(tasks);
-                        })
-                    )
-                    .then(() => setShowRegisterModal(false));
+    const handleRegister = React.useCallback(
+        async (event) => {
+            event.preventDefault();
+            const { email, password } = event.target.elements;
+            service.register(email.value, password.value).then(() => {
+                service.login(email.value, password.value).then(async () => {
+                    const userId = await firebaseConfig.auth().currentUser?.uid;
+                    login(userId ? userId : 'guest');
+                    service
+                        .getGuestTasks()
+                        .then((res: Task[]) => service.addTasks(res))
+                        .then(() =>
+                            service.getTasks(userId!).then((res) => {
+                                let finishedTasks: Object[] = [];
+                                let tasks: Object[] = [];
+                                res.forEach((document: any) => {
+                                    const data = document.data();
+                                    if (data.isFinished)
+                                        finishedTasks.push(data);
+                                    else tasks.push(data);
+                                });
+                                dispatch(setFinishedTasks(finishedTasks));
+                                setTasks(tasks);
+                            })
+                        )
+                        .then(() => setShowRegisterModal(false));
+                });
             });
-        });
-    }, []);
+        },
+        [dispatch]
+    );
 
     const loginModal = React.useMemo(
         () => (
@@ -219,9 +224,19 @@ export default function HomeScreen(p: Props) {
                 >
                     <AddCircleOutlinedIcon color="primary" fontSize="large" />
                 </IconButton>
+                <IconButton
+                    onClick={() => p.history.push('/finishedTasks')}
+                    style={{ margin: 16 }}
+                    aria-label="Done"
+                >
+                    <CheckCircleOutlineIcon
+                        color="primary"
+                        fontSize="large"
+                    ></CheckCircleOutlineIcon>
+                </IconButton>
             </Grid>
         ),
-        [onAddClick]
+        [onAddClick, p.history]
     );
 
     const onDeleteItemClick = React.useCallback(
@@ -340,12 +355,7 @@ export default function HomeScreen(p: Props) {
                     variant="outlined"
                 />
             </div>
-            <p
-                style={{ margin: 16, alignSelf: 'flex-end' }}
-                onClick={() => p.history.push('/finishedTasks')}
-            >
-                Finished todos
-            </p>
+
             {loading ? null : tasks.length < 1 ? null : (
                 <Paper style={{ margin: 16 }}>
                     <List style={{ overflow: 'hidden' }}>{renderItems()}</List>
