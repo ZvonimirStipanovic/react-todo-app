@@ -8,7 +8,7 @@ import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
-import { isGuest, LOGIN_TOKEN } from '../../router/login';
+import { isGuest, LOGIN_TOKEN } from '../authentication/const/login';
 import { Task } from './types/Task';
 import service from '../../service/service';
 
@@ -34,18 +34,19 @@ export const categories = [
 interface Props extends RouterProps {}
 
 export default function AddScreen(p: Props) {
-    const [category, setCategory] = useState('Home');
+    const [category, setCategory] = useState<string>('Home');
 
-    const onBackClick = React.useCallback(() => p.history.goBack(), [
-        p.history,
-    ]);
-
-    const handleCategoriesChange = React.useCallback((event: any) => {
-        setCategory(event.target.value);
-    }, []);
+    const onBackClick = () => p.history.goBack();
+    const isAnonymous = isGuest();
+    const handleCategoriesChange = React.useCallback(
+        (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+            setCategory(event.target.value);
+        },
+        []
+    );
 
     const handleAddTodo = React.useCallback(
-        async (event) => {
+        async (event: any) => {
             event.preventDefault();
             const { title, description, time } = event.target.elements;
             const userId = await localStorage.getItem(LOGIN_TOKEN);
@@ -59,10 +60,9 @@ export default function AddScreen(p: Props) {
                 time.value,
                 false
             );
-            const shouldCache = isGuest();
-            service.addTask(task, shouldCache).then(() => p.history.push('/'));
+            service.addTask(task, isAnonymous).then(() => p.history.push('/'));
         },
-        [category, p.history]
+        [category, p.history, isAnonymous]
     );
 
     return (

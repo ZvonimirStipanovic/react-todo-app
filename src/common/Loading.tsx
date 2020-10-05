@@ -2,6 +2,7 @@ import { CircularProgress, createStyles, makeStyles } from '@material-ui/core';
 import React from 'react';
 import { State as LoadingState } from '../redux/loading/index';
 import { connect } from 'react-redux';
+import { AppState } from '../redux/AppState';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -53,7 +54,7 @@ function Loading({ children, loading }: Props) {
     );
 }
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = (state: AppState) => ({
     loading: state.loading,
 });
 

@@ -11,7 +11,7 @@ class ErrorMiddleware implements Service {
         this.dispatch = dispatch;
     }
 
-    public async getTasks(userId: string): Promise<any> {
+    public async getTasks(userId: string): Promise<Task[]> {
         try {
             return await this.next.getTasks(userId);
         } catch (e) {

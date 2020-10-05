@@ -9,7 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { firebaseConfig } from '../../firebase';
 import firebase from 'firebase';
-import { login } from '../../router/login';
+import { login } from './const/login';
 import service from '../../service/service';
 
 interface Props extends RouterProps {}

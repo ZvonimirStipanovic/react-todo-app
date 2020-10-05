@@ -8,22 +8,25 @@ import { createStyles, makeStyles } from '@material-ui/core/styles';
 import {
     logout,
     login,
-    isLoggedIn,
     LOGIN_TOKEN,
     isGuest,
-} from '../../router/login';
+} from '../authentication/const/login';
 import LoginModal from '../authentication/LoginModal';
 import { List, Paper, IconButton, Grid, TextField } from '@material-ui/core';
 import TodoListItem from './TodoListItem';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
-import { useStore, useDispatch } from 'react-redux';
-import { setFinishedTask, setFinishedTasks } from './redux/action';
+import { useDispatch, connect } from 'react-redux';
 import service from '../../service/service';
 import { Task } from './types/Task';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { firebaseConfig } from '../../firebase';
+import { setTasks } from './redux/action';
+import { getActiveTasks } from './redux/selectors';
+import { AppState } from '../../redux/AppState';
 
-interface Props extends RouterProps {}
+interface Props extends RouterProps {
+    tasks: Task[];
+}
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -36,47 +39,33 @@ const useStyles = makeStyles(() =>
     })
 );
 
-export default function HomeScreen(p: Props) {
-    const store = useStore();
+function HomeScreen(p: Props) {
     const dispatch = useDispatch();
-    const [showLoginModal, setShowLoginModal] = useState(false);
-    const [showRegisterModal, setShowRegisterModal] = useState(false);
-    const [tasks, setTasks]: any = useState([{}]);
-    const [searchValue, setSearchValue] = useState('');
-    const [loading, setLoading] = useState(true);
+
+    const classes = useStyles();
+
+    const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
+    const [showRegisterModal, setShowRegisterModal] = useState<boolean>(false);
+    const [searchValue, setSearchValue] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(true);
+
+    const isAnonymous = isGuest();
 
     useEffect(() => {
         let userId = 'userId';
         userId = localStorage.getItem(LOGIN_TOKEN)!;
-        if (!isGuest())
-            service.getTasks(userId).then((res) => {
-                let finishedTasks: Object[] = [];
-                let tasks: Object[] = [];
-                res.forEach((document: any) => {
-                    const data = document.data();
-                    if (data.isFinished) finishedTasks.push(data);
-                    else tasks.push(data);
-                });
-                dispatch(setFinishedTasks(finishedTasks));
-                setTasks(tasks);
+        if (!isAnonymous)
+            service.getTasks(userId).then((res: Task[]) => {
+                dispatch(setTasks(res));
                 setLoading(false);
             });
         else {
             service.getGuestTasks().then((res: Task[]) => {
-                let finishedTasks: Object[] = [];
-                let tasks: Object[] = [];
-                res.forEach((task: Task) => {
-                    if (task.isFinished) finishedTasks.push(task);
-                    else tasks.push(task);
-                });
-                dispatch(setFinishedTasks(finishedTasks));
-                setTasks(tasks);
+                dispatch(setTasks(res));
                 setLoading(false);
             });
         }
-    }, [store, dispatch]);
-
-    const classes = useStyles();
+    }, [dispatch, isAnonymous]);
 
     const handleLoginButton = React.useCallback(
         () => setShowLoginModal(true),
@@ -98,17 +87,9 @@ export default function HomeScreen(p: Props) {
                     .getGuestTasks()
                     .then((res: Task[]) => service.addTasks(res))
                     .then(() =>
-                        service.getTasks(userId!).then((res) => {
-                            let finishedTasks: Object[] = [];
-                            let tasks: Object[] = [];
-                            res.forEach((document: any) => {
-                                const data = document.data();
-                                if (data.isFinished) finishedTasks.push(data);
-                                else tasks.push(data);
-                            });
-                            dispatch(setFinishedTasks(finishedTasks));
-                            setTasks(tasks);
-                        })
+                        service
+                            .getTasks(userId!)
+                            .then((tasks: Task[]) => dispatch(setTasks(tasks)))
                     )
                     .then(() => setShowLoginModal(false));
             });
@@ -128,18 +109,11 @@ export default function HomeScreen(p: Props) {
                         .getGuestTasks()
                         .then((res: Task[]) => service.addTasks(res))
                         .then(() =>
-                            service.getTasks(userId!).then((res) => {
-                                let finishedTasks: Object[] = [];
-                                let tasks: Object[] = [];
-                                res.forEach((document: any) => {
-                                    const data = document.data();
-                                    if (data.isFinished)
-                                        finishedTasks.push(data);
-                                    else tasks.push(data);
-                                });
-                                dispatch(setFinishedTasks(finishedTasks));
-                                setTasks(tasks);
-                            })
+                            service
+                                .getTasks(userId!)
+                                .then((tasks: Task[]) =>
+                                    dispatch(setTasks(tasks))
+                                )
                         )
                         .then(() => setShowRegisterModal(false));
                 });
@@ -181,7 +155,7 @@ export default function HomeScreen(p: Props) {
 
     const topRightButtons = React.useMemo(
         () =>
-            isGuest() ? (
+            isAnonymous ? (
                 <>
                     <Button
                         color="inherit"
@@ -199,15 +173,7 @@ export default function HomeScreen(p: Props) {
                     Log out
                 </Button>
             ),
-        [
-            // eslint-disable-next-line
-            isLoggedIn(),
-            // eslint-disable-next-line
-            isGuest(),
-            handleLoginButton,
-            handleRegisterButton,
-            handleLogout,
-        ]
+        [isAnonymous, handleLoginButton, handleRegisterButton, handleLogout]
     );
 
     const onAddClick = React.useCallback(() => p.history.push('/add'), [
@@ -229,10 +195,7 @@ export default function HomeScreen(p: Props) {
                     style={{ margin: 16 }}
                     aria-label="Done"
                 >
-                    <CheckCircleOutlineIcon
-                        color="primary"
-                        fontSize="large"
-                    ></CheckCircleOutlineIcon>
+                    <CheckCircleOutlineIcon color="primary" fontSize="large" />
                 </IconButton>
             </Grid>
         ),
@@ -241,44 +204,55 @@ export default function HomeScreen(p: Props) {
 
     const onDeleteItemClick = React.useCallback(
         (taskId: string) => {
-            const newTasks = tasks.filter(
-                (task: any) => task.taskId !== taskId
+            const newTasks = p.tasks.filter(
+                (task: Task) => task.taskId !== taskId
             );
-            setTasks(newTasks);
+            dispatch(setTasks(newTasks));
             service.deleteTask(taskId);
         },
-        [tasks]
+        [dispatch, p.tasks]
     );
 
     const onEditClick = React.useCallback(
         (taskId: string) => {
-            const task = tasks.filter((task: any) => task.taskId === taskId);
-            p.history.push('/update', { task: task });
+            const task = p.tasks.filter((task: Task) => task.taskId === taskId);
+            p.history.push('/update', { task });
         },
-        [tasks, p.history]
+        [p.tasks, p.history]
     );
 
-    const onSearchChange = React.useCallback((event: any) => {
-        setSearchValue(event.target.value);
-    }, []);
+    const onSearchChange = React.useCallback(
+        (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+            setSearchValue(event.target.value);
+        },
+        []
+    );
 
     const onCheckboxClick = React.useCallback(
         (taskId: string) => {
-            const task = tasks.filter((task: any) => task.taskId === taskId);
-            const tasksLeft = tasks.filter(
-                (task: any) => task.taskId !== taskId
+            const taskIndex = p.tasks.findIndex(
+                (task: Task) => task.taskId === taskId
             );
-            const finishedTask = { ...task[0], isFinished: true };
-            setTasks(tasksLeft);
-            dispatch(setFinishedTask(finishedTask));
-            service.setTaskFinished(finishedTask);
+            const updatedTasks = [...p.tasks];
+            const task = updatedTasks[taskIndex];
+            updatedTasks[taskIndex] = new Task(
+                task.userId,
+                task.taskId,
+                task.title,
+                task.description,
+                task.category,
+                task.time,
+                true
+            );
+            service.setTaskFinished(updatedTasks[taskIndex]);
+            dispatch(setTasks(updatedTasks));
         },
-        [tasks, dispatch]
+        [p.tasks, dispatch]
     );
 
     const renderItems = React.useCallback(() => {
         if (searchValue.length < 1)
-            return tasks.map((item: any) => (
+            return p.tasks.map((item: Task) => (
                 <TodoListItem
                     key={item.taskId}
                     taskId={item.taskId}
@@ -291,7 +265,7 @@ export default function HomeScreen(p: Props) {
                 />
             ));
         else {
-            const toRender = tasks.filter((item: Task) =>
+            const toRender = p.tasks.filter((item: Task) =>
                 item.title.toLowerCase().includes(searchValue)
             );
 
@@ -302,7 +276,7 @@ export default function HomeScreen(p: Props) {
                     </p>
                 );
 
-            return toRender.map((item: any) => (
+            return toRender.map((item: Task) => (
                 <TodoListItem
                     key={item.taskId + item.taskId}
                     taskId={item.taskId}
@@ -315,7 +289,7 @@ export default function HomeScreen(p: Props) {
                 />
             ));
         }
-    }, [searchValue, tasks, onDeleteItemClick, onEditClick, onCheckboxClick]);
+    }, [searchValue, p.tasks, onDeleteItemClick, onEditClick, onCheckboxClick]);
 
     return (
         <div className={classes.root}>
@@ -327,7 +301,7 @@ export default function HomeScreen(p: Props) {
                     {topRightButtons}
                 </Toolbar>
             </AppBar>
-            {isGuest() ? (
+            {isAnonymous ? (
                 <p
                     style={{
                         margin: 16,
@@ -356,7 +330,7 @@ export default function HomeScreen(p: Props) {
                 />
             </div>
 
-            {loading ? null : tasks.length < 1 ? null : (
+            {loading ? null : p.tasks.length < 1 ? null : (
                 <Paper style={{ margin: 16 }}>
                     <List style={{ overflow: 'hidden' }}>{renderItems()}</List>
                 </Paper>
@@ -365,3 +339,9 @@ export default function HomeScreen(p: Props) {
         </div>
     );
 }
+
+const mapStateToProps = (state: AppState) => ({
+    tasks: getActiveTasks(state),
+});
+
+export default connect(mapStateToProps)(HomeScreen);

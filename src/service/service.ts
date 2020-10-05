@@ -20,7 +20,7 @@ export enum ErrorType {
 }
 
 export interface Service {
-    getTasks(userId: string): Promise<any>;
+    getTasks(userId: string): Promise<Task[]>;
     addTask(task: Task, shouldCache: boolean): Promise<boolean>;
     addTasks(tasks: Task[]): Promise<boolean>;
     deleteTask(taskId: string): Promise<boolean>;

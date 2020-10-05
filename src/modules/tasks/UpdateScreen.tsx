@@ -10,57 +10,34 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import { categories } from './AddScreen';
 import service from '../../service/service';
+import { Task } from './types/Task';
 
 interface Props extends RouterProps {}
 
 export default function UpdateScreen(p: Props) {
-    const [task, setTask]: any = useState();
+    const [task, setTask] = useState<Task>();
 
     useEffect(() => {
         const state: any = p.history.location.state;
         if (state) setTask(state.task[0]);
     }, [p.history.location.state]);
 
-    const onBackClick = React.useCallback(() => p.history.goBack(), [
-        p.history,
-    ]);
+    const onBackClick = () => p.history.goBack();
 
     const saveTodo = React.useCallback(
         async (event) => {
             event.preventDefault();
-            service.updateTask(task).then(() => p.history.push('/'));
+            service.updateTask(task!).then(() => p.history.push('/'));
         },
         [task, p.history]
     );
 
-    const handleChangeTitle = React.useCallback(
-        (event: any) => {
-            const newTask = { ...task, title: event.target.value };
-            setTask(newTask);
-        },
-        [task]
-    );
-
-    const handleChangeDescription = React.useCallback(
-        (event: any) => {
-            const newTask = { ...task, description: event.target.value };
-            setTask(newTask);
-        },
-        [task]
-    );
-
-    const handleCategoriesChange = React.useCallback(
-        (event: any) => {
-            const newTask = { ...task, category: event.target.value };
-            setTask(newTask);
-        },
-        [task]
-    );
-
-    const handleTimeChange = React.useCallback(
-        (event: any) => {
-            const newTask = { ...task, time: event.target.value };
-            setTask(newTask);
+    const handleChangeTask = React.useCallback(
+        (name: string) => (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+            setTask({
+                ...task,
+                [name]: event.target.value,
+            } as Task);
         },
         [task]
     );
@@ -86,7 +63,7 @@ export default function UpdateScreen(p: Props) {
                     placeholder="Enter a title of a todo"
                     fullWidth
                     value={task ? task!.title : 'unknown'}
-                    onChange={handleChangeTitle}
+                    onChange={handleChangeTask('title')}
                     margin="normal"
                     InputLabelProps={{
                         shrink: true,
@@ -100,7 +77,7 @@ export default function UpdateScreen(p: Props) {
                     fullWidth
                     multiline
                     rows={4}
-                    onChange={handleChangeDescription}
+                    onChange={handleChangeTask('description')}
                     value={task ? task!.description : 'unknown'}
                     margin="normal"
                     InputLabelProps={{
@@ -115,7 +92,7 @@ export default function UpdateScreen(p: Props) {
                     margin="normal"
                     label="Category"
                     value={task ? task!.category : 'unknown'}
-                    onChange={handleCategoriesChange}
+                    onChange={handleChangeTask('category')}
                     variant="outlined"
                 >
                     {categories.map((option: any) => (
@@ -130,7 +107,7 @@ export default function UpdateScreen(p: Props) {
                     type="time"
                     value={task ? task!.time : '00:00'}
                     fullWidth
-                    onChange={handleTimeChange}
+                    onChange={handleChangeTask('time')}
                     margin="normal"
                     InputLabelProps={{
                         shrink: true,

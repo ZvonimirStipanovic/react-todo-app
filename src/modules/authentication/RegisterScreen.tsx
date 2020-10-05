@@ -49,9 +49,7 @@ export default function RegisterScreen(p: Props) {
         [p.history]
     );
 
-    const onBackClick = React.useCallback(() => p.history.goBack(), [
-        p.history,
-    ]);
+    const onBackClick = () => p.history.goBack();
 
     return (
         <div>

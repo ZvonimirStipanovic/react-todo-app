@@ -12,7 +12,7 @@ class LoadingMiddleware implements Service {
         this.dispatch = dispatch;
     }
 
-    public async getTasks(userId: string): Promise<any> {
+    public async getTasks(userId: string): Promise<Task[]> {
         this.dispatch(startLoading('getTasks'));
         try {
             const result = await this.next.getTasks(userId);

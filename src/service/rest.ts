@@ -2,7 +2,10 @@ import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { firebaseConfig } from '../firebase';
 import { Task } from '../modules/tasks/types/Task';
 import { HTTPClient } from './client';
-import { getLoginToken, GUEST_TASKS } from '../router/login';
+import {
+    getLoginToken,
+    GUEST_TASKS,
+} from '../modules/authentication/const/login';
 import { ErrorType, Service, ServiceError } from './service';
 
 export class URL {
@@ -26,7 +29,7 @@ class REST implements Service {
         this.url = url;
     }
 
-    public async getTasks(userId: string): Promise<any> {
+    public async getTasks(userId: string): Promise<Task[]> {
         //REPLACE WITH AXIOS
         //const res = await this.request(this.getTasks, {
         //    method: 'POST',
@@ -35,11 +38,16 @@ class REST implements Service {
         //console.log('res', res);
         //return GarbageTypesReply.fromJSON(res.data.result.garbageTypes);
         const database = firebaseConfig.firestore();
-        return database
+        let tasks: Task[] = [];
+        await database
             .collection('users')
             .doc(userId)
             .collection('tasks')
-            .get();
+            .get()
+            .then((doc) => {
+                doc.forEach((item) => tasks.push(item.data() as Task));
+            });
+        return tasks;
     }
 
     public async addTask(task: Task, shouldCache: boolean): Promise<boolean> {
@@ -136,7 +144,7 @@ class REST implements Service {
         }
     }
 
-    public async setTaskFinished(task: any): Promise<boolean> {
+    public async setTaskFinished(task: Task): Promise<boolean> {
         //REPLACE WITH AXIOS
         const userId = getLoginToken()!;
         const database = firebaseConfig.firestore();
@@ -146,7 +154,7 @@ class REST implements Service {
                 .doc(userId)
                 .collection('tasks')
                 .doc(task.taskId)
-                .update(task);
+                .update({ ...task });
             return true;
         } catch (e) {
             return false;

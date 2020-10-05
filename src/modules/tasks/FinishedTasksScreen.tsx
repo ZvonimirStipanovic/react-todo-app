@@ -6,48 +6,40 @@ import {
     Toolbar,
     Typography,
 } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { RouterProps } from 'react-router';
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
 import TodoListItem from './TodoListItem';
 import service from '../../service/service';
-import { useDispatch, useStore } from 'react-redux';
-import { setFinishedTasks } from './redux/action';
+import { connect, useDispatch } from 'react-redux';
+import { Task } from './types/Task';
+import { getCompletedTasks } from './redux/selectors';
+import { AppState } from '../../redux/AppState';
+import { setTasks } from './redux/action';
 
-interface Props extends RouterProps {}
+interface Props extends RouterProps {
+    tasks: Task[];
+}
 
-export default function FinishedTasksScreen(p: Props) {
-    const [tasks, setTasks]: any = useState([{}]);
-    const [loading, setLoading] = useState(true);
-
-    const store = useStore();
+function FinishedTasksScreen(p: Props) {
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        setTasks(store.getState().tasks.finishedTasks);
-        setLoading(false);
-    }, [store]);
-
-    const onBackClick = React.useCallback(() => p.history.goBack(), [
-        p.history,
-    ]);
+    const onBackClick = () => p.history.goBack();
 
     const onDeleteItemClick = React.useCallback(
         (taskId: string) => {
-            const newTasks = tasks.filter(
-                (task: any) => task.taskId !== taskId
+            const newTasks = p.tasks.filter(
+                (task: Task) => task.taskId !== taskId
             );
-            setTasks(newTasks);
-            dispatch(setFinishedTasks(newTasks));
+            dispatch(setTasks(newTasks));
             service.deleteTask(taskId);
         },
-        //eslint-disable-next-line
-        [store.getState().tasks.finishedTasks, dispatch, store, tasks]
+        [p.tasks, dispatch]
     );
 
     const toRender = React.useCallback(
         () =>
-            tasks.map((item: any) => (
+            p.tasks.map((item: Task) => (
                 <TodoListItem
                     key={item.taskId + item.title}
                     taskId={item.taskId}
@@ -57,8 +49,7 @@ export default function FinishedTasksScreen(p: Props) {
                     onDeleteClick={onDeleteItemClick}
                 />
             )),
-        //eslint-disable-next-line
-        [store.getState().finishedTasks, tasks]
+        [p.tasks, onDeleteItemClick]
     );
 
     return (
@@ -75,7 +66,7 @@ export default function FinishedTasksScreen(p: Props) {
                     <Typography variant="h6">Finished Todos</Typography>
                 </Toolbar>
             </AppBar>
-            {loading ? null : tasks.length < 1 ? null : (
+            {p.tasks.length < 1 ? null : (
                 <Paper style={{ margin: 16 }}>
                     <List style={{ overflow: 'hidden' }}>{toRender()}</List>
                 </Paper>
@@ -83,3 +74,9 @@ export default function FinishedTasksScreen(p: Props) {
         </div>
     );
 }
+
+const mapStateToProps = (state: AppState) => ({
+    tasks: getCompletedTasks(state),
+});
+
+export default connect(mapStateToProps)(FinishedTasksScreen);
