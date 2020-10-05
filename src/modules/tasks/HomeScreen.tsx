@@ -255,7 +255,7 @@ function HomeScreen(p: Props) {
                     {topRightButtons}
                 </Toolbar>
             </AppBar>
-            {notLoggedText}
+            {notLoggedText()}
             {loginModal}
             {registerModal}
             <div style={{ margin: 16 }}>
