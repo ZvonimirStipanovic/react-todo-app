@@ -4,13 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
-import {
-    logout,
-    login,
-    LOGIN_TOKEN,
-    isGuest,
-} from '../authentication/const/login';
+import { logout, LOGIN_TOKEN, isGuest } from '../authentication/const/login';
 import LoginModal from '../authentication/LoginModal';
 import { List, Paper, IconButton, Grid, TextField } from '@material-ui/core';
 import TodoListItem from './TodoListItem';
@@ -19,30 +13,19 @@ import { useDispatch, connect } from 'react-redux';
 import service from '../../service/service';
 import { Task } from './types/Task';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import { firebaseConfig } from '../../firebase';
 import { setTasks } from './redux/action';
 import { getActiveTasks } from './redux/selectors';
 import { AppState } from '../../redux/AppState';
+import { tasksStyles } from './styles';
 
 interface Props extends RouterProps {
     tasks: Task[];
 }
 
-const useStyles = makeStyles(() =>
-    createStyles({
-        root: {
-            flexGrow: 1,
-        },
-        title: {
-            flexGrow: 1,
-        },
-    })
-);
-
 function HomeScreen(p: Props) {
     const dispatch = useDispatch();
 
-    const classes = useStyles();
+    const classes = tasksStyles();
 
     const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
     const [showRegisterModal, setShowRegisterModal] = useState<boolean>(false);
@@ -71,55 +54,10 @@ function HomeScreen(p: Props) {
         () => setShowLoginModal(true),
         []
     );
+
     const handleRegisterButton = React.useCallback(
         () => setShowRegisterModal(true),
         []
-    );
-
-    const handleLogin = React.useCallback(
-        async (event) => {
-            event.preventDefault();
-            const { email, password } = event.target.elements;
-            service.login(email.value, password.value).then(async () => {
-                const userId = await firebaseConfig.auth().currentUser?.uid;
-                login(userId ? userId : 'guest');
-                service
-                    .getGuestTasks()
-                    .then((res: Task[]) => service.addTasks(res))
-                    .then(() =>
-                        service
-                            .getTasks(userId!)
-                            .then((tasks: Task[]) => dispatch(setTasks(tasks)))
-                    )
-                    .then(() => setShowLoginModal(false));
-            });
-        },
-        [dispatch]
-    );
-
-    const handleRegister = React.useCallback(
-        async (event) => {
-            event.preventDefault();
-            const { email, password } = event.target.elements;
-            service.register(email.value, password.value).then(() => {
-                service.login(email.value, password.value).then(async () => {
-                    const userId = await firebaseConfig.auth().currentUser?.uid;
-                    login(userId ? userId : 'guest');
-                    service
-                        .getGuestTasks()
-                        .then((res: Task[]) => service.addTasks(res))
-                        .then(() =>
-                            service
-                                .getTasks(userId!)
-                                .then((tasks: Task[]) =>
-                                    dispatch(setTasks(tasks))
-                                )
-                        )
-                        .then(() => setShowRegisterModal(false));
-                });
-            });
-        },
-        [dispatch]
     );
 
     const loginModal = React.useMemo(
@@ -128,11 +66,11 @@ function HomeScreen(p: Props) {
                 open={showLoginModal}
                 buttonTitle="Log in"
                 title="Log in"
-                onSubmit={handleLogin}
+                type="login"
                 setOpenLogin={(val: boolean) => setShowLoginModal(val)}
             />
         ),
-        [showLoginModal, handleLogin]
+        [showLoginModal]
     );
 
     const registerModal = React.useMemo(
@@ -141,11 +79,11 @@ function HomeScreen(p: Props) {
                 open={showRegisterModal}
                 buttonTitle="Register"
                 title="Register"
-                onSubmit={handleRegister}
+                type="register"
                 setOpenLogin={(val: boolean) => setShowRegisterModal(val)}
             />
         ),
-        [showRegisterModal, handleRegister]
+        [showRegisterModal]
     );
 
     const handleLogout = React.useCallback(() => {
@@ -250,6 +188,23 @@ function HomeScreen(p: Props) {
         [p.tasks, dispatch]
     );
 
+    const notLoggedText = React.useCallback(
+        () =>
+            isAnonymous ? (
+                <p
+                    style={{
+                        margin: 16,
+                        fontSize: 24,
+                        color: 'red',
+                        textAlign: 'center',
+                    }}
+                >
+                    YOU ARE NOT LOGGED IN
+                </p>
+            ) : null,
+        [isAnonymous]
+    );
+
     const renderItems = React.useCallback(() => {
         if (searchValue.length < 1)
             return p.tasks.map((item: Task) => (
@@ -268,7 +223,6 @@ function HomeScreen(p: Props) {
             const toRender = p.tasks.filter((item: Task) =>
                 item.title.toLowerCase().includes(searchValue)
             );
-
             if (toRender.length === 0)
                 return (
                     <p style={{ margin: 12, color: 'gray' }}>
@@ -301,18 +255,7 @@ function HomeScreen(p: Props) {
                     {topRightButtons}
                 </Toolbar>
             </AppBar>
-            {isAnonymous ? (
-                <p
-                    style={{
-                        margin: 16,
-                        fontSize: 24,
-                        color: 'red',
-                        textAlign: 'center',
-                    }}
-                >
-                    YOU ARE NOT LOGGED IN
-                </p>
-            ) : null}
+            {notLoggedText}
             {loginModal}
             {registerModal}
             <div style={{ margin: 16 }}>

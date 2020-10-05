@@ -7,16 +7,70 @@ import {
     DialogActions,
 } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import service from '../../service/service';
+import { firebaseConfig } from '../../firebase';
+import { login } from './const/login';
+import { Task } from '../tasks/types/Task';
+import { useDispatch } from 'react-redux';
+import { setTasks } from '../tasks/redux/action';
 
 interface Props {
     title: string;
     buttonTitle: string;
     open: boolean;
+    type: string;
     setOpenLogin: (val: boolean) => void;
-    onSubmit: (event: React.FormEvent) => void;
 }
 
 export default function LoginModal(p: Props) {
+    const dispatch = useDispatch();
+
+    const handleRegister = React.useCallback(
+        async (event) => {
+            event.preventDefault();
+            const { email, password } = event.target.elements;
+            service.register(email.value, password.value).then(() => {
+                service.login(email.value, password.value).then(async () => {
+                    const userId = await firebaseConfig.auth().currentUser?.uid;
+                    login(userId ? userId : 'guest');
+                    service
+                        .getGuestTasks()
+                        .then((res: Task[]) => service.addTasks(res))
+                        .then(() =>
+                            service
+                                .getTasks(userId!)
+                                .then((tasks: Task[]) =>
+                                    dispatch(setTasks(tasks))
+                                )
+                        )
+                        .then(() => p.setOpenLogin(false));
+                });
+            });
+        },
+        [p, dispatch]
+    );
+
+    const handleLogin = React.useCallback(
+        async (event) => {
+            event.preventDefault();
+            const { email, password } = event.target.elements;
+            service.login(email.value, password.value).then(async () => {
+                const userId = await firebaseConfig.auth().currentUser?.uid;
+                login(userId ? userId : 'guest');
+                service
+                    .getGuestTasks()
+                    .then((res: Task[]) => service.addTasks(res))
+                    .then(() =>
+                        service
+                            .getTasks(userId!)
+                            .then((tasks: Task[]) => dispatch(setTasks(tasks)))
+                    )
+                    .then(() => p.setOpenLogin(false));
+            });
+        },
+        [p, dispatch]
+    );
+
     return (
         <div>
             <Dialog
@@ -25,7 +79,9 @@ export default function LoginModal(p: Props) {
                 aria-labelledby="form-dialog-title"
             >
                 <DialogTitle id="form-dialog-title">{p.title}</DialogTitle>
-                <form onSubmit={p.onSubmit}>
+                <form
+                    onSubmit={p.type === 'login' ? handleLogin : handleRegister}
+                >
                     <DialogContent>
                         <TextField
                             autoFocus
