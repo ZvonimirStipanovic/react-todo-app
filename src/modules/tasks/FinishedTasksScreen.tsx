@@ -9,10 +9,10 @@ import {
 import React, { useEffect, useState } from 'react';
 import { RouterProps } from 'react-router';
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
-import TodoListItem from '../common/TodoListItem';
-import service from '../service/service';
+import TodoListItem from './TodoListItem';
+import service from '../../service/service';
 import { useDispatch, useStore } from 'react-redux';
-import { setFinishedTasks } from '../redux/tasks/action';
+import { setFinishedTasks } from './redux/action';
 
 interface Props extends RouterProps {}
 

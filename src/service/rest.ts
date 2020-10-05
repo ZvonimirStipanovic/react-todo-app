@@ -1,6 +1,6 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { firebaseConfig } from '../firebase';
-import { Task } from '../types/Task';
+import { Task } from '../modules/tasks/types/Task';
 import { HTTPClient } from './client';
 import { getLoginToken, GUEST_TASKS } from '../router/login';
 import { ErrorType, Service, ServiceError } from './service';

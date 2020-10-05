@@ -5,7 +5,7 @@ import CacheMiddleware from './middleware/CacheMiddleware';
 import REST, { URL } from './rest';
 import config from '../config';
 import client from './client';
-import { Task } from '../types/Task';
+import { Task } from '../modules/tasks/types/Task';
 
 export enum ErrorType {
     Unknown,

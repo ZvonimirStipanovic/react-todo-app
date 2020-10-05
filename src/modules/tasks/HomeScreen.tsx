@@ -11,17 +11,17 @@ import {
     isLoggedIn,
     LOGIN_TOKEN,
     isGuest,
-} from '../router/login';
-import LoginModal from '../common/LoginModal';
+} from '../../router/login';
+import LoginModal from '../authentication/LoginModal';
 import { List, Paper, IconButton, Grid, TextField } from '@material-ui/core';
-import TodoListItem from '../common/TodoListItem';
+import TodoListItem from './TodoListItem';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import { useStore, useDispatch } from 'react-redux';
-import { setFinishedTask, setFinishedTasks } from '../redux/tasks/action';
-import service from '../service/service';
-import { Task } from '../types/Task';
+import { setFinishedTask, setFinishedTasks } from './redux/action';
+import service from '../../service/service';
+import { Task } from './types/Task';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import { firebaseConfig } from '../firebase';
+import { firebaseConfig } from '../../firebase';
 
 interface Props extends RouterProps {}
 

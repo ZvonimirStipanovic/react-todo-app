@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import { startLoading, stopLoading } from '../../redux/loading/actions';
-import { Task } from '../../types/Task';
+import { Task } from '../../modules/tasks/types/Task';
 import { Service } from '../service';
 
 class LoadingMiddleware implements Service {

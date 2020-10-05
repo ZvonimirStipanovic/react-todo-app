@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import { GUEST_TASKS } from '../../router/login';
-import { Task } from '../../types/Task';
+import { Task } from '../../modules/tasks/types/Task';
 import { Service } from '../service';
 
 class CacheMiddleware implements Service {

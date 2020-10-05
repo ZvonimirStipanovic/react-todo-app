@@ -1,12 +1,12 @@
 import React from 'react';
-import { BrowserRouter, Redirect, Route } from 'react-router-dom';
-import LoginScreen from '../modules/LoginScreen';
-import RegisterScreen from '../modules/RegisterScreen';
+import { BrowserRouter, Route } from 'react-router-dom';
+import LoginScreen from '../modules/authentication/LoginScreen';
+import RegisterScreen from '../modules/authentication/RegisterScreen';
 import PrivateRoute from './PrivateRoute';
-import HomeScreen from '../modules/HomeScreen';
-import AddScreen from '../modules/AddScreen';
-import UpdateScreen from '../modules/UpdateScreen';
-import FinishedTasksScreen from '../modules/FinishedTasksScreen';
+import HomeScreen from '../modules/tasks/HomeScreen';
+import AddScreen from '../modules/tasks/AddScreen';
+import UpdateScreen from '../modules/tasks/UpdateScreen';
+import FinishedTasksScreen from '../modules/tasks/FinishedTasksScreen';
 
 function MainRouter() {
     return (
@@ -21,7 +21,6 @@ function MainRouter() {
                 path="/finishedTasks"
                 component={FinishedTasksScreen}
             />
-            <Redirect to="/" />
         </BrowserRouter>
     );
 }
