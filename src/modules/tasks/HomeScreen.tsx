@@ -10,12 +10,12 @@ import { List, Paper, IconButton, Grid, TextField } from '@material-ui/core';
 import TodoListItem from './TodoListItem';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import { useDispatch, connect } from 'react-redux';
-import service from '../../service/service';
-import { Task } from './types/Task';
+import service from '../../const/service/service';
+import { Task } from './models/Task';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { setTasks } from './redux/action';
 import { getActiveTasks } from './redux/selectors';
-import { AppState } from '../../redux/AppState';
+import { AppState } from '../redux-store/AppState';
 import { tasksStyles } from './styles';
 
 interface Props extends RouterProps {

@@ -7,10 +7,10 @@ import {
     DialogActions,
 } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import service from '../../service/service';
-import { firebaseConfig } from '../../firebase';
+import service from '../../const/service/service';
+import { firebaseConfig } from '../../const/firebase';
 import { login } from './const/login';
-import { Task } from '../tasks/types/Task';
+import { Task } from '../tasks/models/Task';
 import { useDispatch } from 'react-redux';
 import { setTasks } from '../tasks/redux/action';
 

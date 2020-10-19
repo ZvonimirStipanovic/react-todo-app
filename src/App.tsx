@@ -1,9 +1,9 @@
 import React from 'react';
-import MainRouter from './router/MainRouter';
+import MainRouter from './const/router/MainRouter';
 import { Provider } from 'react-redux';
-import store from './store';
-import Loading from './common/Loading';
-import { firebaseConfig } from './firebase';
+import store from './modules/redux-store/store';
+import Loading from './components/Loading';
+import { firebaseConfig } from './const/firebase';
 import firebase from 'firebase/app';
 
 function App() {

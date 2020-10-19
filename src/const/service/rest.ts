@@ -1,11 +1,11 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { firebaseConfig } from '../firebase';
-import { Task } from '../modules/tasks/types/Task';
+import { Task } from '../../modules/tasks/models/Task';
 import { HTTPClient } from './client';
 import {
     getLoginToken,
     GUEST_TASKS,
-} from '../modules/authentication/const/login';
+} from '../../modules/authentication/const/login';
 import { ErrorType, Service, ServiceError } from './service';
 
 export class URL {

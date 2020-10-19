@@ -1,8 +1,8 @@
 import { CircularProgress, createStyles, makeStyles } from '@material-ui/core';
 import React from 'react';
-import { State as LoadingState } from '../redux/loading/index';
+import { State as LoadingState } from '../modules/redux-store/loading/index';
 import { connect } from 'react-redux';
-import { AppState } from '../redux/AppState';
+import { AppState } from '../modules/redux-store/AppState';
 
 const useStyles = makeStyles(() =>
     createStyles({

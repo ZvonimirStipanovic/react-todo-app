@@ -9,27 +9,9 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import { isGuest, LOGIN_TOKEN } from '../authentication/const/login';
-import { Task } from './types/Task';
-import service from '../../service/service';
-
-export const categories = [
-    {
-        value: 'Sport',
-        label: 'Sport',
-    },
-    {
-        value: 'Home',
-        label: 'Home',
-    },
-    {
-        value: 'Work',
-        label: 'Work',
-    },
-    {
-        value: 'School',
-        label: 'School',
-    },
-];
+import { Task } from './models/Task';
+import service from '../../const/service/service';
+import { categories } from '../../models/Categories';
 
 interface Props extends RouterProps {}
 

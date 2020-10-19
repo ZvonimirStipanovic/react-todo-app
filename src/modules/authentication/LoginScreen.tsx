@@ -7,10 +7,10 @@ import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { firebaseConfig } from '../../firebase';
+import { firebaseConfig } from '../../const/firebase';
 import firebase from 'firebase';
 import { login } from './const/login';
-import service from '../../service/service';
+import service from '../../const/service/service';
 
 interface Props extends RouterProps {}
 

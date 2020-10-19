@@ -1,5 +1,5 @@
 import { AnyAction } from 'redux';
-import { Task } from '../types/Task';
+import { Task } from '../models/Task';
 import { SET_TASKS } from './action';
 
 export interface State {
