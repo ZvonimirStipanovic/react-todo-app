@@ -1,5 +1,5 @@
 import { Service } from 'const/service/service';
-import { startLoading, stopLoading } from 'modules/redux-store/loading/actions';
+import { startLoading, stopLoading } from 'modules/loading/redux/actions';
 import { Task } from 'modules/tasks';
 import { Dispatch } from 'redux';
 
