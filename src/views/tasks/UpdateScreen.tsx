@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RouterProps } from 'react-router';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -8,43 +8,38 @@ import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
-import { isGuest, LOGIN_TOKEN } from '../authentication/const/login';
-import { Task } from './models/Task';
 import service from '../../const/service/service';
+import { Task } from '../../modules/tasks/models/Task';
 import { categories } from '../../models/Categories';
 
 interface Props extends RouterProps {}
 
-export default function AddScreen(p: Props) {
-    const [category, setCategory] = useState<string>('Home');
+export default function UpdateScreen(p: Props) {
+    const [task, setTask] = useState<Task>();
+
+    useEffect(() => {
+        const state: any = p.history.location.state;
+        if (state) setTask(state.task[0]);
+    }, [p.history.location.state]);
 
     const onBackClick = () => p.history.goBack();
-    const isAnonymous = isGuest();
-    const handleCategoriesChange = React.useCallback(
-        (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-            setCategory(event.target.value);
+
+    const saveTodo = React.useCallback(
+        async (event) => {
+            event.preventDefault();
+            service.updateTask(task!).then(() => p.history.push('/'));
         },
-        []
+        [task, p.history]
     );
 
-    const handleAddTodo = React.useCallback(
-        async (event: any) => {
-            event.preventDefault();
-            const { title, description, time } = event.target.elements;
-            const userId = await localStorage.getItem(LOGIN_TOKEN);
-            const date = new Date().toISOString();
-            const task = new Task(
-                userId!,
-                date,
-                title.value,
-                description.value,
-                category,
-                time.value,
-                false
-            );
-            service.addTask(task, isAnonymous).then(() => p.history.push('/'));
+    const handleChangeTask = React.useCallback(
+        (name: string) => (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+            setTask({
+                ...task,
+                [name]: event.target.value,
+            } as Task);
         },
-        [category, p.history, isAnonymous]
+        [task]
     );
 
     return (
@@ -58,15 +53,17 @@ export default function AddScreen(p: Props) {
                     >
                         <ArrowBackOutlinedIcon style={{ color: 'white' }} />
                     </IconButton>
-                    <Typography variant="h6">Add new todo</Typography>
+                    <Typography variant="h6">Update Todo</Typography>
                 </Toolbar>
             </AppBar>
-            <form style={{ margin: 16 }} onSubmit={handleAddTodo}>
+            <form style={{ margin: 16 }} onSubmit={saveTodo}>
                 <TextField
                     id="title"
                     label="Title"
                     placeholder="Enter a title of a todo"
                     fullWidth
+                    value={task ? task!.title : 'unknown'}
+                    onChange={handleChangeTask('title')}
                     margin="normal"
                     InputLabelProps={{
                         shrink: true,
@@ -80,6 +77,8 @@ export default function AddScreen(p: Props) {
                     fullWidth
                     multiline
                     rows={4}
+                    onChange={handleChangeTask('description')}
+                    value={task ? task!.description : 'unknown'}
                     margin="normal"
                     InputLabelProps={{
                         shrink: true,
@@ -92,8 +91,8 @@ export default function AddScreen(p: Props) {
                     fullWidth
                     margin="normal"
                     label="Category"
-                    value={category}
-                    onChange={handleCategoriesChange}
+                    value={task ? task!.category : 'unknown'}
+                    onChange={handleChangeTask('category')}
                     variant="outlined"
                 >
                     {categories.map((option: any) => (
@@ -106,8 +105,9 @@ export default function AddScreen(p: Props) {
                     id="time"
                     label="Time"
                     type="time"
-                    defaultValue="07:30"
+                    value={task ? task!.time : '00:00'}
                     fullWidth
+                    onChange={handleChangeTask('time')}
                     margin="normal"
                     InputLabelProps={{
                         shrink: true,
@@ -120,7 +120,7 @@ export default function AddScreen(p: Props) {
                     color="primary"
                     style={{ height: 40, marginTop: 16 }}
                 >
-                    SUBMIT
+                    Update
                 </Button>
             </form>
         </div>

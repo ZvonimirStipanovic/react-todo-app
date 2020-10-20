@@ -9,13 +9,13 @@ import {
 import React from 'react';
 import { RouterProps } from 'react-router';
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
-import TodoListItem from './TodoListItem';
+import TodoListItem from '../../modules/tasks/TodoListItem';
 import service from '../../const/service/service';
 import { connect, useDispatch } from 'react-redux';
-import { Task } from './models/Task';
-import { getCompletedTasks } from './redux/selectors';
-import { AppState } from '../redux-store/AppState';
-import { setTasks } from './redux/action';
+import { Task } from '../../modules/tasks/models/Task';
+import { getCompletedTasks } from '../../modules/tasks/redux/selectors';
+import { AppState } from '../../modules/redux-store/AppState';
+import { setTasks } from '../../modules/tasks/redux/action';
 
 interface Props extends RouterProps {
     tasks: Task[];
