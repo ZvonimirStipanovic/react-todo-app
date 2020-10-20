@@ -1,8 +1,9 @@
-import { Task } from '../models/Task';
+import { ActionUnion, createAction } from 'modules/redux-store';
+import { Task } from '../models';
+import { TasksActionTypes } from './types';
 
-export const SET_TASKS = 'SET_TASKS';
+export const TasksActions = {
+    Set: (tasks: Task[]) => createAction(TasksActionTypes.Set, { tasks }),
+};
 
-export const setTasks = (tasks: Task[]) => ({
-    type: SET_TASKS,
-    tasks,
-});
+export type TasksActions = ActionUnion<typeof TasksActions>;

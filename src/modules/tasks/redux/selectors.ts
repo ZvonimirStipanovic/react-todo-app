@@ -1,4 +1,4 @@
-import { AppState } from 'modules/redux-store/AppState';
+import { AppState } from 'modules/redux-store';
 import { createSelector } from 'reselect';
 import { Task } from '../models';
 

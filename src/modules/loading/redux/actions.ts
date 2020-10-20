@@ -1,12 +1,9 @@
-export const START_LOADING = 'START_LOADING';
-export const STOP_LOADING = 'STOP_LOADING';
+import { ActionUnion, createAction } from 'modules/redux-store';
+import { LoadingActionTypes } from '.';
 
-export const startLoading = (name: string) => ({
-    type: START_LOADING,
-    name,
-});
+export const LoadingActions = {
+    Start: (name: string) => createAction(LoadingActionTypes.Start, { name }),
+    Stop: (name: string) => createAction(LoadingActionTypes.Stop, { name }),
+};
 
-export const stopLoading = (name: string) => ({
-    type: STOP_LOADING,
-    name,
-});
+export type LoadingActions = ActionUnion<typeof LoadingActions>;

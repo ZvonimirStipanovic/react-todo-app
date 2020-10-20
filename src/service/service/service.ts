@@ -4,10 +4,10 @@ import {
     ErrorMiddleware,
     LoadingMiddleware,
 } from 'service/middleware';
-import store from 'modules/redux-store/store';
 import { Task } from 'modules/tasks';
 import client from './client';
 import REST, { URL } from './rest';
+import { store } from 'modules/redux-store';
 
 export enum ErrorType {
     Unknown,
