@@ -1,8 +1,9 @@
-import { Service } from 'const/service/service';
+import { Service } from 'service';
+import { GUEST_TASKS } from 'modules/authentication';
 import { Task } from 'modules/tasks';
 import { Dispatch } from 'redux';
 
-class ErrorMiddleware implements Service {
+class CacheMiddleware implements Service {
     public next: Service;
     public dispatch: Dispatch;
 
@@ -13,15 +14,24 @@ class ErrorMiddleware implements Service {
 
     public async getTasks(userId: string): Promise<Task[]> {
         try {
-            return await this.next.getTasks(userId);
+            const tasks = await this.next.getTasks(userId);
+            return tasks;
         } catch (e) {
-            // this.dispatch(newError(e));
             throw e;
         }
     }
 
     public async addTask(task: Task, shouldCache: boolean): Promise<boolean> {
         try {
+            if (shouldCache) {
+                const tasks = localStorage.getItem(GUEST_TASKS);
+                if (tasks) {
+                    const parsed = JSON.parse(tasks);
+                    const newTasks = [...parsed, task];
+                    localStorage.setItem(GUEST_TASKS, JSON.stringify(newTasks));
+                } else
+                    localStorage.setItem(GUEST_TASKS, JSON.stringify([task]));
+            }
             return await this.next.addTask(task, shouldCache);
         } catch (e) {
             throw e;
@@ -85,4 +95,4 @@ class ErrorMiddleware implements Service {
     }
 }
 
-export default ErrorMiddleware;
+export default CacheMiddleware;

@@ -8,8 +8,8 @@ import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import firebase from 'firebase';
-import service from 'const/service/service';
-import { firebaseConfig } from 'modules/firebase/components/firebase';
+import { service } from 'service';
+import { firebaseConfig } from 'modules/firebase';
 import { login } from 'modules/authentication';
 
 interface Props extends RouterProps {}

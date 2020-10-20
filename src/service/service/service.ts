@@ -3,7 +3,7 @@ import {
     CacheMiddleware,
     ErrorMiddleware,
     LoadingMiddleware,
-} from 'const/middleware';
+} from 'service/middleware';
 import store from 'modules/redux-store/store';
 import { Task } from 'modules/tasks';
 import client from './client';
@@ -57,6 +57,4 @@ const rest: Service = new REST(client, url);
 
 const cache: Service = new CacheMiddleware(rest, store.dispatch);
 const error: Service = new ErrorMiddleware(cache, store.dispatch);
-const service: Service = new LoadingMiddleware(error, store.dispatch);
-
-export default service;
+export const service: Service = new LoadingMiddleware(error, store.dispatch);

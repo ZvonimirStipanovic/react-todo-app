@@ -9,9 +9,9 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import { isGuest, LOGIN_TOKEN } from 'modules/authentication';
-import { Task } from 'modules/tasks/models/Task';
-import service from 'const/service/service';
-import { categories } from 'models/Categories';
+import { Task } from 'modules/tasks';
+import { service } from 'service';
+import { categories } from 'models';
 
 interface Props extends RouterProps {}
 

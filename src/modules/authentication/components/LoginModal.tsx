@@ -8,9 +8,9 @@ import {
 } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { useDispatch } from 'react-redux';
-import service from 'const/service/service';
-import { firebaseConfig } from 'modules/firebase/components/firebase';
-import { login } from '../const/login';
+import { service } from 'service';
+import { firebaseConfig } from 'modules/firebase';
+import { login } from '../const';
 import { Task } from 'modules/tasks';
 import { setTasks } from 'modules/tasks/redux/action';
 
