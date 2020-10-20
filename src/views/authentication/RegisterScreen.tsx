@@ -5,11 +5,9 @@ import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import { IconButton } from '@material-ui/core';
-import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
 import { service } from 'service';
+import { AppRoute } from 'const';
+import { Header } from 'components';
 
 interface Props extends RouterProps {}
 
@@ -44,7 +42,7 @@ export default function RegisterScreen(p: Props) {
             const { email, password } = event.target.elements;
             service
                 .register(email.value, password.value)
-                .then(() => p.history.push('/'));
+                .then(() => p.history.push(AppRoute.Home));
         },
         [p.history]
     );
@@ -53,18 +51,11 @@ export default function RegisterScreen(p: Props) {
 
     return (
         <div>
-            <AppBar position="static">
-                <Toolbar>
-                    <IconButton
-                        aria-label="Back"
-                        onClick={onBackClick}
-                        style={{ marginRight: 8 }}
-                    >
-                        <ArrowBackOutlinedIcon style={{ color: 'white' }} />
-                    </IconButton>
-                    <Typography variant="h6">Register</Typography>
-                </Toolbar>
-            </AppBar>
+            <Header
+                title="Register"
+                showBackButton={true}
+                onBackClick={onBackClick}
+            />
             <Container component="main" maxWidth="xs">
                 <div className={classes.paper}>
                     <Typography component="h1" variant="h5">

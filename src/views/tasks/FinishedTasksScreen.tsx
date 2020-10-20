@@ -1,20 +1,13 @@
-import {
-    AppBar,
-    IconButton,
-    List,
-    Paper,
-    Toolbar,
-    Typography,
-} from '@material-ui/core';
+import { List, Paper } from '@material-ui/core';
 import React from 'react';
 import { RouterProps } from 'react-router';
-import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
 import { connect, useDispatch } from 'react-redux';
 import { Task, TodoListItem } from 'modules/tasks';
 import { setTasks } from 'modules/tasks/redux/action';
 import { service } from 'service';
 import { AppState } from 'modules/redux-store/AppState';
 import { getCompletedTasks } from 'modules/tasks/redux/selectors';
+import { Header } from 'components';
 
 interface Props extends RouterProps {
     tasks: Task[];
@@ -53,18 +46,11 @@ function FinishedTasksScreen(p: Props) {
 
     return (
         <div>
-            <AppBar position="static">
-                <Toolbar>
-                    <IconButton
-                        aria-label="Back"
-                        onClick={onBackClick}
-                        style={{ marginRight: 8 }}
-                    >
-                        <ArrowBackOutlinedIcon style={{ color: 'white' }} />
-                    </IconButton>
-                    <Typography variant="h6">Finished Todos</Typography>
-                </Toolbar>
-            </AppBar>
+            <Header
+                title="Finished Todos"
+                showBackButton={true}
+                onBackClick={onBackClick}
+            />
             {p.tasks.length < 1 ? null : (
                 <Paper style={{ margin: 16 }}>
                     <List style={{ overflow: 'hidden' }}>{toRender()}</List>

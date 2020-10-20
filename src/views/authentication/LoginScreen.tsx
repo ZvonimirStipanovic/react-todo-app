@@ -11,6 +11,7 @@ import firebase from 'firebase';
 import { service } from 'service';
 import { firebaseConfig } from 'modules/firebase';
 import { login } from 'modules/authentication';
+import { AppRoute } from 'const';
 
 interface Props extends RouterProps {}
 
@@ -46,7 +47,7 @@ export default function LoginScreen(p: Props) {
             service.login(email.value, password.value).then(async () => {
                 const userId = await firebaseConfig.auth().currentUser?.uid;
                 login(userId ? userId : 'guest');
-                p.history.push('/');
+                p.history.push(AppRoute.Home);
             });
         },
         [p.history]
@@ -57,7 +58,7 @@ export default function LoginScreen(p: Props) {
         //const userId = await firebaseConfig.auth().currentUser?.uid;
         //login(userId ? userId : 'UNKNOWN');
         login('guest');
-        p.history.push('/');
+        p.history.push(AppRoute.Home);
     }, [p.history]);
 
     const handleLoginWithFacebook = React.useCallback(() => {

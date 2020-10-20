@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { RouterProps } from 'react-router';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { List, Paper, IconButton, Grid, TextField } from '@material-ui/core';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
@@ -15,6 +12,8 @@ import { setTasks } from 'modules/tasks/redux/action';
 import LoginModal from 'modules/authentication/components/LoginModal';
 import { AppState } from 'modules/redux-store/AppState';
 import { getActiveTasks } from 'modules/tasks/redux/selectors';
+import { AppRoute } from 'const';
+import { Header } from 'components';
 
 interface Props extends RouterProps {
     tasks: Task[];
@@ -86,7 +85,7 @@ function HomeScreen(p: Props) {
 
     const handleLogout = React.useCallback(() => {
         logout();
-        p.history.push('/login');
+        p.history.push(AppRoute.Login);
     }, [p.history]);
 
     const topRightButtons = React.useMemo(
@@ -112,7 +111,7 @@ function HomeScreen(p: Props) {
         [isAnonymous, handleLoginButton, handleRegisterButton, handleLogout]
     );
 
-    const onAddClick = React.useCallback(() => p.history.push('/add'), [
+    const onAddClick = React.useCallback(() => p.history.push(AppRoute.Add), [
         p.history,
     ]);
 
@@ -127,7 +126,7 @@ function HomeScreen(p: Props) {
                     <AddCircleOutlinedIcon color="primary" fontSize="large" />
                 </IconButton>
                 <IconButton
-                    onClick={() => p.history.push('/finishedTasks')}
+                    onClick={() => p.history.push(AppRoute.Finished)}
                     style={{ margin: 16 }}
                     aria-label="Done"
                 >
@@ -152,7 +151,7 @@ function HomeScreen(p: Props) {
     const onEditClick = React.useCallback(
         (taskId: string) => {
             const task = p.tasks.filter((task: Task) => task.taskId === taskId);
-            p.history.push('/update', { task });
+            p.history.push(AppRoute.Update, { task });
         },
         [p.tasks, p.history]
     );
@@ -245,14 +244,12 @@ function HomeScreen(p: Props) {
 
     return (
         <div className={classes.root}>
-            <AppBar position="static">
-                <Toolbar>
-                    <Typography variant="h6" className={classes.title}>
-                        Home screen
-                    </Typography>
-                    {topRightButtons}
-                </Toolbar>
-            </AppBar>
+            <Header
+                title="Home screen"
+                showBackButton={false}
+                topRightButtons={topRightButtons}
+                titleStyle={classes.title}
+            />
             {notLoggedText()}
             {loginModal}
             {registerModal}

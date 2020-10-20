@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { RouterProps } from 'react-router';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import { IconButton } from '@material-ui/core';
-import Typography from '@material-ui/core/Typography';
-import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import { Task } from 'modules/tasks';
 import { service } from 'service';
 import { categories } from 'models';
+import { AppRoute } from 'const';
+import { Header } from 'components';
 
 interface Props extends RouterProps {}
 
@@ -27,7 +24,7 @@ export default function UpdateScreen(p: Props) {
     const saveTodo = React.useCallback(
         async (event) => {
             event.preventDefault();
-            service.updateTask(task!).then(() => p.history.push('/'));
+            service.updateTask(task!).then(() => p.history.push(AppRoute.Home));
         },
         [task, p.history]
     );
@@ -44,18 +41,11 @@ export default function UpdateScreen(p: Props) {
 
     return (
         <div>
-            <AppBar position="static">
-                <Toolbar>
-                    <IconButton
-                        aria-label="Back"
-                        onClick={onBackClick}
-                        style={{ marginRight: 8 }}
-                    >
-                        <ArrowBackOutlinedIcon style={{ color: 'white' }} />
-                    </IconButton>
-                    <Typography variant="h6">Update Todo</Typography>
-                </Toolbar>
-            </AppBar>
+            <Header
+                title="Update Todo"
+                showBackButton={true}
+                onBackClick={onBackClick}
+            />
             <form style={{ margin: 16 }} onSubmit={saveTodo}>
                 <TextField
                     id="title"
@@ -95,11 +85,18 @@ export default function UpdateScreen(p: Props) {
                     onChange={handleChangeTask('category')}
                     variant="outlined"
                 >
-                    {categories.map((option: any) => (
-                        <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                        </MenuItem>
-                    ))}
+                    <MenuItem key={categories.home} value={categories.home}>
+                        {categories.home}
+                    </MenuItem>
+                    <MenuItem key={categories.school} value={categories.school}>
+                        {categories.school}
+                    </MenuItem>
+                    <MenuItem key={categories.sport} value={categories.sport}>
+                        {categories.sport}
+                    </MenuItem>
+                    <MenuItem key={categories.work} value={categories.work}>
+                        {categories.work}
+                    </MenuItem>
                 </TextField>
                 <TextField
                     id="time"
