@@ -1,4 +1,4 @@
-import { isLoggedIn } from 'modules/authentication/const/login';
+import { isLoggedIn } from 'modules/authentication';
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 

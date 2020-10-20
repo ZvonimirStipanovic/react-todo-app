@@ -8,17 +8,13 @@ import { List, Paper, IconButton, Grid, TextField } from '@material-ui/core';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import { useDispatch, connect } from 'react-redux';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import TodoListItem from 'modules/tasks/TodoListItem';
 import { Task } from 'modules/tasks/models/Task';
 import { tasksStyles } from 'modules/tasks/styles';
-import {
-    isGuest,
-    LOGIN_TOKEN,
-    logout,
-} from 'modules/authentication/const/login';
+import { isGuest, LOGIN_TOKEN, logout } from 'modules/authentication';
 import service from 'const/service/service';
 import { setTasks } from 'modules/tasks/redux/action';
 import LoginModal from 'modules/authentication/LoginModal';
-import TodoListItem from 'modules/tasks/TodoListItem';
 import { AppState } from 'modules/redux-store/AppState';
 import { getActiveTasks } from 'modules/tasks/redux/selectors';
 

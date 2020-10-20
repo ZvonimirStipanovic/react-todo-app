@@ -1,5 +1,5 @@
 import { AnyAction } from 'redux';
-import { Task } from '../models/Task';
+import { Task } from '../models';
 import { SET_TASKS } from './action';
 
 export interface TaskState {
@@ -10,7 +10,7 @@ const INITIAL_STATE: TaskState = {
     tasks: [],
 };
 
-const tasksReducer = (
+export const tasksReducer = (
     state: TaskState = INITIAL_STATE,
     action: AnyAction
 ): TaskState => {
@@ -21,5 +21,3 @@ const tasksReducer = (
             return state;
     }
 };
-
-export default tasksReducer;

@@ -1,9 +1,11 @@
 import config from 'const/config';
-import CacheMiddleware from 'const/middleware/CacheMiddleware';
-import ErrorMiddleware from 'const/middleware/ErrorMiddleware';
-import LoadingMiddleware from 'const/middleware/LoadingMiddleware';
+import {
+    CacheMiddleware,
+    ErrorMiddleware,
+    LoadingMiddleware,
+} from 'const/middleware';
 import store from 'modules/redux-store/store';
-import { Task } from 'modules/tasks/models/Task';
+import { Task } from 'modules/tasks';
 import client from './client';
 import REST, { URL } from './rest';
 

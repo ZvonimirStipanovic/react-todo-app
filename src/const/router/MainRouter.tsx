@@ -1,11 +1,8 @@
 import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
-import LoginScreen from 'views/authentication/LoginScreen';
-import RegisterScreen from 'views/authentication/RegisterScreen';
-import HomeScreen from 'views/home/HomeScreen';
-import AddScreen from 'views/tasks/AddScreen';
-import FinishedTasksScreen from 'views/tasks/FinishedTasksScreen';
-import UpdateScreen from 'views/tasks/UpdateScreen';
+import { LoginScreen, RegisterScreen } from 'views/authentication';
+import { HomeScreen } from 'views/home';
+import { AddScreen, FinishedTasksScreen, UpdateScreen } from 'views/tasks';
 import PrivateRoute from './PrivateRoute';
 
 function MainRouter() {

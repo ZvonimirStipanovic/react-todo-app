@@ -1,4 +1,4 @@
-import tasksReducer from 'modules/tasks/redux';
+import { tasksReducer } from 'modules/tasks/redux';
 import { combineReducers } from 'redux';
 import LoadingReducer from './loading';
 

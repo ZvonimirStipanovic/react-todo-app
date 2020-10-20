@@ -1,6 +1,6 @@
 import { Service } from 'const/service/service';
-import { GUEST_TASKS } from 'modules/authentication/const/login';
-import { Task } from 'modules/tasks/models/Task';
+import { GUEST_TASKS } from 'modules/authentication';
+import { Task } from 'modules/tasks';
 import { Dispatch } from 'redux';
 
 class CacheMiddleware implements Service {

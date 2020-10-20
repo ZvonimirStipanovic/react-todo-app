@@ -1,5 +1,5 @@
 import { Service } from 'const/service/service';
-import { Task } from 'modules/tasks/models/Task';
+import { Task } from 'modules/tasks';
 import { Dispatch } from 'redux';
 
 class ErrorMiddleware implements Service {

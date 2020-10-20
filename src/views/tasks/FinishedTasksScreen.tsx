@@ -10,10 +10,10 @@ import React from 'react';
 import { RouterProps } from 'react-router';
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
 import { connect, useDispatch } from 'react-redux';
-import { Task } from 'modules/tasks/models/Task';
+import { Task } from 'modules/tasks/models';
+import TodoListItem from 'modules/tasks/TodoListItem';
 import { setTasks } from 'modules/tasks/redux/action';
 import service from 'const/service/service';
-import TodoListItem from 'modules/tasks/TodoListItem';
 import { AppState } from 'modules/redux-store/AppState';
 import { getCompletedTasks } from 'modules/tasks/redux/selectors';
 

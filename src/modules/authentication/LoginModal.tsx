@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 import service from 'const/service/service';
 import { firebaseConfig } from 'modules/firebase/firebase';
 import { login } from './const/login';
-import { Task } from 'modules/tasks/models/Task';
+import { Task } from 'modules/tasks';
 import { setTasks } from 'modules/tasks/redux/action';
 
 interface Props {
