@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import firebase from 'firebase/app';
-import { firebaseConfig } from 'modules/firebase/firebase';
+import { firebaseConfig } from 'modules/firebase/components/firebase';
 import store from 'modules/redux-store/store';
 import { Loading } from 'components';
 import MainRouter from 'const/router/MainRouter';

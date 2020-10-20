@@ -11,7 +11,7 @@ import { RouterProps } from 'react-router';
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
 import { connect, useDispatch } from 'react-redux';
 import { Task } from 'modules/tasks/models';
-import TodoListItem from 'modules/tasks/TodoListItem';
+import TodoListItem from 'modules/tasks/components/TodoListItem';
 import { setTasks } from 'modules/tasks/redux/action';
 import service from 'const/service/service';
 import { AppState } from 'modules/redux-store/AppState';

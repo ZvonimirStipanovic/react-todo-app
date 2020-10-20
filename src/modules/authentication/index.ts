@@ -1,2 +1,2 @@
 export * from './const/login';
-export * from './LoginModal';
+export * from './components/LoginModal';
