@@ -1,10 +1,10 @@
 import React from 'react';
-import MainRouter from './router/MainRouter';
 import { Provider } from 'react-redux';
-import store from './store';
-import Loading from './common/Loading';
-import { firebaseConfig } from './firebase';
 import firebase from 'firebase/app';
+import { firebaseConfig } from 'modules/firebase/components/firebase';
+import store from 'modules/redux-store/store';
+import { MainRouter } from 'modules/router';
+import { Loading } from 'modules/loading/components';
 
 function App() {
     firebaseConfig.firestore().settings({

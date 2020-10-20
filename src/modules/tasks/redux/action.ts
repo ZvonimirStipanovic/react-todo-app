@@ -1,4 +1,4 @@
-import { Task } from '../types/Task';
+import { Task } from '../models/Task';
 
 export const SET_TASKS = 'SET_TASKS';
 

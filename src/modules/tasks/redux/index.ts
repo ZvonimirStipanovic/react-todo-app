@@ -1,19 +1,19 @@
 import { AnyAction } from 'redux';
-import { Task } from '../types/Task';
+import { Task } from '../models';
 import { SET_TASKS } from './action';
 
-export interface State {
+export interface TaskState {
     tasks: Task[];
 }
 
-const INITIAL_STATE: State = {
+const INITIAL_STATE: TaskState = {
     tasks: [],
 };
 
-const tasksReducer = (
-    state: State = INITIAL_STATE,
+export const tasksReducer = (
+    state: TaskState = INITIAL_STATE,
     action: AnyAction
-): State => {
+): TaskState => {
     switch (action.type) {
         case SET_TASKS:
             return { ...state, tasks: action.tasks };
@@ -21,5 +21,3 @@ const tasksReducer = (
             return state;
     }
 };
-
-export default tasksReducer;
