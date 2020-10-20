@@ -1,5 +1,5 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { firebaseConfig } from '../firebase';
+import { firebaseConfig } from '../../modules/firebase/firebase';
 import { Task } from '../../modules/tasks/models/Task';
 import { HTTPClient } from './client';
 import {

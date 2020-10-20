@@ -8,9 +8,9 @@ import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
-import service from '../../const/service/service';
-import { Task } from '../../modules/tasks/models/Task';
-import { categories } from '../../models/Categories';
+import { Task } from 'modules/tasks/models/Task';
+import service from 'const/service/service';
+import { categories } from 'models/Categories';
 
 interface Props extends RouterProps {}
 

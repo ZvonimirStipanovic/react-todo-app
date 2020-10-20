@@ -4,23 +4,23 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import {
-    logout,
-    LOGIN_TOKEN,
-    isGuest,
-} from '../../modules/authentication/const/login';
-import LoginModal from '../../modules/authentication/LoginModal';
 import { List, Paper, IconButton, Grid, TextField } from '@material-ui/core';
-import TodoListItem from '../../modules/tasks/TodoListItem';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import { useDispatch, connect } from 'react-redux';
-import service from '../../const/service/service';
-import { Task } from '../../modules/tasks/models/Task';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import { setTasks } from '../../modules/tasks/redux/action';
-import { getActiveTasks } from '../../modules/tasks/redux/selectors';
-import { AppState } from '../../modules/redux-store/AppState';
-import { tasksStyles } from '../../modules/tasks/styles';
+import { Task } from 'modules/tasks/models/Task';
+import { tasksStyles } from 'modules/tasks/styles';
+import {
+    isGuest,
+    LOGIN_TOKEN,
+    logout,
+} from 'modules/authentication/const/login';
+import service from 'const/service/service';
+import { setTasks } from 'modules/tasks/redux/action';
+import LoginModal from 'modules/authentication/LoginModal';
+import TodoListItem from 'modules/tasks/TodoListItem';
+import { AppState } from 'modules/redux-store/AppState';
+import { getActiveTasks } from 'modules/tasks/redux/selectors';
 
 interface Props extends RouterProps {
     tasks: Task[];

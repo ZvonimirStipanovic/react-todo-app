@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosPromise } from 'axios';
-import config from '../config';
+import config from 'const/config';
 
 export interface HTTPClient {
     request<T = any>(config: AxiosRequestConfig): AxiosPromise<T>;

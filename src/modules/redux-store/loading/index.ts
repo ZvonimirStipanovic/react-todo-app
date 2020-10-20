@@ -1,13 +1,16 @@
 import { AnyAction } from 'redux';
 import { START_LOADING, STOP_LOADING } from './actions';
 
-export interface State {
+export interface LoadingState {
     [index: string]: boolean;
 }
 
-const initState: State = {};
+const initState: LoadingState = {};
 
-const LoadingReducer = (state: State = initState, action: AnyAction): State => {
+const LoadingReducer = (
+    state: LoadingState = initState,
+    action: AnyAction
+): LoadingState => {
     switch (action.type) {
         case START_LOADING:
             return { ...state, [action.name]: true };

@@ -1,7 +1,7 @@
-import { State as LoadingState } from './loading';
-import { State as TasksState } from '../tasks/redux';
+import { TaskState } from 'modules/tasks/redux';
+import { LoadingState } from './loading';
 
 export interface AppState {
     readonly loading: LoadingState;
-    readonly tasks: TasksState;
+    readonly tasks: TaskState;
 }

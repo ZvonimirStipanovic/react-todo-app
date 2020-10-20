@@ -1,11 +1,11 @@
-import LoadingMiddleware from '../middleware/LoadingMiddleware';
-import store from '../../modules/redux-store/store';
-import ErrorMiddleware from '../middleware/ErrorMiddleware';
-import CacheMiddleware from '../middleware/CacheMiddleware';
-import REST, { URL } from './rest';
-import config from '../config';
+import config from 'const/config';
+import CacheMiddleware from 'const/middleware/CacheMiddleware';
+import ErrorMiddleware from 'const/middleware/ErrorMiddleware';
+import LoadingMiddleware from 'const/middleware/LoadingMiddleware';
+import store from 'modules/redux-store/store';
+import { Task } from 'modules/tasks/models/Task';
 import client from './client';
-import { Task } from '../../modules/tasks/models/Task';
+import REST, { URL } from './rest';
 
 export enum ErrorType {
     Unknown,

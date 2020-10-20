@@ -1,7 +1,7 @@
+import { Service } from 'const/service/service';
+import { GUEST_TASKS } from 'modules/authentication/const/login';
+import { Task } from 'modules/tasks/models/Task';
 import { Dispatch } from 'redux';
-import { GUEST_TASKS } from '../../modules/authentication/const/login';
-import { Task } from '../../modules/tasks/models/Task';
-import { Service } from '../service/service';
 
 class CacheMiddleware implements Service {
     public next: Service;

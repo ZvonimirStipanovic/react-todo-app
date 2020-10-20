@@ -1,5 +1,5 @@
+import { AppState } from 'modules/redux-store/AppState';
 import { createSelector } from 'reselect';
-import { AppState } from '../../redux-store/AppState';
 import { Task } from '../models/Task';
 
 const getTodos = (state: AppState) => state.tasks.tasks;
