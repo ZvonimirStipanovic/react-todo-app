@@ -4,15 +4,12 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import { isGuest, LOGIN_TOKEN } from 'modules/authentication';
-import { Task } from 'modules/tasks';
+import { Task, TaskService } from 'modules/tasks';
 import { categories } from 'models';
 import { AppRoute } from 'const';
 import { Header } from 'components';
-import { Collections, FireStoreService } from 'modules/firebase';
 
 interface Props extends RouterProps {}
-
-const user = new FireStoreService<Task>(Collections.Users);
 
 export default function AddScreen(p: Props) {
     const [category, setCategory] = useState<string>('Home');
@@ -41,7 +38,7 @@ export default function AddScreen(p: Props) {
                 time.value,
                 false
             );
-            user.addTask(task, isAnonymous).then(() =>
+            TaskService.addTask(task, isAnonymous).then(() =>
                 p.history.push(AppRoute.Home)
             );
         },

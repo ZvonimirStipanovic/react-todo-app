@@ -7,14 +7,8 @@ import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { login } from 'modules/authentication';
+import { AuthService, login } from 'modules/authentication';
 import { AppRoute } from 'const';
-import {
-    Collections,
-    FirebaseService,
-    FireStoreService,
-} from 'modules/firebase';
-import { Task } from 'modules/tasks';
 
 interface Props extends RouterProps {}
 
@@ -40,30 +34,27 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const auth = new FireStoreService<Task>(Collections.Auth);
-
 export default function LoginScreen(p: Props) {
     const classes = useStyles();
-    const firebase = FirebaseService.Instance;
 
     const handleLogin = React.useCallback(
         async (event) => {
             event.preventDefault();
             const { email, password } = event.target.elements;
-            auth.login(email.value, password.value).then(async () => {
-                const userId = await firebase.auth().currentUser?.uid;
-                login(userId ? userId : 'guest');
+            AuthService.login(email.value, password.value).then(async () => {
+                const userId = AuthService.getUserUid();
+                login(userId);
                 p.history.push(AppRoute.Home);
             });
         },
-        [p.history, firebase]
+        [p.history]
     );
 
-    const handleAnonymousLogin = React.useCallback(async () => {
-        await firebase.auth().signInAnonymously();
+    const handleAnonymousLogin = () => {
+        AuthService.anonymousLogin();
         login('guest');
         p.history.push(AppRoute.Home);
-    }, [p.history, firebase]);
+    };
 
     const handleLoginWithFacebook = React.useCallback(() => {
         /**const provider = new firebase.auth.FacebookAuthProvider();

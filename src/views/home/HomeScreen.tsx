@@ -5,21 +5,18 @@ import { List, Paper, IconButton, Grid, TextField } from '@material-ui/core';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import { useDispatch, connect } from 'react-redux';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import { Task, tasksStyles, TodoListItem } from 'modules/tasks';
-import { isGuest, LOGIN_TOKEN, logout } from 'modules/authentication';
+import { Task, TaskService, tasksStyles, TodoListItem } from 'modules/tasks';
+import { isGuest, logout } from 'modules/authentication';
 import LoginModal from 'modules/authentication/components/LoginModal';
 import { AppState } from 'modules/redux-store/';
-import { getActiveTasks } from 'modules/tasks/redux';
+import { getActiveTasks, TaskThunkActions } from 'modules/tasks/redux';
 import { AppRoute } from 'const';
 import { Header } from 'components';
 import { TasksActions } from 'modules/tasks/redux';
-import { Collections, FireStoreService } from 'modules/firebase';
 
 interface Props extends RouterProps {
     tasks: Task[];
 }
-
-const users = new FireStoreService<Task>(Collections.Users);
 
 function HomeScreen(p: Props) {
     const dispatch = useDispatch();
@@ -33,23 +30,11 @@ function HomeScreen(p: Props) {
 
     const isAnonymous = isGuest();
 
-    //EXPORT TO CUSTOM HOOK
-    const getTasks = React.useCallback(
-        async (userId: string, isAnonymous: boolean) => {
-            users.getTasksAsync(userId, isAnonymous).then((tasks: Task[]) => {
-                dispatch(TasksActions.Set(tasks));
-                setLoading(false);
-            });
-        },
-        [dispatch]
-    );
-
     useEffect(() => {
-        let userId = 'userId';
-        userId = localStorage.getItem(LOGIN_TOKEN)!;
-        if (!isAnonymous) getTasks(userId, false);
-        else getTasks(userId, true);
-    }, [dispatch, isAnonymous, getTasks]);
+        if (!isAnonymous) TaskThunkActions.getTasks(false)(dispatch);
+        else TaskThunkActions.getTasks(false)(dispatch);
+        setLoading(false);
+    }, [dispatch, isAnonymous]);
 
     const handleLoginButton = React.useCallback(
         () => setShowLoginModal(true),
@@ -147,7 +132,7 @@ function HomeScreen(p: Props) {
                 (task: Task) => task.taskId !== taskId
             );
             dispatch(TasksActions.Set(newTasks));
-            users.deleteTask(taskId);
+            TaskService.deleteTask(taskId);
         },
         [dispatch, p.tasks]
     );
@@ -183,7 +168,7 @@ function HomeScreen(p: Props) {
                 task.time,
                 true
             );
-            users.setTaskFinished(updatedTasks[taskIndex]);
+            TaskService.setTaskFinished(updatedTasks[taskIndex]);
             dispatch(TasksActions.Set(updatedTasks));
         },
         [p.tasks, dispatch]

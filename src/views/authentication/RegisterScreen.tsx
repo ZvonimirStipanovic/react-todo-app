@@ -7,8 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { AppRoute } from 'const';
 import { Header } from 'components';
-import { Collections, FireStoreService } from 'modules/firebase';
-import { Task } from 'modules/tasks';
+import { AuthService } from 'modules/authentication';
 
 interface Props extends RouterProps {}
 
@@ -34,8 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const auth = new FireStoreService<Task>(Collections.Auth);
-
 export default function RegisterScreen(p: Props) {
     const classes = useStyles();
 
@@ -43,7 +40,7 @@ export default function RegisterScreen(p: Props) {
         async (event) => {
             event.preventDefault();
             const { email, password } = event.target.elements;
-            auth.register(email.value, password.value).then(() =>
+            AuthService.register(email.value, password.value).then(() =>
                 p.history.push(AppRoute.Home)
             );
         },

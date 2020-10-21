@@ -13,30 +13,6 @@ export class FireStoreService<T extends any> {
         this.collection = this.firestore.collection(collection);
     }
 
-    /** Login user */
-    async login(email: string, password: string): Promise<boolean> {
-        try {
-            await this.firebase
-                .auth()
-                .signInWithEmailAndPassword(email, password);
-            return true;
-        } catch (e) {
-            return false;
-        }
-    }
-
-    /** Register user */
-    async register(email: string, password: string): Promise<boolean> {
-        try {
-            await this.firebase
-                .auth()
-                .createUserWithEmailAndPassword(email, password);
-            return true;
-        } catch (e) {
-            return false;
-        }
-    }
-
     /** Fetch all tasks from a collection users or from local storage if anonymous */
     async getTasksAsync(userId: string, isAnonymous?: boolean): Promise<T[]> {
         if (isAnonymous) {
