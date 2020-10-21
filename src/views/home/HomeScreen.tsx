@@ -7,17 +7,19 @@ import { useDispatch, connect } from 'react-redux';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { Task, tasksStyles, TodoListItem } from 'modules/tasks';
 import { isGuest, LOGIN_TOKEN, logout } from 'modules/authentication';
-import { service } from 'service';
 import LoginModal from 'modules/authentication/components/LoginModal';
 import { AppState } from 'modules/redux-store/';
 import { getActiveTasks } from 'modules/tasks/redux';
 import { AppRoute } from 'const';
 import { Header } from 'components';
 import { TasksActions } from 'modules/tasks/redux';
+import { Collections, FireStoreService } from 'modules/firebase';
 
 interface Props extends RouterProps {
     tasks: Task[];
 }
+
+const users = new FireStoreService<Task>(Collections.Users);
 
 function HomeScreen(p: Props) {
     const dispatch = useDispatch();
@@ -31,21 +33,23 @@ function HomeScreen(p: Props) {
 
     const isAnonymous = isGuest();
 
+    //EXPORT TO CUSTOM HOOK
+    const getTasks = React.useCallback(
+        async (userId: string, isAnonymous: boolean) => {
+            users.getTasksAsync(userId, isAnonymous).then((tasks: Task[]) => {
+                dispatch(TasksActions.Set(tasks));
+                setLoading(false);
+            });
+        },
+        [dispatch]
+    );
+
     useEffect(() => {
         let userId = 'userId';
         userId = localStorage.getItem(LOGIN_TOKEN)!;
-        if (!isAnonymous)
-            service.getTasks(userId).then((res: Task[]) => {
-                dispatch(TasksActions.Set(res));
-                setLoading(false);
-            });
-        else {
-            service.getGuestTasks().then((res: Task[]) => {
-                dispatch(TasksActions.Set(res));
-                setLoading(false);
-            });
-        }
-    }, [dispatch, isAnonymous]);
+        if (!isAnonymous) getTasks(userId, false);
+        else getTasks(userId, true);
+    }, [dispatch, isAnonymous, getTasks]);
 
     const handleLoginButton = React.useCallback(
         () => setShowLoginModal(true),
@@ -143,7 +147,7 @@ function HomeScreen(p: Props) {
                 (task: Task) => task.taskId !== taskId
             );
             dispatch(TasksActions.Set(newTasks));
-            service.deleteTask(taskId);
+            users.deleteTask(taskId);
         },
         [dispatch, p.tasks]
     );
@@ -179,7 +183,7 @@ function HomeScreen(p: Props) {
                 task.time,
                 true
             );
-            service.setTaskFinished(updatedTasks[taskIndex]);
+            users.setTaskFinished(updatedTasks[taskIndex]);
             dispatch(TasksActions.Set(updatedTasks));
         },
         [p.tasks, dispatch]

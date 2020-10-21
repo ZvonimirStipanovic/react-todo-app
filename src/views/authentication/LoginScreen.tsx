@@ -7,11 +7,14 @@ import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import firebase from 'firebase';
-import { service } from 'service';
-import { firebaseConfig } from 'modules/firebase';
 import { login } from 'modules/authentication';
 import { AppRoute } from 'const';
+import {
+    Collections,
+    FirebaseService,
+    FireStoreService,
+} from 'modules/firebase';
+import { Task } from 'modules/tasks';
 
 interface Props extends RouterProps {}
 
@@ -37,36 +40,37 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
+const auth = new FireStoreService<Task>(Collections.Auth);
+
 export default function LoginScreen(p: Props) {
     const classes = useStyles();
+    const firebase = FirebaseService.Instance;
 
     const handleLogin = React.useCallback(
         async (event) => {
             event.preventDefault();
             const { email, password } = event.target.elements;
-            service.login(email.value, password.value).then(async () => {
-                const userId = await firebaseConfig.auth().currentUser?.uid;
+            auth.login(email.value, password.value).then(async () => {
+                const userId = await firebase.auth().currentUser?.uid;
                 login(userId ? userId : 'guest');
                 p.history.push(AppRoute.Home);
             });
         },
-        [p.history]
+        [p.history, firebase]
     );
 
     const handleAnonymousLogin = React.useCallback(async () => {
-        await firebaseConfig.auth().signInAnonymously();
-        //const userId = await firebaseConfig.auth().currentUser?.uid;
-        //login(userId ? userId : 'UNKNOWN');
+        await firebase.auth().signInAnonymously();
         login('guest');
         p.history.push(AppRoute.Home);
-    }, [p.history]);
+    }, [p.history, firebase]);
 
     const handleLoginWithFacebook = React.useCallback(() => {
-        const provider = new firebase.auth.FacebookAuthProvider();
+        /**const provider = new firebase.auth.FacebookAuthProvider();
         provider.setCustomParameters({
             display: 'popup',
         });
-        firebaseConfig.auth().signInWithPopup(provider);
+        firebase.auth().signInWithPopup(provider); */
     }, []);
 
     return (

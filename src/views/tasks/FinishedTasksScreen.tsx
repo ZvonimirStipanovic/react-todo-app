@@ -3,15 +3,17 @@ import React from 'react';
 import { RouterProps } from 'react-router';
 import { connect, useDispatch } from 'react-redux';
 import { Task, TodoListItem } from 'modules/tasks';
-import { service } from 'service';
-import { AppState } from 'modules/redux-store/models/AppState';
+import { TasksActions } from 'modules/tasks/redux/action';
 import { getCompletedTasks } from 'modules/tasks/redux/selectors';
 import { Header } from 'components';
-import { TasksActions } from 'modules/tasks/redux';
+import { Collections, FireStoreService } from 'modules/firebase';
+import { AppState } from 'modules/redux-store';
 
 interface Props extends RouterProps {
     tasks: Task[];
 }
+
+const users = new FireStoreService<Task>(Collections.Users);
 
 function FinishedTasksScreen(p: Props) {
     const dispatch = useDispatch();
@@ -24,7 +26,7 @@ function FinishedTasksScreen(p: Props) {
                 (task: Task) => task.taskId !== taskId
             );
             dispatch(TasksActions.Set(newTasks));
-            service.deleteTask(taskId);
+            users.deleteTask(taskId);
         },
         [p.tasks, dispatch]
     );

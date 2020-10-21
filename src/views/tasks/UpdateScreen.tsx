@@ -4,12 +4,14 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import { Task } from 'modules/tasks';
-import { service } from 'service';
 import { categories } from 'models';
 import { AppRoute } from 'const';
 import { Header } from 'components';
+import { Collections, FireStoreService } from 'modules/firebase';
 
 interface Props extends RouterProps {}
+
+const users = new FireStoreService<Task>(Collections.Users);
 
 export default function UpdateScreen(p: Props) {
     const [task, setTask] = useState<Task>();
@@ -24,7 +26,7 @@ export default function UpdateScreen(p: Props) {
     const saveTodo = React.useCallback(
         async (event) => {
             event.preventDefault();
-            service.updateTask(task!).then(() => p.history.push(AppRoute.Home));
+            users.updateTask(task!).then(() => p.history.push(AppRoute.Home));
         },
         [task, p.history]
     );
