@@ -3,11 +3,11 @@ import React from 'react';
 import { RouterProps } from 'react-router';
 import { connect, useDispatch } from 'react-redux';
 import { Task, TodoListItem } from 'modules/tasks';
-import { setTasks } from 'modules/tasks/redux/action';
 import { service } from 'service';
-import { AppState } from 'modules/redux-store/AppState';
+import { AppState } from 'modules/redux-store/models/AppState';
 import { getCompletedTasks } from 'modules/tasks/redux/selectors';
 import { Header } from 'components';
+import { TasksActions } from 'modules/tasks/redux';
 
 interface Props extends RouterProps {
     tasks: Task[];
@@ -23,7 +23,7 @@ function FinishedTasksScreen(p: Props) {
             const newTasks = p.tasks.filter(
                 (task: Task) => task.taskId !== taskId
             );
-            dispatch(setTasks(newTasks));
+            dispatch(TasksActions.Set(newTasks));
             service.deleteTask(taskId);
         },
         [p.tasks, dispatch]

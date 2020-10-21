@@ -12,7 +12,7 @@ import { service } from 'service';
 import { firebaseConfig } from 'modules/firebase';
 import { login } from '../const';
 import { Task } from 'modules/tasks';
-import { setTasks } from 'modules/tasks/redux/action';
+import { TasksActions } from 'modules/tasks/redux';
 
 interface Props {
     title: string;
@@ -40,7 +40,7 @@ export default function LoginModal(p: Props) {
                             service
                                 .getTasks(userId!)
                                 .then((tasks: Task[]) =>
-                                    dispatch(setTasks(tasks))
+                                    dispatch(TasksActions.Set(tasks))
                                 )
                         )
                         .then(() => p.setOpenLogin(false));
@@ -63,7 +63,9 @@ export default function LoginModal(p: Props) {
                     .then(() =>
                         service
                             .getTasks(userId!)
-                            .then((tasks: Task[]) => dispatch(setTasks(tasks)))
+                            .then((tasks: Task[]) =>
+                                dispatch(TasksActions.Set(tasks))
+                            )
                     )
                     .then(() => p.setOpenLogin(false));
             });

@@ -2,9 +2,9 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import firebase from 'firebase/app';
 import { firebaseConfig } from 'modules/firebase/components/firebase';
-import store from 'modules/redux-store/store';
 import { MainRouter } from 'modules/router';
 import { Loading } from 'modules/loading/components';
+import { store } from 'modules/redux-store';
 
 function App() {
     firebaseConfig.firestore().settings({

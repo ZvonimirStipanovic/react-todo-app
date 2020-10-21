@@ -8,12 +8,12 @@ import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { Task, tasksStyles, TodoListItem } from 'modules/tasks';
 import { isGuest, LOGIN_TOKEN, logout } from 'modules/authentication';
 import { service } from 'service';
-import { setTasks } from 'modules/tasks/redux/action';
 import LoginModal from 'modules/authentication/components/LoginModal';
-import { AppState } from 'modules/redux-store/AppState';
-import { getActiveTasks } from 'modules/tasks/redux/selectors';
+import { AppState } from 'modules/redux-store/';
+import { getActiveTasks } from 'modules/tasks/redux';
 import { AppRoute } from 'const';
 import { Header } from 'components';
+import { TasksActions } from 'modules/tasks/redux';
 
 interface Props extends RouterProps {
     tasks: Task[];
@@ -36,12 +36,12 @@ function HomeScreen(p: Props) {
         userId = localStorage.getItem(LOGIN_TOKEN)!;
         if (!isAnonymous)
             service.getTasks(userId).then((res: Task[]) => {
-                dispatch(setTasks(res));
+                dispatch(TasksActions.Set(res));
                 setLoading(false);
             });
         else {
             service.getGuestTasks().then((res: Task[]) => {
-                dispatch(setTasks(res));
+                dispatch(TasksActions.Set(res));
                 setLoading(false);
             });
         }
@@ -142,7 +142,7 @@ function HomeScreen(p: Props) {
             const newTasks = p.tasks.filter(
                 (task: Task) => task.taskId !== taskId
             );
-            dispatch(setTasks(newTasks));
+            dispatch(TasksActions.Set(newTasks));
             service.deleteTask(taskId);
         },
         [dispatch, p.tasks]
@@ -180,7 +180,7 @@ function HomeScreen(p: Props) {
                 true
             );
             service.setTaskFinished(updatedTasks[taskIndex]);
-            dispatch(setTasks(updatedTasks));
+            dispatch(TasksActions.Set(updatedTasks));
         },
         [p.tasks, dispatch]
     );
