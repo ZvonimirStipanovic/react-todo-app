@@ -5,11 +5,8 @@ import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import { service } from 'service';
-import { AppRoute } from 'const';
 import { Header } from 'components';
-
-interface Props extends RouterProps {}
+import { AuthService } from 'modules/authentication';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -33,21 +30,19 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-export default function RegisterScreen(p: Props) {
+export default function RegisterScreen({ history }: RouterProps) {
     const classes = useStyles();
 
     const handleRegister = React.useCallback(
         async (event) => {
             event.preventDefault();
             const { email, password } = event.target.elements;
-            service
-                .register(email.value, password.value)
-                .then(() => p.history.push(AppRoute.Home));
+            AuthService.register(email.value, password.value, history);
         },
-        [p.history]
+        [history]
     );
 
-    const onBackClick = () => p.history.goBack();
+    const onBackClick = () => history.goBack();
 
     return (
         <div>

@@ -5,12 +5,11 @@ import { List, Paper, IconButton, Grid, TextField } from '@material-ui/core';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import { useDispatch, connect } from 'react-redux';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import { Task, tasksStyles, TodoListItem } from 'modules/tasks';
-import { isGuest, LOGIN_TOKEN, logout } from 'modules/authentication';
-import { service } from 'service';
+import { Task, TaskService, tasksStyles, TodoListItem } from 'modules/tasks';
+import { isGuest, logout } from 'modules/authentication';
 import LoginModal from 'modules/authentication/components/LoginModal';
 import { AppState } from 'modules/redux-store/';
-import { getActiveTasks } from 'modules/tasks/redux';
+import { getActiveTasks, TaskThunkActions } from 'modules/tasks/redux';
 import { AppRoute } from 'const';
 import { Header } from 'components';
 import { TasksActions } from 'modules/tasks/redux';
@@ -19,7 +18,7 @@ interface Props extends RouterProps {
     tasks: Task[];
 }
 
-function HomeScreen(p: Props) {
+function HomeScreen({ tasks, history }: Props) {
     const dispatch = useDispatch();
 
     const classes = tasksStyles();
@@ -32,19 +31,9 @@ function HomeScreen(p: Props) {
     const isAnonymous = isGuest();
 
     useEffect(() => {
-        let userId = 'userId';
-        userId = localStorage.getItem(LOGIN_TOKEN)!;
-        if (!isAnonymous)
-            service.getTasks(userId).then((res: Task[]) => {
-                dispatch(TasksActions.Set(res));
-                setLoading(false);
-            });
-        else {
-            service.getGuestTasks().then((res: Task[]) => {
-                dispatch(TasksActions.Set(res));
-                setLoading(false);
-            });
-        }
+        if (!isAnonymous) dispatch(TaskThunkActions.getTasks(false));
+        else dispatch(TaskThunkActions.getTasks(false));
+        setLoading(false);
     }, [dispatch, isAnonymous]);
 
     const handleLoginButton = React.useCallback(
@@ -85,8 +74,8 @@ function HomeScreen(p: Props) {
 
     const handleLogout = React.useCallback(() => {
         logout();
-        p.history.push(AppRoute.Login);
-    }, [p.history]);
+        history.push(AppRoute.Login);
+    }, [history]);
 
     const topRightButtons = React.useMemo(
         () =>
@@ -111,8 +100,8 @@ function HomeScreen(p: Props) {
         [isAnonymous, handleLoginButton, handleRegisterButton, handleLogout]
     );
 
-    const onAddClick = React.useCallback(() => p.history.push(AppRoute.Add), [
-        p.history,
+    const onAddClick = React.useCallback(() => history.push(AppRoute.Add), [
+        history,
     ]);
 
     const addButton = React.useMemo(
@@ -126,7 +115,7 @@ function HomeScreen(p: Props) {
                     <AddCircleOutlinedIcon color="primary" fontSize="large" />
                 </IconButton>
                 <IconButton
-                    onClick={() => p.history.push(AppRoute.Finished)}
+                    onClick={() => history.push(AppRoute.Finished)}
                     style={{ margin: 16 }}
                     aria-label="Done"
                 >
@@ -134,26 +123,26 @@ function HomeScreen(p: Props) {
                 </IconButton>
             </Grid>
         ),
-        [onAddClick, p.history]
+        [onAddClick, history]
     );
 
     const onDeleteItemClick = React.useCallback(
         (taskId: string) => {
-            const newTasks = p.tasks.filter(
+            const newTasks = tasks.filter(
                 (task: Task) => task.taskId !== taskId
             );
             dispatch(TasksActions.Set(newTasks));
-            service.deleteTask(taskId);
+            TaskService.deleteTask(taskId);
         },
-        [dispatch, p.tasks]
+        [dispatch, tasks]
     );
 
     const onEditClick = React.useCallback(
         (taskId: string) => {
-            const task = p.tasks.filter((task: Task) => task.taskId === taskId);
-            p.history.push(AppRoute.Update, { task });
+            const task = tasks.filter((task: Task) => task.taskId === taskId);
+            history.push(AppRoute.Update, { task });
         },
-        [p.tasks, p.history]
+        [tasks, history]
     );
 
     const onSearchChange = React.useCallback(
@@ -165,10 +154,10 @@ function HomeScreen(p: Props) {
 
     const onCheckboxClick = React.useCallback(
         (taskId: string) => {
-            const taskIndex = p.tasks.findIndex(
+            const taskIndex = tasks.findIndex(
                 (task: Task) => task.taskId === taskId
             );
-            const updatedTasks = [...p.tasks];
+            const updatedTasks = [...tasks];
             const task = updatedTasks[taskIndex];
             updatedTasks[taskIndex] = new Task(
                 task.userId,
@@ -179,10 +168,10 @@ function HomeScreen(p: Props) {
                 task.time,
                 true
             );
-            service.setTaskFinished(updatedTasks[taskIndex]);
+            TaskService.setTaskFinished(updatedTasks[taskIndex]);
             dispatch(TasksActions.Set(updatedTasks));
         },
-        [p.tasks, dispatch]
+        [tasks, dispatch]
     );
 
     const notLoggedText = React.useCallback(
@@ -204,7 +193,7 @@ function HomeScreen(p: Props) {
 
     const renderItems = React.useCallback(() => {
         if (searchValue.length < 1)
-            return p.tasks.map((item: Task) => (
+            return tasks.map((item: Task) => (
                 <TodoListItem
                     key={item.taskId}
                     taskId={item.taskId}
@@ -217,7 +206,7 @@ function HomeScreen(p: Props) {
                 />
             ));
         else {
-            const toRender = p.tasks.filter((item: Task) =>
+            const toRender = tasks.filter((item: Task) =>
                 item.title.toLowerCase().includes(searchValue)
             );
             if (toRender.length === 0)
@@ -240,7 +229,7 @@ function HomeScreen(p: Props) {
                 />
             ));
         }
-    }, [searchValue, p.tasks, onDeleteItemClick, onEditClick, onCheckboxClick]);
+    }, [searchValue, tasks, onDeleteItemClick, onEditClick, onCheckboxClick]);
 
     return (
         <div className={classes.root}>
@@ -268,7 +257,7 @@ function HomeScreen(p: Props) {
                 />
             </div>
 
-            {loading ? null : p.tasks.length < 1 ? null : (
+            {loading ? null : tasks.length < 1 ? null : (
                 <Paper style={{ margin: 16 }}>
                     <List style={{ overflow: 'hidden' }}>{renderItems()}</List>
                 </Paper>

@@ -1,4 +1,5 @@
-import { combineReducers, createStore } from 'redux';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
+import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { tasksReducer } from 'modules/tasks';
 import { LoadingReducer } from 'modules/loading';
@@ -8,7 +9,10 @@ const combinedReducers = {
     loading: LoadingReducer,
 };
 
+const composeEnhancers = composeWithDevTools({});
+
 export const store = createStore(
     combineReducers(combinedReducers),
-    composeWithDevTools()
+    {},
+    composeEnhancers(applyMiddleware(thunk))
 );

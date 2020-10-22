@@ -10,14 +10,20 @@ interface HeaderProps {
     onBackClick?: () => void;
 }
 
-export const Header = (p: HeaderProps) => {
+export const Header = ({
+    title,
+    showBackButton,
+    topRightButtons,
+    titleStyle,
+    onBackClick,
+}: HeaderProps) => {
     return (
         <AppBar position="static">
             <Toolbar>
-                {p.showBackButton && (
+                {showBackButton && (
                     <IconButton
                         aria-label="Back"
-                        onClick={p.onBackClick}
+                        onClick={onBackClick}
                         style={{ marginRight: 8 }}
                     >
                         <ArrowBackOutlinedIcon style={{ color: 'white' }} />
@@ -25,11 +31,11 @@ export const Header = (p: HeaderProps) => {
                 )}
                 <Typography
                     variant="h6"
-                    className={p.titleStyle ? p.titleStyle : undefined}
+                    className={titleStyle ? titleStyle : undefined}
                 >
-                    {p.title}
+                    {title}
                 </Typography>
-                {p.topRightButtons && p.topRightButtons}
+                {topRightButtons && topRightButtons}
             </Toolbar>
         </AppBar>
     );

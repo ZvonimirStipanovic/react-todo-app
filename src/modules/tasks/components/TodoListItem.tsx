@@ -24,33 +24,41 @@ interface Props {
     onCheckboxClick?: (taskId: string) => void;
 }
 
-const TodoListItem = (p: Props) => {
-    let category;
+const TodoListItem = ({
+    title,
+    category,
+    taskId,
+    description,
+    onDeleteClick,
+    onEditClick,
+    onCheckboxClick,
+}: Props) => {
+    let cat;
 
-    switch (p.category) {
+    switch (category) {
         case 'Sport':
-            category = <SportsSoccerIcon />;
+            cat = <SportsSoccerIcon />;
             break;
         case 'Home':
-            category = <HomeIcon />;
+            cat = <HomeIcon />;
             break;
         case 'Work':
-            category = <WorkIcon />;
+            cat = <WorkIcon />;
             break;
         case 'School':
-            category = <SchoolIcon />;
+            cat = <SchoolIcon />;
             break;
         default:
-            category = <DeviceUnknownIcon />;
+            cat = <DeviceUnknownIcon />;
             break;
     }
 
     return (
         <ListItem>
-            {p.onCheckboxClick && (
+            {onCheckboxClick && (
                 <Checkbox
                     color="primary"
-                    onClick={() => p.onCheckboxClick!(p.taskId)}
+                    onClick={() => onCheckboxClick!(taskId)}
                 />
             )}
 
@@ -61,21 +69,21 @@ const TodoListItem = (p: Props) => {
                     justifyContent: 'center',
                 }}
             >
-                {category}
+                {cat}
             </div>
-            <ListItemText primary={p.title} secondary={p.description} />
+            <ListItemText primary={title} secondary={description} />
             <ListItemSecondaryAction>
-                {p.onEditClick && (
+                {onEditClick && (
                     <IconButton
                         aria-label="Edit"
-                        onClick={() => p.onEditClick!(p.taskId)}
+                        onClick={() => onEditClick!(taskId)}
                     >
                         <EditOutlinedIcon />
                     </IconButton>
                 )}
                 <IconButton
                     aria-label="Delete"
-                    onClick={() => p.onDeleteClick(p.taskId)}
+                    onClick={() => onDeleteClick(taskId)}
                 >
                     <DeleteOutlineOutlinedIcon />
                 </IconButton>

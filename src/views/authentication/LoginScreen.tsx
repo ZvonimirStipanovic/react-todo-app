@@ -7,13 +7,10 @@ import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import firebase from 'firebase';
-import { service } from 'service';
-import { firebaseConfig } from 'modules/firebase';
-import { login } from 'modules/authentication';
+import { AuthService, login } from 'modules/authentication';
 import { AppRoute } from 'const';
-
-interface Props extends RouterProps {}
+import { AuthThunkActions } from 'modules/authentication/components/redux';
+import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -37,36 +34,38 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-export default function LoginScreen(p: Props) {
+export default function LoginScreen({ history }: RouterProps) {
     const classes = useStyles();
+    const dispatch = useDispatch();
 
     const handleLogin = React.useCallback(
         async (event) => {
             event.preventDefault();
             const { email, password } = event.target.elements;
-            service.login(email.value, password.value).then(async () => {
-                const userId = await firebaseConfig.auth().currentUser?.uid;
-                login(userId ? userId : 'guest');
-                p.history.push(AppRoute.Home);
-            });
+            dispatch(
+                AuthThunkActions.login(
+                    email.value,
+                    password.value,
+                    undefined,
+                    history
+                )
+            );
         },
-        [p.history]
+        [history, dispatch]
     );
 
-    const handleAnonymousLogin = React.useCallback(async () => {
-        await firebaseConfig.auth().signInAnonymously();
-        //const userId = await firebaseConfig.auth().currentUser?.uid;
-        //login(userId ? userId : 'UNKNOWN');
+    const handleAnonymousLogin = () => {
+        AuthService.anonymousLogin();
         login('guest');
-        p.history.push(AppRoute.Home);
-    }, [p.history]);
+        history.push(AppRoute.Home);
+    };
 
     const handleLoginWithFacebook = React.useCallback(() => {
-        const provider = new firebase.auth.FacebookAuthProvider();
+        /**const provider = new firebase.auth.FacebookAuthProvider();
         provider.setCustomParameters({
             display: 'popup',
         });
-        firebaseConfig.auth().signInWithPopup(provider);
+        firebase.auth().signInWithPopup(provider); */
     }, []);
 
     return (

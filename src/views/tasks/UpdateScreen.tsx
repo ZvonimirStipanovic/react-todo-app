@@ -3,30 +3,29 @@ import { RouterProps } from 'react-router';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
-import { Task } from 'modules/tasks';
-import { service } from 'service';
+import { Task, TaskService } from 'modules/tasks';
 import { categories } from 'models';
 import { AppRoute } from 'const';
 import { Header } from 'components';
 
-interface Props extends RouterProps {}
-
-export default function UpdateScreen(p: Props) {
+export default function UpdateScreen({ history }: RouterProps) {
     const [task, setTask] = useState<Task>();
 
     useEffect(() => {
-        const state: any = p.history.location.state;
+        const state: any = history.location.state;
         if (state) setTask(state.task[0]);
-    }, [p.history.location.state]);
+    }, [history.location.state]);
 
-    const onBackClick = () => p.history.goBack();
+    const onBackClick = () => history.goBack();
 
     const saveTodo = React.useCallback(
         async (event) => {
             event.preventDefault();
-            service.updateTask(task!).then(() => p.history.push(AppRoute.Home));
+            TaskService.updateTask(task!).then(() =>
+                history.push(AppRoute.Home)
+            );
         },
-        [task, p.history]
+        [task, history]
     );
 
     const handleChangeTask = React.useCallback(

@@ -8,11 +8,7 @@ import {
 } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { useDispatch } from 'react-redux';
-import { service } from 'service';
-import { firebaseConfig } from 'modules/firebase';
-import { login } from '../const';
-import { Task } from 'modules/tasks';
-import { TasksActions } from 'modules/tasks/redux';
+import { AuthThunkActions } from './redux';
 
 interface Props {
     title: string;
@@ -22,67 +18,45 @@ interface Props {
     setOpenLogin: (val: boolean) => void;
 }
 
-export default function LoginModal(p: Props) {
+export default function LoginModal({
+    title,
+    buttonTitle,
+    open,
+    type,
+    setOpenLogin,
+}: Props) {
     const dispatch = useDispatch();
 
-    const handleRegister = React.useCallback(
-        async (event) => {
-            event.preventDefault();
-            const { email, password } = event.target.elements;
-            service.register(email.value, password.value).then(() => {
-                service.login(email.value, password.value).then(async () => {
-                    const userId = await firebaseConfig.auth().currentUser?.uid;
-                    login(userId ? userId : 'guest');
-                    service
-                        .getGuestTasks()
-                        .then((res: Task[]) => service.addTasks(res))
-                        .then(() =>
-                            service
-                                .getTasks(userId!)
-                                .then((tasks: Task[]) =>
-                                    dispatch(TasksActions.Set(tasks))
-                                )
-                        )
-                        .then(() => p.setOpenLogin(false));
-                });
-            });
-        },
-        [p, dispatch]
-    );
+    const handleRegister = async (event: any) => {
+        event.preventDefault();
+        const { email, password } = event.target.elements;
+        dispatch(
+            AuthThunkActions.registerAndLogin(
+                email.value,
+                password.value,
+                setOpenLogin
+            )
+        );
+    };
 
-    const handleLogin = React.useCallback(
-        async (event) => {
-            event.preventDefault();
-            const { email, password } = event.target.elements;
-            service.login(email.value, password.value).then(async () => {
-                const userId = await firebaseConfig.auth().currentUser?.uid;
-                login(userId ? userId : 'guest');
-                service
-                    .getGuestTasks()
-                    .then((res: Task[]) => service.addTasks(res))
-                    .then(() =>
-                        service
-                            .getTasks(userId!)
-                            .then((tasks: Task[]) =>
-                                dispatch(TasksActions.Set(tasks))
-                            )
-                    )
-                    .then(() => p.setOpenLogin(false));
-            });
-        },
-        [p, dispatch]
-    );
+    const handleLogin = async (event: any) => {
+        event.preventDefault();
+        const { email, password } = event.target.elements;
+        dispatch(
+            AuthThunkActions.login(email.value, password.value, setOpenLogin)
+        );
+    };
 
     return (
         <div>
             <Dialog
-                open={p.open}
-                onClose={() => p.setOpenLogin(false)}
+                open={open}
+                onClose={() => setOpenLogin(false)}
                 aria-labelledby="form-dialog-title"
             >
-                <DialogTitle id="form-dialog-title">{p.title}</DialogTitle>
+                <DialogTitle id="form-dialog-title">{title}</DialogTitle>
                 <form
-                    onSubmit={p.type === 'login' ? handleLogin : handleRegister}
+                    onSubmit={type === 'login' ? handleLogin : handleRegister}
                 >
                     <DialogContent>
                         <TextField
@@ -103,13 +77,13 @@ export default function LoginModal(p: Props) {
                     </DialogContent>
                     <DialogActions>
                         <Button
-                            onClick={() => p.setOpenLogin(false)}
+                            onClick={() => setOpenLogin(false)}
                             color="primary"
                         >
                             Cancel
                         </Button>
                         <Button type="submit" color="primary">
-                            {p.buttonTitle}
+                            {buttonTitle}
                         </Button>
                     </DialogActions>
                 </form>

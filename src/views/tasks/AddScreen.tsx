@@ -4,18 +4,15 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import { isGuest, LOGIN_TOKEN } from 'modules/authentication';
-import { Task } from 'modules/tasks';
-import { service } from 'service';
+import { Task, TaskService } from 'modules/tasks';
 import { categories } from 'models';
 import { AppRoute } from 'const';
 import { Header } from 'components';
 
-interface Props extends RouterProps {}
-
-export default function AddScreen(p: Props) {
+export default function AddScreen({ history }: RouterProps) {
     const [category, setCategory] = useState<string>('Home');
 
-    const onBackClick = () => p.history.goBack();
+    const onBackClick = () => history.goBack();
     const isAnonymous = isGuest();
     const handleCategoriesChange = React.useCallback(
         (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -39,11 +36,11 @@ export default function AddScreen(p: Props) {
                 time.value,
                 false
             );
-            service
-                .addTask(task, isAnonymous)
-                .then(() => p.history.push(AppRoute.Home));
+            TaskService.addTask(task, isAnonymous).then(() =>
+                history.push(AppRoute.Home)
+            );
         },
-        [category, p.history, isAnonymous]
+        [category, history, isAnonymous]
     );
 
     return (
