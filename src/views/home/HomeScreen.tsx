@@ -13,7 +13,7 @@ import { getActiveTasks } from 'modules/tasks/redux';
 import { AppRoute } from 'const';
 import { Header } from 'components';
 import { TasksActions } from 'modules/tasks/redux';
-import { useLogin } from 'modules/authentication/hooks';
+import { useAuthHook } from 'modules/authentication/hooks';
 
 interface Props extends RouterProps {
     tasks: Task[];
@@ -29,11 +29,11 @@ function HomeScreen({ tasks, history }: Props) {
     const [searchValue, setSearchValue] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
 
-    const isAnonymous = useLogin(true);
+    const auth = useAuthHook(true);
 
     useEffect(() => {
-        isAnonymous && setLoading(false);
-    }, [isAnonymous]);
+        auth.isAnonymous && setLoading(false);
+    }, [auth.isAnonymous]);
 
     const handleLoginButton = React.useCallback(
         () => setShowLoginModal(true),
@@ -78,7 +78,7 @@ function HomeScreen({ tasks, history }: Props) {
 
     const topRightButtons = React.useMemo(
         () =>
-            isAnonymous ? (
+            auth.isAnonymous ? (
                 <>
                     <Button
                         color="inherit"
@@ -96,7 +96,12 @@ function HomeScreen({ tasks, history }: Props) {
                     Log out
                 </Button>
             ),
-        [isAnonymous, handleLoginButton, handleRegisterButton, handleLogout]
+        [
+            auth.isAnonymous,
+            handleLoginButton,
+            handleRegisterButton,
+            handleLogout,
+        ]
     );
 
     const onAddClick = React.useCallback(() => history.push(AppRoute.Add), [
@@ -175,7 +180,7 @@ function HomeScreen({ tasks, history }: Props) {
 
     const notLoggedText = React.useCallback(
         () =>
-            isAnonymous ? (
+            auth.isAnonymous ? (
                 <p
                     style={{
                         margin: 16,
@@ -187,7 +192,7 @@ function HomeScreen({ tasks, history }: Props) {
                     YOU ARE NOT LOGGED IN
                 </p>
             ) : null,
-        [isAnonymous]
+        [auth.isAnonymous]
     );
 
     const renderItems = React.useCallback(() => {

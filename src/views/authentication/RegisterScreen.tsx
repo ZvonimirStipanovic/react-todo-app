@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { Header } from 'components';
-import { useHandleRegister } from 'modules/authentication/hooks';
+import { useAuthHook } from 'modules/authentication/hooks';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -35,6 +35,8 @@ export default function RegisterScreen({ history }: RouterProps) {
 
     const onBackClick = () => history.goBack();
 
+    const auth = useAuthHook();
+
     return (
         <div>
             <Header
@@ -49,7 +51,7 @@ export default function RegisterScreen({ history }: RouterProps) {
                     </Typography>
                     <form
                         className={classes.form}
-                        onSubmit={useHandleRegister(history)}
+                        onSubmit={auth.handleRegister(history)}
                     >
                         <TextField
                             variant="outlined"

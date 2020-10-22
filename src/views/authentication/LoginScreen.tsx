@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { AuthService, login } from 'modules/authentication';
 import { AppRoute } from 'const';
 import { useDispatch } from 'react-redux';
-import { useHandleLogin } from 'modules/authentication/hooks';
+import { useAuthHook } from 'modules/authentication/hooks';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -38,6 +38,8 @@ export default function LoginScreen({ history }: RouterProps) {
     const classes = useStyles();
     const dispatch = useDispatch();
 
+    const auth = useAuthHook();
+
     const handleAnonymousLogin = () => {
         AuthService.anonymousLogin();
         login('guest');
@@ -60,7 +62,7 @@ export default function LoginScreen({ history }: RouterProps) {
                 </Typography>
                 <form
                     className={classes.form}
-                    onSubmit={useHandleLogin(dispatch, history)}
+                    onSubmit={auth.handleLogin(dispatch, history)}
                 >
                     <TextField
                         variant="outlined"

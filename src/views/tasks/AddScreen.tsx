@@ -8,13 +8,13 @@ import { Task, TaskService } from 'modules/tasks';
 import { categories } from 'models';
 import { AppRoute } from 'const';
 import { Header } from 'components';
-import { useLogin } from 'modules/authentication/hooks';
+import { useAuthHook } from 'modules/authentication/hooks';
 
 export default function AddScreen({ history }: RouterProps) {
     const [category, setCategory] = useState<string>('Home');
 
     const onBackClick = () => history.goBack();
-    const isAnonymous = useLogin(false);
+    const auth = useAuthHook(false);
 
     const handleCategoriesChange = React.useCallback(
         (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -38,11 +38,11 @@ export default function AddScreen({ history }: RouterProps) {
                 time.value,
                 false
             );
-            TaskService.addTask(task, isAnonymous).then(() =>
+            TaskService.addTask(task, auth.isAnonymous).then(() =>
                 history.push(AppRoute.Home)
             );
         },
-        [category, history, isAnonymous]
+        [category, history, auth.isAnonymous]
     );
 
     return (

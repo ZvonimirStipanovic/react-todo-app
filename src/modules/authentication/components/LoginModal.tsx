@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { useDispatch } from 'react-redux';
-import { useHandleLogin } from '../hooks';
+import { useAuthHook } from '../hooks';
 
 interface Props {
     title: string;
@@ -26,6 +26,7 @@ export default function LoginModal({
     setOpenLogin,
 }: Props) {
     const dispatch = useDispatch();
+    const auth = useAuthHook(false);
 
     return (
         <div>
@@ -36,7 +37,7 @@ export default function LoginModal({
             >
                 <DialogTitle id="form-dialog-title">{title}</DialogTitle>
                 <form
-                    onSubmit={useHandleLogin(
+                    onSubmit={auth.handleLogin(
                         dispatch,
                         undefined,
                         undefined,
