@@ -9,6 +9,8 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { AuthService, login } from 'modules/authentication';
 import { AppRoute } from 'const';
+import { AuthThunkActions } from 'modules/authentication/components/redux';
+import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -34,18 +36,22 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function LoginScreen({ history }: RouterProps) {
     const classes = useStyles();
+    const dispatch = useDispatch();
 
     const handleLogin = React.useCallback(
         async (event) => {
             event.preventDefault();
             const { email, password } = event.target.elements;
-            AuthService.login(email.value, password.value).then(async () => {
-                const userId = AuthService.getUserUid();
-                login(userId);
-                history.push(AppRoute.Home);
-            });
+            dispatch(
+                AuthThunkActions.login(
+                    email.value,
+                    password.value,
+                    undefined,
+                    history
+                )
+            );
         },
-        [history]
+        [history, dispatch]
     );
 
     const handleAnonymousLogin = () => {

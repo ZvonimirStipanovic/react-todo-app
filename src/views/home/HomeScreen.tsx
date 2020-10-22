@@ -31,8 +31,8 @@ function HomeScreen({ tasks, history }: Props) {
     const isAnonymous = isGuest();
 
     useEffect(() => {
-        if (!isAnonymous) TaskThunkActions.getTasks(false)(dispatch);
-        else TaskThunkActions.getTasks(false)(dispatch);
+        if (!isAnonymous) dispatch(TaskThunkActions.getTasks(false));
+        else dispatch(TaskThunkActions.getTasks(false));
         setLoading(false);
     }, [dispatch, isAnonymous]);
 

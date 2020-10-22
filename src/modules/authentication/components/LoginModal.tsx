@@ -8,8 +8,7 @@ import {
 } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { useDispatch } from 'react-redux';
-import { AuthService } from '../services';
-import { TaskThunkActions } from 'modules/tasks/redux';
+import { AuthThunkActions } from './redux';
 
 interface Props {
     title: string;
@@ -31,21 +30,21 @@ export default function LoginModal({
     const handleRegister = async (event: any) => {
         event.preventDefault();
         const { email, password } = event.target.elements;
-        AuthService.register(email.value, password.value).then(() => {
-            AuthService.login(email.value, password.value).then(() => {
-                TaskThunkActions.getTasks(false)(dispatch);
-                setOpenLogin(false);
-            });
-        });
+        dispatch(
+            AuthThunkActions.registerAndLogin(
+                email.value,
+                password.value,
+                setOpenLogin
+            )
+        );
     };
 
     const handleLogin = async (event: any) => {
         event.preventDefault();
         const { email, password } = event.target.elements;
-        AuthService.login(email.value, password.value).then(() => {
-            TaskThunkActions.getTasks(false)(dispatch);
-            setOpenLogin(false);
-        });
+        dispatch(
+            AuthThunkActions.login(email.value, password.value, setOpenLogin)
+        );
     };
 
     return (

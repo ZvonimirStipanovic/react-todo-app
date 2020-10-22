@@ -5,7 +5,6 @@ import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import { AppRoute } from 'const';
 import { Header } from 'components';
 import { AuthService } from 'modules/authentication';
 
@@ -38,9 +37,7 @@ export default function RegisterScreen({ history }: RouterProps) {
         async (event) => {
             event.preventDefault();
             const { email, password } = event.target.elements;
-            AuthService.register(email.value, password.value).then(() =>
-                history.push(AppRoute.Home)
-            );
+            AuthService.register(email.value, password.value, history);
         },
         [history]
     );

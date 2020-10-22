@@ -10,18 +10,13 @@ const getTasks = (isAnonymous: boolean) => async (dispatch: Dispatch) => {
     if (userId) {
         auth.getTasksAsync(userId, isAnonymous)
             .then((tasks: Task[]) => auth.addTasks(tasks))
-            .then(() => getUserTasks(userId, isAnonymous, auth)(dispatch));
+            .then(() => {
+                auth.getTasksAsync(userId, isAnonymous).then((tasks: Task[]) =>
+                    dispatch(TasksActions.Set(tasks))
+                );
+            });
     }
-};
-
-const getUserTasks = (
-    userId: string,
-    isAnonymous: boolean,
-    user: any
-) => async (dispatch: Dispatch) => {
-    user.getTasksAsync(userId, isAnonymous).then((tasks: Task[]) =>
-        dispatch(TasksActions.Set(tasks))
-    );
+    return;
 };
 
 export const TaskThunkActions = {
