@@ -26,7 +26,7 @@ export default function LoginModal({
     setOpenLogin,
 }: Props) {
     const dispatch = useDispatch();
-    const auth = useAuthHook(false);
+    const { handleLogin } = useAuthHook(false);
 
     return (
         <div>
@@ -36,14 +36,7 @@ export default function LoginModal({
                 aria-labelledby="form-dialog-title"
             >
                 <DialogTitle id="form-dialog-title">{title}</DialogTitle>
-                <form
-                    onSubmit={auth.handleLogin(
-                        dispatch,
-                        undefined,
-                        undefined,
-                        type
-                    )}
-                >
+                <form onSubmit={handleLogin({ dispatch, type })}>
                     <DialogContent>
                         <TextField
                             autoFocus

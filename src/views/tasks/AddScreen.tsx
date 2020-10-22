@@ -14,7 +14,7 @@ export default function AddScreen({ history }: RouterProps) {
     const [category, setCategory] = useState<string>('Home');
 
     const onBackClick = () => history.goBack();
-    const auth = useAuthHook(false);
+    const { isAnonymous } = useAuthHook(false);
 
     const handleCategoriesChange = React.useCallback(
         (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -38,11 +38,11 @@ export default function AddScreen({ history }: RouterProps) {
                 time.value,
                 false
             );
-            TaskService.addTask(task, auth.isAnonymous).then(() =>
+            TaskService.addTask(task, isAnonymous).then(() =>
                 history.push(AppRoute.Home)
             );
         },
-        [category, history, auth.isAnonymous]
+        [category, history, isAnonymous]
     );
 
     return (

@@ -7,6 +7,13 @@ import * as H from 'history';
 import { Dispatch } from 'redux';
 import { AuthThunkActions } from '../components';
 
+export interface LoginProps {
+    dispatch: Dispatch;
+    history?: H.History;
+    setOpenLogin?: (val: boolean) => void;
+    type?: string;
+}
+
 export const useAuthHook = (shouldGetTasks?: boolean) => {
     const [isAnonymous, setIsAnonymous] = useState(false);
 
@@ -18,10 +25,7 @@ export const useAuthHook = (shouldGetTasks?: boolean) => {
     }, []);
 
     useEffect(() => {
-        if (shouldGetTasks) {
-            if (!isAnonymous) dispatch(TaskThunkActions.getTasks(false));
-            else dispatch(TaskThunkActions.getTasks(true));
-        }
+        if (shouldGetTasks) dispatch(TaskThunkActions.getTasks(isAnonymous));
     }, [dispatch, isAnonymous, shouldGetTasks]);
 
     const handleRegister = (history: H.History) => (event: any) => {
@@ -30,12 +34,12 @@ export const useAuthHook = (shouldGetTasks?: boolean) => {
         AuthService.register(email.value, password.value, history);
     };
 
-    const handleLogin = (
-        dispatch: Dispatch,
-        history?: H.History,
-        setOpenLogin?: (val: boolean) => void,
-        type?: string
-    ) => (event: any) => {
+    const handleLogin = ({
+        dispatch,
+        history,
+        setOpenLogin,
+        type,
+    }: LoginProps) => (event: any) => {
         event.preventDefault();
         const { email, password } = event.target.elements;
 

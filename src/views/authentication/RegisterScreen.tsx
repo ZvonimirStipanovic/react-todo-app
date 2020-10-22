@@ -35,7 +35,7 @@ export default function RegisterScreen({ history }: RouterProps) {
 
     const onBackClick = () => history.goBack();
 
-    const auth = useAuthHook();
+    const { handleRegister } = useAuthHook();
 
     return (
         <div>
@@ -51,7 +51,7 @@ export default function RegisterScreen({ history }: RouterProps) {
                     </Typography>
                     <form
                         className={classes.form}
-                        onSubmit={auth.handleRegister(history)}
+                        onSubmit={handleRegister(history)}
                     >
                         <TextField
                             variant="outlined"

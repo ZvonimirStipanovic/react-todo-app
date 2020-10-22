@@ -29,11 +29,11 @@ function HomeScreen({ tasks, history }: Props) {
     const [searchValue, setSearchValue] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
 
-    const auth = useAuthHook(true);
+    const { isAnonymous } = useAuthHook(true);
 
     useEffect(() => {
-        auth.isAnonymous && setLoading(false);
-    }, [auth.isAnonymous]);
+        isAnonymous && setLoading(false);
+    }, [isAnonymous]);
 
     const handleLoginButton = React.useCallback(
         () => setShowLoginModal(true),
@@ -78,7 +78,7 @@ function HomeScreen({ tasks, history }: Props) {
 
     const topRightButtons = React.useMemo(
         () =>
-            auth.isAnonymous ? (
+            isAnonymous ? (
                 <>
                     <Button
                         color="inherit"
@@ -96,12 +96,7 @@ function HomeScreen({ tasks, history }: Props) {
                     Log out
                 </Button>
             ),
-        [
-            auth.isAnonymous,
-            handleLoginButton,
-            handleRegisterButton,
-            handleLogout,
-        ]
+        [isAnonymous, handleLoginButton, handleRegisterButton, handleLogout]
     );
 
     const onAddClick = React.useCallback(() => history.push(AppRoute.Add), [
@@ -180,7 +175,7 @@ function HomeScreen({ tasks, history }: Props) {
 
     const notLoggedText = React.useCallback(
         () =>
-            auth.isAnonymous ? (
+            isAnonymous ? (
                 <p
                     style={{
                         margin: 16,
@@ -192,7 +187,7 @@ function HomeScreen({ tasks, history }: Props) {
                     YOU ARE NOT LOGGED IN
                 </p>
             ) : null,
-        [auth.isAnonymous]
+        [isAnonymous]
     );
 
     const renderItems = React.useCallback(() => {

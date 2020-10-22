@@ -38,7 +38,7 @@ export default function LoginScreen({ history }: RouterProps) {
     const classes = useStyles();
     const dispatch = useDispatch();
 
-    const auth = useAuthHook();
+    const { handleLogin } = useAuthHook();
 
     const handleAnonymousLogin = () => {
         AuthService.anonymousLogin();
@@ -62,7 +62,7 @@ export default function LoginScreen({ history }: RouterProps) {
                 </Typography>
                 <form
                     className={classes.form}
-                    onSubmit={auth.handleLogin(dispatch, history)}
+                    onSubmit={handleLogin({ dispatch, history })}
                 >
                     <TextField
                         variant="outlined"
