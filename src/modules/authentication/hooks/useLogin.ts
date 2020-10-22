@@ -9,15 +9,14 @@ export const useLogin = (shouldGetTasks?: boolean) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        localStorage.getItem(LOGIN_TOKEN) === 'guest'
-            ? setIsAnonymous(true)
-            : setIsAnonymous(false);
+        const isGuest = localStorage.getItem(LOGIN_TOKEN) === 'guest';
+        setIsAnonymous(isGuest);
     }, []);
 
     useEffect(() => {
         if (shouldGetTasks) {
             if (!isAnonymous) dispatch(TaskThunkActions.getTasks(false));
-            else dispatch(TaskThunkActions.getTasks(false));
+            else dispatch(TaskThunkActions.getTasks(true));
         }
     }, [dispatch, isAnonymous, shouldGetTasks]);
 
