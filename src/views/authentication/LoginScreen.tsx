@@ -10,8 +10,6 @@ import Typography from '@material-ui/core/Typography';
 import { AuthService, login } from 'modules/authentication';
 import { AppRoute } from 'const';
 
-interface Props extends RouterProps {}
-
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         paper: {
@@ -34,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-export default function LoginScreen(p: Props) {
+export default function LoginScreen({ history }: RouterProps) {
     const classes = useStyles();
 
     const handleLogin = React.useCallback(
@@ -44,16 +42,16 @@ export default function LoginScreen(p: Props) {
             AuthService.login(email.value, password.value).then(async () => {
                 const userId = AuthService.getUserUid();
                 login(userId);
-                p.history.push(AppRoute.Home);
+                history.push(AppRoute.Home);
             });
         },
-        [p.history]
+        [history]
     );
 
     const handleAnonymousLogin = () => {
         AuthService.anonymousLogin();
         login('guest');
-        p.history.push(AppRoute.Home);
+        history.push(AppRoute.Home);
     };
 
     const handleLoginWithFacebook = React.useCallback(() => {

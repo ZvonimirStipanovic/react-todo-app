@@ -13,25 +13,25 @@ interface Props extends RouterProps {
     tasks: Task[];
 }
 
-function FinishedTasksScreen(p: Props) {
+function FinishedTasksScreen({ tasks, history }: Props) {
     const dispatch = useDispatch();
 
-    const onBackClick = () => p.history.goBack();
+    const onBackClick = () => history.goBack();
 
     const onDeleteItemClick = React.useCallback(
         (taskId: string) => {
-            const newTasks = p.tasks.filter(
+            const newTasks = tasks.filter(
                 (task: Task) => task.taskId !== taskId
             );
             dispatch(TasksActions.Set(newTasks));
             TaskService.deleteTask(taskId);
         },
-        [p.tasks, dispatch]
+        [tasks, dispatch]
     );
 
     const toRender = React.useCallback(
         () =>
-            p.tasks.map((item: Task) => (
+            tasks.map((item: Task) => (
                 <TodoListItem
                     key={item.taskId + item.title}
                     taskId={item.taskId}
@@ -41,7 +41,7 @@ function FinishedTasksScreen(p: Props) {
                     onDeleteClick={onDeleteItemClick}
                 />
             )),
-        [p.tasks, onDeleteItemClick]
+        [tasks, onDeleteItemClick]
     );
 
     return (
@@ -51,7 +51,7 @@ function FinishedTasksScreen(p: Props) {
                 showBackButton={true}
                 onBackClick={onBackClick}
             />
-            {p.tasks.length < 1 ? null : (
+            {tasks.length < 1 ? null : (
                 <Paper style={{ margin: 16 }}>
                     <List style={{ overflow: 'hidden' }}>{toRender()}</List>
                 </Paper>

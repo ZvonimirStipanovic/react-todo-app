@@ -8,26 +8,24 @@ import { categories } from 'models';
 import { AppRoute } from 'const';
 import { Header } from 'components';
 
-interface Props extends RouterProps {}
-
-export default function UpdateScreen(p: Props) {
+export default function UpdateScreen({ history }: RouterProps) {
     const [task, setTask] = useState<Task>();
 
     useEffect(() => {
-        const state: any = p.history.location.state;
+        const state: any = history.location.state;
         if (state) setTask(state.task[0]);
-    }, [p.history.location.state]);
+    }, [history.location.state]);
 
-    const onBackClick = () => p.history.goBack();
+    const onBackClick = () => history.goBack();
 
     const saveTodo = React.useCallback(
         async (event) => {
             event.preventDefault();
             TaskService.updateTask(task!).then(() =>
-                p.history.push(AppRoute.Home)
+                history.push(AppRoute.Home)
             );
         },
-        [task, p.history]
+        [task, history]
     );
 
     const handleChangeTask = React.useCallback(

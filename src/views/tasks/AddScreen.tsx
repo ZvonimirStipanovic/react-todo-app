@@ -9,12 +9,10 @@ import { categories } from 'models';
 import { AppRoute } from 'const';
 import { Header } from 'components';
 
-interface Props extends RouterProps {}
-
-export default function AddScreen(p: Props) {
+export default function AddScreen({ history }: RouterProps) {
     const [category, setCategory] = useState<string>('Home');
 
-    const onBackClick = () => p.history.goBack();
+    const onBackClick = () => history.goBack();
     const isAnonymous = isGuest();
     const handleCategoriesChange = React.useCallback(
         (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -39,10 +37,10 @@ export default function AddScreen(p: Props) {
                 false
             );
             TaskService.addTask(task, isAnonymous).then(() =>
-                p.history.push(AppRoute.Home)
+                history.push(AppRoute.Home)
             );
         },
-        [category, p.history, isAnonymous]
+        [category, history, isAnonymous]
     );
 
     return (

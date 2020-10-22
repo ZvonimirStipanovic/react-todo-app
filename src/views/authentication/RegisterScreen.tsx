@@ -9,8 +9,6 @@ import { AppRoute } from 'const';
 import { Header } from 'components';
 import { AuthService } from 'modules/authentication';
 
-interface Props extends RouterProps {}
-
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         paper: {
@@ -33,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-export default function RegisterScreen(p: Props) {
+export default function RegisterScreen({ history }: RouterProps) {
     const classes = useStyles();
 
     const handleRegister = React.useCallback(
@@ -41,13 +39,13 @@ export default function RegisterScreen(p: Props) {
             event.preventDefault();
             const { email, password } = event.target.elements;
             AuthService.register(email.value, password.value).then(() =>
-                p.history.push(AppRoute.Home)
+                history.push(AppRoute.Home)
             );
         },
-        [p.history]
+        [history]
     );
 
-    const onBackClick = () => p.history.goBack();
+    const onBackClick = () => history.goBack();
 
     return (
         <div>

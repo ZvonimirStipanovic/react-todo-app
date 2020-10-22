@@ -19,7 +19,13 @@ interface Props {
     setOpenLogin: (val: boolean) => void;
 }
 
-export default function LoginModal(p: Props) {
+export default function LoginModal({
+    title,
+    buttonTitle,
+    open,
+    type,
+    setOpenLogin,
+}: Props) {
     const dispatch = useDispatch();
 
     const handleRegister = async (event: any) => {
@@ -28,7 +34,7 @@ export default function LoginModal(p: Props) {
         AuthService.register(email.value, password.value).then(() => {
             AuthService.login(email.value, password.value).then(() => {
                 TaskThunkActions.getTasks(false)(dispatch);
-                p.setOpenLogin(false);
+                setOpenLogin(false);
             });
         });
     };
@@ -38,20 +44,20 @@ export default function LoginModal(p: Props) {
         const { email, password } = event.target.elements;
         AuthService.login(email.value, password.value).then(() => {
             TaskThunkActions.getTasks(false)(dispatch);
-            p.setOpenLogin(false);
+            setOpenLogin(false);
         });
     };
 
     return (
         <div>
             <Dialog
-                open={p.open}
-                onClose={() => p.setOpenLogin(false)}
+                open={open}
+                onClose={() => setOpenLogin(false)}
                 aria-labelledby="form-dialog-title"
             >
-                <DialogTitle id="form-dialog-title">{p.title}</DialogTitle>
+                <DialogTitle id="form-dialog-title">{title}</DialogTitle>
                 <form
-                    onSubmit={p.type === 'login' ? handleLogin : handleRegister}
+                    onSubmit={type === 'login' ? handleLogin : handleRegister}
                 >
                     <DialogContent>
                         <TextField
@@ -72,13 +78,13 @@ export default function LoginModal(p: Props) {
                     </DialogContent>
                     <DialogActions>
                         <Button
-                            onClick={() => p.setOpenLogin(false)}
+                            onClick={() => setOpenLogin(false)}
                             color="primary"
                         >
                             Cancel
                         </Button>
                         <Button type="submit" color="primary">
-                            {p.buttonTitle}
+                            {buttonTitle}
                         </Button>
                     </DialogActions>
                 </form>
