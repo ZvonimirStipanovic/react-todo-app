@@ -32,8 +32,8 @@ function HomeScreen({ tasks, history }: Props) {
     const isAnonymous = useLogin(true);
 
     useEffect(() => {
-        setLoading(false);
-    }, []);
+        isAnonymous && setLoading(false);
+    }, [isAnonymous]);
 
     const handleLoginButton = React.useCallback(
         () => setShowLoginModal(true),
