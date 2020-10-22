@@ -3,7 +3,7 @@ import { RouterProps } from 'react-router';
 import Button from '@material-ui/core/Button';
 import { List, Paper, IconButton, Grid, TextField } from '@material-ui/core';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
-import { useDispatch, connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { Task, TaskService, tasksStyles, TodoListItem } from 'modules/tasks';
 import { logout } from 'modules/authentication';
@@ -15,12 +15,10 @@ import { Header } from 'components';
 import { TasksActions } from 'modules/tasks/redux';
 import { useAuthHook } from 'modules/authentication/hooks';
 
-interface Props extends RouterProps {
-    tasks: Task[];
-}
-
-function HomeScreen({ tasks, history }: Props) {
+function HomeScreen({ history }: RouterProps) {
     const dispatch = useDispatch();
+
+    const tasks = useSelector((state: AppState) => getActiveTasks(state));
 
     const classes = tasksStyles();
 
@@ -32,8 +30,8 @@ function HomeScreen({ tasks, history }: Props) {
     const { isAnonymous } = useAuthHook(true);
 
     useEffect(() => {
-        isAnonymous && setLoading(false);
-    }, [isAnonymous]);
+        setLoading(false);
+    }, []);
 
     const handleLoginButton = React.useCallback(
         () => setShowLoginModal(true),
@@ -266,8 +264,4 @@ function HomeScreen({ tasks, history }: Props) {
     );
 }
 
-const mapStateToProps = (state: AppState) => ({
-    tasks: getActiveTasks(state),
-});
-
-export default connect(mapStateToProps)(HomeScreen);
+export default HomeScreen;

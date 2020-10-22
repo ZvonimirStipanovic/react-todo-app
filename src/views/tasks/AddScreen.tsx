@@ -23,28 +23,6 @@ export default function AddScreen({ history }: RouterProps) {
         []
     );
 
-    const handleAddTodo = React.useCallback(
-        async (event: any) => {
-            event.preventDefault();
-            const { title, description, time } = event.target.elements;
-            const userId = await localStorage.getItem(LOGIN_TOKEN);
-            const date = new Date().toISOString();
-            const task = new Task(
-                userId!,
-                date,
-                title.value,
-                description.value,
-                category,
-                time.value,
-                false
-            );
-            TaskService.addTask(task, isAnonymous).then(() =>
-                history.push(AppRoute.Home)
-            );
-        },
-        [category, history, isAnonymous]
-    );
-
     return (
         <div>
             <Header
@@ -123,4 +101,23 @@ export default function AddScreen({ history }: RouterProps) {
             </form>
         </div>
     );
+
+    async function handleAddTodo(event: any) {
+        event.preventDefault();
+        const { title, description, time } = event.target.elements;
+        const userId = await localStorage.getItem(LOGIN_TOKEN);
+        const date = new Date().toISOString();
+        const task = new Task(
+            userId!,
+            date,
+            title.value,
+            description.value,
+            category,
+            time.value,
+            false
+        );
+        TaskService.addTask(task, isAnonymous).then(() =>
+            history.push(AppRoute.Home)
+        );
+    }
 }

@@ -18,16 +18,6 @@ export default function UpdateScreen({ history }: RouterProps) {
 
     const onBackClick = () => history.goBack();
 
-    const saveTodo = React.useCallback(
-        async (event) => {
-            event.preventDefault();
-            TaskService.updateTask(task!).then(() =>
-                history.push(AppRoute.Home)
-            );
-        },
-        [task, history]
-    );
-
     const handleChangeTask = React.useCallback(
         (name: string) => (event: React.ChangeEvent<HTMLTextAreaElement>) => {
             setTask({
@@ -121,4 +111,9 @@ export default function UpdateScreen({ history }: RouterProps) {
             </form>
         </div>
     );
+
+    function saveTodo(event: any) {
+        event.preventDefault();
+        TaskService.updateTask(task!).then(() => history.push(AppRoute.Home));
+    }
 }

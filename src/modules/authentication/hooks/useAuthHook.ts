@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { AuthService } from '../services';
 import * as H from 'history';
 import { Dispatch } from 'redux';
-import { AuthThunkActions } from '../components';
+import { AuthThunkActions } from '../redux';
 
 export interface LoginProps {
     dispatch: Dispatch;
