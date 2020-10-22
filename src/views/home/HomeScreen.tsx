@@ -13,7 +13,7 @@ import { getActiveTasks } from 'modules/tasks/redux';
 import { AppRoute } from 'const';
 import { Header } from 'components';
 import { TasksActions } from 'modules/tasks/redux';
-import { useLogin } from 'hooks';
+import { useLogin } from 'modules/authentication/hooks';
 
 interface Props extends RouterProps {
     tasks: Task[];

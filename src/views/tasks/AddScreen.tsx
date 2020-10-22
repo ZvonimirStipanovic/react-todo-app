@@ -8,7 +8,7 @@ import { Task, TaskService } from 'modules/tasks';
 import { categories } from 'models';
 import { AppRoute } from 'const';
 import { Header } from 'components';
-import { useLogin } from 'hooks';
+import { useLogin } from 'modules/authentication/hooks';
 
 export default function AddScreen({ history }: RouterProps) {
     const [category, setCategory] = useState<string>('Home');
