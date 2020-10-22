@@ -3,17 +3,19 @@ import { RouterProps } from 'react-router';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
-import { isGuest, LOGIN_TOKEN } from 'modules/authentication';
+import { LOGIN_TOKEN } from 'modules/authentication';
 import { Task, TaskService } from 'modules/tasks';
 import { categories } from 'models';
 import { AppRoute } from 'const';
 import { Header } from 'components';
+import { useLogin } from 'hooks';
 
 export default function AddScreen({ history }: RouterProps) {
     const [category, setCategory] = useState<string>('Home');
 
     const onBackClick = () => history.goBack();
-    const isAnonymous = isGuest();
+    const isAnonymous = useLogin(false);
+
     const handleCategoriesChange = React.useCallback(
         (event: React.ChangeEvent<HTMLTextAreaElement>) => {
             setCategory(event.target.value);

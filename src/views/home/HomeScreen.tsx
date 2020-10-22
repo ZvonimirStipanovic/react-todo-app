@@ -6,13 +6,14 @@ import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import { useDispatch, connect } from 'react-redux';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { Task, TaskService, tasksStyles, TodoListItem } from 'modules/tasks';
-import { isGuest, logout } from 'modules/authentication';
+import { logout } from 'modules/authentication';
 import LoginModal from 'modules/authentication/components/LoginModal';
 import { AppState } from 'modules/redux-store/';
-import { getActiveTasks, TaskThunkActions } from 'modules/tasks/redux';
+import { getActiveTasks } from 'modules/tasks/redux';
 import { AppRoute } from 'const';
 import { Header } from 'components';
 import { TasksActions } from 'modules/tasks/redux';
+import { useLogin } from 'hooks';
 
 interface Props extends RouterProps {
     tasks: Task[];
@@ -28,13 +29,11 @@ function HomeScreen({ tasks, history }: Props) {
     const [searchValue, setSearchValue] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
 
-    const isAnonymous = isGuest();
+    const isAnonymous = useLogin(true);
 
     useEffect(() => {
-        if (!isAnonymous) dispatch(TaskThunkActions.getTasks(false));
-        else dispatch(TaskThunkActions.getTasks(false));
         setLoading(false);
-    }, [dispatch, isAnonymous]);
+    }, []);
 
     const handleLoginButton = React.useCallback(
         () => setShowLoginModal(true),
