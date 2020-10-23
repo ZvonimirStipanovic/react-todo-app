@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppBar, IconButton, Toolbar, Typography } from '@material-ui/core';
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
+import { BackButton } from './BackButton';
 
 interface HeaderProps {
     title: string;
@@ -38,5 +39,29 @@ export const Header = ({
                 {topRightButtons && topRightButtons}
             </Toolbar>
         </AppBar>
+    );
+};
+
+interface HeaderPropsHtml {
+    title: string;
+    to: string;
+    showBackButton: boolean;
+    showRightButtons: boolean;
+}
+
+export const HeaderHtml = ({
+    title,
+    to,
+    showBackButton,
+    showRightButtons,
+}: HeaderPropsHtml) => {
+    return (
+        <header className="header">
+            <div className="wrapper">
+                {showBackButton && <BackButton to={to} />}
+                <h6>{title}</h6>
+                {showRightButtons && <div></div>}
+            </div>
+        </header>
     );
 };
