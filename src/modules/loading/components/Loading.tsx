@@ -1,8 +1,7 @@
 import { CircularProgress, createStyles, makeStyles } from '@material-ui/core';
-import { LoadingState } from 'modules/loading';
 import { AppState } from 'modules/redux-store';
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -21,12 +20,13 @@ const useStyles = makeStyles(() =>
 );
 
 interface Props {
-    readonly loading: LoadingState;
     readonly children: JSX.Element;
 }
 
-function Loading({ children, loading }: Props) {
+function Loading({ children }: Props) {
     const classes = useStyles();
+
+    const loading = useSelector((state: AppState) => state.loading);
 
     let showLoading = false;
     if (loading) {
@@ -54,8 +54,4 @@ function Loading({ children, loading }: Props) {
     );
 }
 
-const mapStateToProps = (state: AppState) => ({
-    loading: state.loading,
-});
-
-export default connect(mapStateToProps)(Loading);
+export default Loading;

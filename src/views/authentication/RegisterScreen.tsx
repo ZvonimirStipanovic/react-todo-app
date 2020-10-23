@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { Header } from 'components';
-import { AuthService } from 'modules/authentication';
+import { useAuthHook } from 'modules/authentication/hooks';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -33,16 +33,9 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function RegisterScreen({ history }: RouterProps) {
     const classes = useStyles();
 
-    const handleRegister = React.useCallback(
-        async (event) => {
-            event.preventDefault();
-            const { email, password } = event.target.elements;
-            AuthService.register(email.value, password.value, history);
-        },
-        [history]
-    );
-
     const onBackClick = () => history.goBack();
+
+    const { handleRegister } = useAuthHook();
 
     return (
         <div>
@@ -56,7 +49,10 @@ export default function RegisterScreen({ history }: RouterProps) {
                     <Typography component="h1" variant="h5">
                         Register
                     </Typography>
-                    <form className={classes.form} onSubmit={handleRegister}>
+                    <form
+                        className={classes.form}
+                        onSubmit={handleRegister(history)}
+                    >
                         <TextField
                             variant="outlined"
                             margin="normal"

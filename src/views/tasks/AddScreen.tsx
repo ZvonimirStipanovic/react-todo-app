@@ -3,44 +3,24 @@ import { RouterProps } from 'react-router';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
-import { isGuest, LOGIN_TOKEN } from 'modules/authentication';
+import { LOGIN_TOKEN } from 'modules/authentication';
 import { Task, TaskService } from 'modules/tasks';
 import { categories } from 'models';
 import { AppRoute } from 'const';
 import { Header } from 'components';
+import { useAuthHook } from 'modules/authentication/hooks';
 
 export default function AddScreen({ history }: RouterProps) {
     const [category, setCategory] = useState<string>('Home');
 
     const onBackClick = () => history.goBack();
-    const isAnonymous = isGuest();
+    const { isAnonymous } = useAuthHook(false);
+
     const handleCategoriesChange = React.useCallback(
         (event: React.ChangeEvent<HTMLTextAreaElement>) => {
             setCategory(event.target.value);
         },
         []
-    );
-
-    const handleAddTodo = React.useCallback(
-        async (event: any) => {
-            event.preventDefault();
-            const { title, description, time } = event.target.elements;
-            const userId = await localStorage.getItem(LOGIN_TOKEN);
-            const date = new Date().toISOString();
-            const task = new Task(
-                userId!,
-                date,
-                title.value,
-                description.value,
-                category,
-                time.value,
-                false
-            );
-            TaskService.addTask(task, isAnonymous).then(() =>
-                history.push(AppRoute.Home)
-            );
-        },
-        [category, history, isAnonymous]
     );
 
     return (
@@ -121,4 +101,23 @@ export default function AddScreen({ history }: RouterProps) {
             </form>
         </div>
     );
+
+    async function handleAddTodo(event: any) {
+        event.preventDefault();
+        const { title, description, time } = event.target.elements;
+        const userId = await localStorage.getItem(LOGIN_TOKEN);
+        const date = new Date().toISOString();
+        const task = new Task(
+            userId!,
+            date,
+            title.value,
+            description.value,
+            category,
+            time.value,
+            false
+        );
+        TaskService.addTask(task, isAnonymous).then(() =>
+            history.push(AppRoute.Home)
+        );
+    }
 }

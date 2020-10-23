@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { useDispatch } from 'react-redux';
-import { AuthThunkActions } from './redux';
+import { useAuthHook } from '../hooks';
 
 interface Props {
     title: string;
@@ -26,26 +26,7 @@ export default function LoginModal({
     setOpenLogin,
 }: Props) {
     const dispatch = useDispatch();
-
-    const handleRegister = async (event: any) => {
-        event.preventDefault();
-        const { email, password } = event.target.elements;
-        dispatch(
-            AuthThunkActions.registerAndLogin(
-                email.value,
-                password.value,
-                setOpenLogin
-            )
-        );
-    };
-
-    const handleLogin = async (event: any) => {
-        event.preventDefault();
-        const { email, password } = event.target.elements;
-        dispatch(
-            AuthThunkActions.login(email.value, password.value, setOpenLogin)
-        );
-    };
+    const { handleLogin } = useAuthHook(false);
 
     return (
         <div>
@@ -55,9 +36,7 @@ export default function LoginModal({
                 aria-labelledby="form-dialog-title"
             >
                 <DialogTitle id="form-dialog-title">{title}</DialogTitle>
-                <form
-                    onSubmit={type === 'login' ? handleLogin : handleRegister}
-                >
+                <form onSubmit={handleLogin({ dispatch, type })}>
                     <DialogContent>
                         <TextField
                             autoFocus

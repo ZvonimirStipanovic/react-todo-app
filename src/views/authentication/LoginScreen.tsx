@@ -9,8 +9,8 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { AuthService, login } from 'modules/authentication';
 import { AppRoute } from 'const';
-import { AuthThunkActions } from 'modules/authentication/components/redux';
 import { useDispatch } from 'react-redux';
+import { useAuthHook } from 'modules/authentication/hooks';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -38,21 +38,7 @@ export default function LoginScreen({ history }: RouterProps) {
     const classes = useStyles();
     const dispatch = useDispatch();
 
-    const handleLogin = React.useCallback(
-        async (event) => {
-            event.preventDefault();
-            const { email, password } = event.target.elements;
-            dispatch(
-                AuthThunkActions.login(
-                    email.value,
-                    password.value,
-                    undefined,
-                    history
-                )
-            );
-        },
-        [history, dispatch]
-    );
+    const { handleLogin } = useAuthHook();
 
     const handleAnonymousLogin = () => {
         AuthService.anonymousLogin();
@@ -74,7 +60,10 @@ export default function LoginScreen({ history }: RouterProps) {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                <form className={classes.form} onSubmit={handleLogin}>
+                <form
+                    className={classes.form}
+                    onSubmit={handleLogin({ dispatch, history })}
+                >
                     <TextField
                         variant="outlined"
                         margin="normal"
