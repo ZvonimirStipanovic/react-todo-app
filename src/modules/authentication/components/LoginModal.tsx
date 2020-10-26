@@ -42,16 +42,7 @@ export default function LoginModal({
                 aria-labelledby="form-dialog-title"
             >
                 <DialogTitle id="form-dialog-title">{title}</DialogTitle>
-                <form
-                    onSubmit={() =>
-                        handleLogin({
-                            dispatch,
-                            type,
-                            setOpenLogin,
-                            history,
-                        })(email, password)
-                    }
-                >
+                <div>
                     <DialogContent>
                         <TextField
                             autoFocus
@@ -82,11 +73,22 @@ export default function LoginModal({
                         >
                             Cancel
                         </Button>
-                        <Button type="submit" color="primary">
+                        <Button
+                            type="submit"
+                            color="primary"
+                            onClick={() =>
+                                handleLogin({
+                                    dispatch,
+                                    type,
+                                    setOpenLogin,
+                                    history,
+                                })(email, password)
+                            }
+                        >
                             {buttonTitle}
                         </Button>
                     </DialogActions>
-                </form>
+                </div>
             </Dialog>
         </div>
     );

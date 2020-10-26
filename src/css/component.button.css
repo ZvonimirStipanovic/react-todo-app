@@ -32,6 +32,10 @@
     color: white;
     background: $color-secondary;
 
+    svg {
+        fill: white;
+    }
+
     &:hover,
     &:focus {
         background-color: $color-light-secondary;
@@ -69,17 +73,17 @@
 }
 
 .btn--size-sml {
-    padding: $unit $unit;
+    padding: calc($unit * 2) calc($unit * 2);
     margin-right: calc($unit * 5);
 }
 
 .btn--size-med {
-    width: calc($unit * 20);
+    padding: calc($unit * 2) calc($unit * 5);
 }
 
 .btn--size-lrg {
-    width: calc($unit * 98);
-    height: calc($unit * 9);
+    width: 100%;
+    padding: calc($unit * 3) calc($unit * 25);
 }
 
 .btn--shadow-low {

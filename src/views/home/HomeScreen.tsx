@@ -8,9 +8,12 @@ import { Task, TaskService, tasksStyles, TodoListItem } from 'modules/tasks';
 import { AppState } from 'modules/redux-store/';
 import { getActiveTasks } from 'modules/tasks/redux';
 import { AppRoute } from 'const';
-import { Header } from 'components';
+import { Button, Header } from 'components';
 import { TasksActions } from 'modules/tasks/redux';
 import { useAuthHook } from 'modules/authentication/hooks';
+import { ReactComponent as Finished } from 'assets/ui-icons/finished.svg';
+import { ReactComponent as Add } from 'assets/ui-icons/add.svg';
+import { ButtonSize, ButtonType } from 'models';
 
 function HomeScreen({ history }: RouterProps) {
     const dispatch = useDispatch();
@@ -28,30 +31,30 @@ function HomeScreen({ history }: RouterProps) {
         setLoading(false);
     }, []);
 
-    const onAddClick = React.useCallback(() => history.push(AppRoute.Add), [
-        history,
-    ]);
-
     const addButton = React.useMemo(
         () => (
-            <Grid container justify="flex-end" alignItems="flex-end">
-                <IconButton
-                    aria-label="Add"
-                    onClick={onAddClick}
-                    style={{ margin: 16 }}
+            <div className="btn--wrapper-end">
+                <Button
+                    variant={ButtonType.Primary}
+                    size={ButtonSize.Small}
+                    handleButtonClick={() => history.push(AppRoute.Add)}
+                    additionalClasses={'btn--circle'}
                 >
-                    <AddCircleOutlinedIcon color="primary" fontSize="large" />
-                </IconButton>
-                <IconButton
-                    onClick={() => history.push(AppRoute.Finished)}
-                    style={{ margin: 16 }}
-                    aria-label="Done"
+                    <Add />
+                </Button>
+                <Button
+                    variant={ButtonType.Secondary}
+                    handleButtonClick={(event: any) =>
+                        history.push(AppRoute.Finished)
+                    }
+                    size={ButtonSize.Small}
+                    additionalClasses={'btn--circle'}
                 >
-                    <CheckCircleOutlineIcon color="primary" fontSize="large" />
-                </IconButton>
-            </Grid>
+                    <Finished />
+                </Button>
+            </div>
         ),
-        [onAddClick, history]
+        [history]
     );
 
     const onDeleteItemClick = React.useCallback(
