@@ -9,7 +9,12 @@ interface Props {
 
 export const BackButton: React.FC<Props> = ({ to }) => {
     return (
-        <Button size={ButtonSize.Medium} variant={ButtonType.Back} to={to}>
+        <Button
+            size={ButtonSize.Small}
+            variant={ButtonType.Back}
+            to={to}
+            additionalClasses="btn--circle"
+        >
             <Left>Back</Left>
         </Button>
     );

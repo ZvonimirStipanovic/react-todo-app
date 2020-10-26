@@ -19,7 +19,7 @@
 
 .btn--back {
     background: transparent;
-    border-radius: 50%;
+
     &:hover,
     &:focus {
         background-color: $color-light-primary;
@@ -43,13 +43,18 @@
     }
 }
 
-.btn--sml {
+.btn--circle {
+    border-radius: 50%;
 }
 
-.btn--med {
-    height: calc($unit * 9);
-    padding: 0 calc($unit * 5);
+.btn--size-sml {
+    padding: $unit $unit;
+    margin-right: calc($unit * 5);
 }
 
-.btn--lrg {
+.btn--size-med {
+    padding: $unit calc($unit * 5);
+}
+
+.btn--size-lrg {
 }

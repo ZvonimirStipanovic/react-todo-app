@@ -5,7 +5,7 @@
 .header {
     position: relative;
     background-color: $color-primary;
-    padding: 0 10px;
+    padding: 0 calc($unit * 3);
     align-items: center;
     overflow: hidden;
     box-shadow: 0 4.5px 4px rgba(0, 0, 0, 0.035),
@@ -16,7 +16,7 @@
 .wrapper {
     display: flex;
     align-items: center;
-    height: 64px;
+    padding: calc($unit * 5) 0;
 }
 
 .button-wrapper {
@@ -25,12 +25,14 @@
 }
 
 .title {
-    display: block;
+    cursor: default;
     margin: auto;
-    font-size: 24px;
-    color: white;
+}
 
-    &:hover {
-        cursor: default;
-    }
+.title--header-white {
+    color: white;
+}
+
+.title--header-size {
+    font-size: 24px;
 }

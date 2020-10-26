@@ -66,7 +66,9 @@ export const Header = ({
             <div className="wrapper">
                 {showBackButton && to ? <BackButton to={to} /> : <div />}
                 <div className="title-wrapper">
-                    <p className="title">{title}</p>
+                    <p className="title title--header-size title--header-white">
+                        {title}
+                    </p>
                 </div>
                 {showRightButtons ? (
                     <div className="button-wrapper">{loginButtons()}</div>

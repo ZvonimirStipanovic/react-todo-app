@@ -52,11 +52,11 @@ export const Button: React.FC<Props> = ({
     function buttonSize() {
         switch (size) {
             case ButtonSize.Small:
-                return 'btn--sml';
+                return 'btn--size-sml';
             case ButtonSize.Medium:
-                return 'btn--med';
+                return 'btn--size-med';
             case ButtonSize.Large:
-                return 'btn--lrg';
+                return 'btn--size-lrg';
             default:
                 return;
         }
