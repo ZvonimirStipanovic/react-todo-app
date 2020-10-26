@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Task, TodoListItem } from 'modules/tasks';
 import { TasksActions } from 'modules/tasks/redux/action';
 import { getCompletedTasks } from 'modules/tasks/redux/selectors';
-import { Header, HeaderHtml } from 'components';
+import { Header } from 'components';
 import { AppState } from 'modules/redux-store';
 import { TaskService } from 'modules/tasks';
 import { AppRoute } from 'const';
@@ -13,22 +13,15 @@ import { AppRoute } from 'const';
 function FinishedTasksScreen({ history }: RouterProps) {
     const dispatch = useDispatch();
 
-    const onBackClick = () => history.goBack();
-
     const tasks = useSelector((state: AppState) => getCompletedTasks(state));
 
     return (
         <div>
-            {/* <Header
-                title="Finished Todos"
-                showBackButton={true}
-                onBackClick={onBackClick}
-            /> */}
-            <HeaderHtml
-                title="HTML"
+            <Header
+                title="FINISHED TASKS"
                 to={AppRoute.Home}
                 showBackButton={true}
-                showRightButtons={true}
+                showRightButtons={false}
             />
             {tasks.length < 1 ? null : (
                 <Paper style={{ margin: 16 }}>

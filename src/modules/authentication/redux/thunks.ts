@@ -25,6 +25,7 @@ const login = (
 ) => (dispatch: Dispatch) => {
     AuthService.login(email, password).then(() => {
         TaskThunkActions.getTasks(false)(dispatch).then(() => {
+            login(email, password);
             setOpenLogin && setOpenLogin(false);
             history && history.push(AppRoute.Home);
         });

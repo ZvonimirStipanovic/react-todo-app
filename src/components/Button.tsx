@@ -6,6 +6,7 @@ interface Props {
     variant?: ButtonType;
     size?: ButtonSize;
     to?: string;
+    handleButtonClick?: VoidFunction;
     additionalClasses?: string;
 }
 
@@ -14,6 +15,7 @@ export const Button: React.FC<Props> = ({
     size,
     to,
     additionalClasses,
+    handleButtonClick,
     children,
 }) => {
     return to ? (
@@ -25,6 +27,7 @@ export const Button: React.FC<Props> = ({
         </Link>
     ) : (
         <button
+            onClick={handleButtonClick}
             className={`btn ${buttonType()} ${buttonSize()} ${additionalClasses}`}
         >
             {children}
@@ -37,8 +40,10 @@ export const Button: React.FC<Props> = ({
                 return 'btn--primary';
             case ButtonType.Secondary:
                 return 'btn--secondary';
-            case ButtonType.PrimaryOutline:
-                return 'btn--primary--outline';
+            case ButtonType.Back:
+                return 'btn--back';
+            case ButtonType.Header:
+                return 'btn--header';
             default:
                 return;
         }
@@ -49,9 +54,9 @@ export const Button: React.FC<Props> = ({
             case ButtonSize.Small:
                 return 'btn--sml';
             case ButtonSize.Medium:
-                return 'btn-med';
+                return 'btn--med';
             case ButtonSize.Large:
-                return 'btn-lrg';
+                return 'btn--lrg';
             default:
                 return;
         }

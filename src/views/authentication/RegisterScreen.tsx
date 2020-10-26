@@ -7,6 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { Header } from 'components';
 import { useAuthHook } from 'modules/authentication/hooks';
+import { AppRoute } from 'const';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -33,8 +34,6 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function RegisterScreen({ history }: RouterProps) {
     const classes = useStyles();
 
-    const onBackClick = () => history.goBack();
-
     const { handleRegister } = useAuthHook();
 
     return (
@@ -42,7 +41,8 @@ export default function RegisterScreen({ history }: RouterProps) {
             <Header
                 title="Register"
                 showBackButton={true}
-                onBackClick={onBackClick}
+                to={AppRoute.Home}
+                showRightButtons={false}
             />
             <Container component="main" maxWidth="xs">
                 <div className={classes.paper}>

@@ -13,7 +13,6 @@ import { useAuthHook } from 'modules/authentication/hooks';
 export default function AddScreen({ history }: RouterProps) {
     const [category, setCategory] = useState<string>('Home');
 
-    const onBackClick = () => history.goBack();
     const { isAnonymous } = useAuthHook(false);
 
     const handleCategoriesChange = React.useCallback(
@@ -28,7 +27,8 @@ export default function AddScreen({ history }: RouterProps) {
             <Header
                 title="Add new todo"
                 showBackButton={true}
-                onBackClick={onBackClick}
+                to={AppRoute.Home}
+                showRightButtons={false}
             />
             <form style={{ margin: 16 }} onSubmit={handleAddTodo}>
                 <TextField

@@ -1,0 +1,9 @@
+/*------------------------------------*\
+    # vars.globals
+\*------------------------------------*/
+
+/**
+ * The $unit variable is a global variable to be used
+ * in paddings, margins, for sizing and positioning
+ */
+$unit: 4px;

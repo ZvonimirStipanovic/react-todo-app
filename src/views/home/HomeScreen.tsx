@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { RouterProps } from 'react-router';
-import Button from '@material-ui/core/Button';
 import { List, Paper, IconButton, Grid, TextField } from '@material-ui/core';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import { useDispatch, useSelector } from 'react-redux';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { Task, TaskService, tasksStyles, TodoListItem } from 'modules/tasks';
-import { logout } from 'modules/authentication';
-import LoginModal from 'modules/authentication/components/LoginModal';
 import { AppState } from 'modules/redux-store/';
 import { getActiveTasks } from 'modules/tasks/redux';
 import { AppRoute } from 'const';
@@ -22,8 +19,6 @@ function HomeScreen({ history }: RouterProps) {
 
     const classes = tasksStyles();
 
-    const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
-    const [showRegisterModal, setShowRegisterModal] = useState<boolean>(false);
     const [searchValue, setSearchValue] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -32,70 +27,6 @@ function HomeScreen({ history }: RouterProps) {
     useEffect(() => {
         setLoading(false);
     }, []);
-
-    const handleLoginButton = React.useCallback(
-        () => setShowLoginModal(true),
-        []
-    );
-
-    const handleRegisterButton = React.useCallback(
-        () => setShowRegisterModal(true),
-        []
-    );
-
-    const loginModal = React.useMemo(
-        () => (
-            <LoginModal
-                open={showLoginModal}
-                buttonTitle="Log in"
-                title="Log in"
-                type="login"
-                setOpenLogin={(val: boolean) => setShowLoginModal(val)}
-            />
-        ),
-        [showLoginModal]
-    );
-
-    const registerModal = React.useMemo(
-        () => (
-            <LoginModal
-                open={showRegisterModal}
-                buttonTitle="Register"
-                title="Register"
-                type="register"
-                setOpenLogin={(val: boolean) => setShowRegisterModal(val)}
-            />
-        ),
-        [showRegisterModal]
-    );
-
-    const handleLogout = React.useCallback(() => {
-        logout();
-        history.push(AppRoute.Login);
-    }, [history]);
-
-    const topRightButtons = React.useMemo(
-        () =>
-            isAnonymous ? (
-                <>
-                    <Button
-                        color="inherit"
-                        onClick={handleLoginButton}
-                        style={{ marginRight: 8 }}
-                    >
-                        Log in
-                    </Button>
-                    <Button color="inherit" onClick={handleRegisterButton}>
-                        Register
-                    </Button>
-                </>
-            ) : (
-                <Button color="inherit" onClick={handleLogout}>
-                    Log out
-                </Button>
-            ),
-        [isAnonymous, handleLoginButton, handleRegisterButton, handleLogout]
-    );
 
     const onAddClick = React.useCallback(() => history.push(AppRoute.Add), [
         history,
@@ -231,14 +162,12 @@ function HomeScreen({ history }: RouterProps) {
     return (
         <div className={classes.root}>
             <Header
-                title="Home screen"
+                title="HOME SCREEN"
+                history={history}
                 showBackButton={false}
-                topRightButtons={topRightButtons}
-                titleStyle={classes.title}
+                showRightButtons={true}
             />
             {notLoggedText()}
-            {loginModal}
-            {registerModal}
             <div style={{ margin: 16 }}>
                 <TextField
                     id="search"

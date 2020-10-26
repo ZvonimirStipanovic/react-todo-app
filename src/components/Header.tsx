@@ -1,67 +1,100 @@
-import React from 'react';
-import { AppBar, IconButton, Toolbar, Typography } from '@material-ui/core';
-import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
+import React, { useState } from 'react';
 import { BackButton } from './BackButton';
+import { Button } from './Button';
+import { ButtonSize, ButtonType } from 'models';
+import * as H from 'history';
+import { LoginModal, logout } from 'modules/authentication';
+import { AppRoute } from 'const';
+import { useAuthHook } from 'modules/authentication/hooks';
 
 interface HeaderProps {
     title: string;
     showBackButton: boolean;
-    topRightButtons?: React.ReactElement;
-    titleStyle?: string;
-    onBackClick?: () => void;
+    showRightButtons: boolean;
+
+    to?: string;
+    history?: H.History;
 }
 
 export const Header = ({
     title,
-    showBackButton,
-    topRightButtons,
-    titleStyle,
-    onBackClick,
-}: HeaderProps) => {
-    return (
-        <AppBar position="static">
-            <Toolbar>
-                {showBackButton && (
-                    <IconButton
-                        aria-label="Back"
-                        onClick={onBackClick}
-                        style={{ marginRight: 8 }}
-                    >
-                        <ArrowBackOutlinedIcon style={{ color: 'white' }} />
-                    </IconButton>
-                )}
-                <Typography
-                    variant="h6"
-                    className={titleStyle ? titleStyle : undefined}
-                >
-                    {title}
-                </Typography>
-                {topRightButtons && topRightButtons}
-            </Toolbar>
-        </AppBar>
-    );
-};
-
-interface HeaderPropsHtml {
-    title: string;
-    to: string;
-    showBackButton: boolean;
-    showRightButtons: boolean;
-}
-
-export const HeaderHtml = ({
-    title,
     to,
     showBackButton,
     showRightButtons,
-}: HeaderPropsHtml) => {
+    history,
+}: HeaderProps) => {
+    const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
+    const [showRegisterModal, setShowRegisterModal] = useState<boolean>(false);
+
+    const { isAnonymous } = useAuthHook(false);
+
+    const loginButtons = () => {
+        if (isAnonymous) {
+            return (
+                <div>
+                    <Button
+                        size={ButtonSize.Medium}
+                        variant={ButtonType.Header}
+                        handleButtonClick={() => setShowLoginModal(true)}
+                    >
+                        Log In
+                    </Button>
+                    <Button
+                        size={ButtonSize.Medium}
+                        variant={ButtonType.Header}
+                        handleButtonClick={() => setShowRegisterModal(true)}
+                    >
+                        Register
+                    </Button>
+                </div>
+            );
+        } else {
+            return (
+                <Button
+                    size={ButtonSize.Medium}
+                    variant={ButtonType.Header}
+                    handleButtonClick={() => handleLogout()}
+                >
+                    Log out
+                </Button>
+            );
+        }
+    };
+
     return (
         <header className="header">
             <div className="wrapper">
-                {showBackButton && <BackButton to={to} />}
-                <h6>{title}</h6>
-                {showRightButtons && <div></div>}
+                {showBackButton && to ? <BackButton to={to} /> : <div />}
+                <div className="title-wrapper">
+                    <p className="title">{title}</p>
+                </div>
+                {showRightButtons ? (
+                    <div className="button-wrapper">{loginButtons()}</div>
+                ) : (
+                    <div />
+                )}
             </div>
+            <LoginModal
+                open={showLoginModal}
+                buttonTitle="Log in"
+                title="Log in"
+                type="login"
+                history={history}
+                setOpenLogin={setShowLoginModal}
+            />
+            <LoginModal
+                open={showRegisterModal}
+                buttonTitle="Register"
+                title="Register"
+                type="register"
+                history={history}
+                setOpenLogin={setShowRegisterModal}
+            />
         </header>
     );
+
+    function handleLogout() {
+        logout();
+        history!.push(AppRoute.Login);
+    }
 };

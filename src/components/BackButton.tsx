@@ -9,11 +9,7 @@ interface Props {
 
 export const BackButton: React.FC<Props> = ({ to }) => {
     return (
-        <Button
-            size={ButtonSize.Medium}
-            variant={ButtonType.PrimaryOutline}
-            to={to}
-        >
+        <Button size={ButtonSize.Medium} variant={ButtonType.Back} to={to}>
             <Left>Back</Left>
         </Button>
     );

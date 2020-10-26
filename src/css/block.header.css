@@ -3,6 +3,34 @@
 \*------------------------------------*/
 
 .header {
-    background: rgb(21, 17, 230);
-    box-shadow: 0 5.3px 8px rgba(0, 0, 0, 0.02), 0 42px 64px rgba(0, 0, 0, 0.02);
+    position: relative;
+    background-color: $color-primary;
+    padding: 0 10px;
+    align-items: center;
+    overflow: hidden;
+    box-shadow: 0 4.5px 4px rgba(0, 0, 0, 0.035),
+        0 12.5px 11px rgba(0, 0, 0, 0.05), 0 30.1px 26.5px rgba(0, 0, 0, 0.065),
+        0 100px 88px rgba(0, 0, 0, 0.1);
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    height: 64px;
+}
+
+.button-wrapper {
+    position: absolute;
+    right: 0;
+}
+
+.title {
+    display: block;
+    margin: auto;
+    font-size: 24px;
+    color: white;
+
+    &:hover {
+        cursor: default;
+    }
 }

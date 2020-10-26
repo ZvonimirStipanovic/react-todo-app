@@ -1,2 +1,9 @@
+/** Import: variables */
+@import 'vars.colors.css';
+@import 'vars.globals.css';
+
 /** Import: block */
 @import 'block.header.css';
+
+/** Import: components */
+@import 'component.button.css';

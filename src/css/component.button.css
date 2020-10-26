@@ -1,0 +1,55 @@
+/*------------------------------------*\
+    # component.btn
+\*------------------------------------*/
+
+.btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+
+    cursor: pointer;
+    background: transparent;
+}
+
+.btn--primary {
+}
+
+.btn--secondary {
+}
+
+.btn--back {
+    background: transparent;
+    border-radius: 50%;
+    &:hover,
+    &:focus {
+        background-color: $color-light-primary;
+
+        svg {
+            fill: white;
+        }
+    }
+}
+
+.btn--header {
+    border: none;
+    outline: none;
+    margin: 0 $unit;
+
+    font-size: 18px;
+
+    &:hover {
+        background-color: $color-light-primary;
+        color: white;
+    }
+}
+
+.btn--sml {
+}
+
+.btn--med {
+    height: calc($unit * 9);
+    padding: 0 calc($unit * 5);
+}
+
+.btn--lrg {
+}

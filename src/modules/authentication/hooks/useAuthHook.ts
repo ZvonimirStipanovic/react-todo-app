@@ -50,14 +50,14 @@ export const useAuthHook = (shouldGetTasks?: boolean) => {
                 setOpenLogin!
             )(dispatch);
 
+        setIsAnonymous(false);
+
         AuthThunkActions.login(
             email.value,
             password.value,
             setOpenLogin,
             history
         )(dispatch);
-
-        setIsAnonymous(false);
     };
 
     return { isAnonymous, handleRegister, handleLogin };

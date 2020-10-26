@@ -16,8 +16,6 @@ export default function UpdateScreen({ history }: RouterProps) {
         if (state) setTask(state.task[0]);
     }, [history.location.state]);
 
-    const onBackClick = () => history.goBack();
-
     const handleChangeTask = React.useCallback(
         (name: string) => (event: React.ChangeEvent<HTMLTextAreaElement>) => {
             setTask({
@@ -32,8 +30,9 @@ export default function UpdateScreen({ history }: RouterProps) {
         <div>
             <Header
                 title="Update Todo"
+                to={AppRoute.Home}
                 showBackButton={true}
-                onBackClick={onBackClick}
+                showRightButtons={false}
             />
             <form style={{ margin: 16 }} onSubmit={saveTodo}>
                 <TextField

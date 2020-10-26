@@ -6,6 +6,7 @@ module.exports = (config) => {
             require('postcss-import')(),
             require('postcss-nested')(),
             require('postcss-preset-env')(),
+            require('postcss-simple-vars')(),
         ],
     });
 
