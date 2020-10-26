@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { RouterProps } from 'react-router';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import { Header } from 'components';
+import { Button, Header } from 'components';
 import { useAuthHook } from 'modules/authentication/hooks';
 import { AppRoute } from 'const';
+import { ButtonSize, ButtonType } from 'models';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -32,6 +32,9 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function RegisterScreen({ history }: RouterProps) {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
     const classes = useStyles();
 
     const { handleRegister } = useAuthHook();
@@ -49,12 +52,12 @@ export default function RegisterScreen({ history }: RouterProps) {
                     <Typography component="h1" variant="h5">
                         Register
                     </Typography>
-                    <form
-                        className={classes.form}
-                        onSubmit={handleRegister(history)}
-                    >
+                    <form className={classes.form}>
                         <TextField
                             variant="outlined"
+                            onChange={(
+                                event: React.ChangeEvent<HTMLInputElement>
+                            ) => setEmail(event.target.value)}
                             margin="normal"
                             required
                             fullWidth
@@ -66,6 +69,9 @@ export default function RegisterScreen({ history }: RouterProps) {
                         />
                         <TextField
                             variant="outlined"
+                            onChange={(
+                                event: React.ChangeEvent<HTMLInputElement>
+                            ) => setPassword(event.target.value)}
                             margin="normal"
                             required
                             fullWidth
@@ -75,11 +81,12 @@ export default function RegisterScreen({ history }: RouterProps) {
                             id="password"
                         />
                         <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            className={classes.submit}
+                            variant={ButtonType.Primary}
+                            size={ButtonSize.Large}
+                            additionalClasses={
+                                'btn--font-med btn--elipsoid btn--shadow-low'
+                            }
+                            handleButtonClick={handleRegisterButton}
                         >
                             Register
                         </Button>
@@ -88,4 +95,9 @@ export default function RegisterScreen({ history }: RouterProps) {
             </Container>
         </div>
     );
+
+    function handleRegisterButton(event: any) {
+        event.preventDefault();
+        handleRegister(history)(email, password);
+    }
 }

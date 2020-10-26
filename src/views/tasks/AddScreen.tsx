@@ -2,16 +2,18 @@ import React, { useState } from 'react';
 import { RouterProps } from 'react-router';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import Button from '@material-ui/core/Button';
 import { LOGIN_TOKEN } from 'modules/authentication';
 import { Task, TaskService } from 'modules/tasks';
-import { categories } from 'models';
+import { ButtonSize, ButtonType, categories } from 'models';
 import { AppRoute } from 'const';
-import { Header } from 'components';
+import { Button, Header } from 'components';
 import { useAuthHook } from 'modules/authentication/hooks';
 
 export default function AddScreen({ history }: RouterProps) {
+    const [title, setTitle] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
     const [category, setCategory] = useState<string>('Home');
+    const [time, setTime] = useState<string>('');
 
     const { isAnonymous } = useAuthHook(false);
 
@@ -30,9 +32,12 @@ export default function AddScreen({ history }: RouterProps) {
                 to={AppRoute.Home}
                 showRightButtons={false}
             />
-            <form style={{ margin: 16 }} onSubmit={handleAddTodo}>
+            <form style={{ margin: 16 }}>
                 <TextField
                     id="title"
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        setTitle(event.target.value)
+                    }
                     label="Title"
                     placeholder="Enter a title of a todo"
                     fullWidth
@@ -44,6 +49,9 @@ export default function AddScreen({ history }: RouterProps) {
                 />
                 <TextField
                     id="description"
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        setDescription(event.target.value)
+                    }
                     label="Description"
                     placeholder="Enter a description of a todo"
                     fullWidth
@@ -80,6 +88,9 @@ export default function AddScreen({ history }: RouterProps) {
                 </TextField>
                 <TextField
                     id="time"
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        setTime(event.target.value)
+                    }
                     label="Time"
                     type="time"
                     defaultValue="07:30"
@@ -89,31 +100,33 @@ export default function AddScreen({ history }: RouterProps) {
                         shrink: true,
                     }}
                 />
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    style={{ height: 40, marginTop: 16 }}
-                >
-                    SUBMIT
-                </Button>
+                <div className="btn--wrapper-center">
+                    <Button
+                        variant={ButtonType.Primary}
+                        size={ButtonSize.Large}
+                        additionalClasses={
+                            'btn--font-med btn--elipsoid btn--shadow-low btn--size-med'
+                        }
+                        handleButtonClick={handleAddTodo}
+                    >
+                        Add
+                    </Button>
+                </div>
             </form>
         </div>
     );
 
     async function handleAddTodo(event: any) {
         event.preventDefault();
-        const { title, description, time } = event.target.elements;
         const userId = await localStorage.getItem(LOGIN_TOKEN);
         const date = new Date().toISOString();
         const task = new Task(
             userId!,
             date,
-            title.value,
-            description.value,
+            title,
+            description,
             category,
-            time.value,
+            time,
             false
         );
         TaskService.addTask(task, isAnonymous).then(() =>

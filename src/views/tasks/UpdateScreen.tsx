@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { RouterProps } from 'react-router';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import Button from '@material-ui/core/Button';
 import { Task, TaskService } from 'modules/tasks';
-import { categories } from 'models';
+import { ButtonSize, ButtonType, categories } from 'models';
 import { AppRoute } from 'const';
-import { Header } from 'components';
+import { Button, Header } from 'components';
 
 export default function UpdateScreen({ history }: RouterProps) {
     const [task, setTask] = useState<Task>();
@@ -34,7 +33,7 @@ export default function UpdateScreen({ history }: RouterProps) {
                 showBackButton={true}
                 showRightButtons={false}
             />
-            <form style={{ margin: 16 }} onSubmit={saveTodo}>
+            <form style={{ margin: 16 }}>
                 <TextField
                     id="title"
                     label="Title"
@@ -98,15 +97,18 @@ export default function UpdateScreen({ history }: RouterProps) {
                         shrink: true,
                     }}
                 />
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    style={{ height: 40, marginTop: 16 }}
-                >
-                    Update
-                </Button>
+                <div className="btn--wrapper-center">
+                    <Button
+                        variant={ButtonType.Primary}
+                        size={ButtonSize.Large}
+                        additionalClasses={
+                            'btn--font-med btn--elipsoid btn--shadow-low btn--size-med'
+                        }
+                        handleButtonClick={saveTodo}
+                    >
+                        Update
+                    </Button>
+                </div>
             </form>
         </div>
     );

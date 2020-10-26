@@ -6,7 +6,7 @@ interface Props {
     variant?: ButtonType;
     size?: ButtonSize;
     to?: string;
-    handleButtonClick?: VoidFunction;
+    handleButtonClick?: (event: any) => void;
     additionalClasses?: string;
 }
 
@@ -40,10 +40,8 @@ export const Button: React.FC<Props> = ({
                 return 'btn--primary';
             case ButtonType.Secondary:
                 return 'btn--secondary';
-            case ButtonType.Back:
-                return 'btn--back';
-            case ButtonType.Header:
-                return 'btn--header';
+            case ButtonType.Neutral:
+                return 'btn--neutral';
             default:
                 return;
         }

@@ -11,7 +11,7 @@ export const BackButton: React.FC<Props> = ({ to }) => {
     return (
         <Button
             size={ButtonSize.Small}
-            variant={ButtonType.Back}
+            variant={ButtonType.Primary}
             to={to}
             additionalClasses="btn--circle"
         >

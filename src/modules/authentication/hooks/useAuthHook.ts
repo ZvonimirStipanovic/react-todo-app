@@ -28,10 +28,11 @@ export const useAuthHook = (shouldGetTasks?: boolean) => {
         if (shouldGetTasks) dispatch(TaskThunkActions.getTasks(isAnonymous));
     }, [dispatch, isAnonymous, shouldGetTasks]);
 
-    const handleRegister = (history: H.History) => (event: any) => {
-        event.preventDefault();
-        const { email, password } = event.target.elements;
-        AuthService.register(email.value, password.value, history);
+    const handleRegister = (history: H.History) => (
+        email: string,
+        password: string
+    ) => {
+        AuthService.register(email, password, history);
     };
 
     const handleLogin = ({
@@ -39,22 +40,19 @@ export const useAuthHook = (shouldGetTasks?: boolean) => {
         history,
         setOpenLogin,
         type,
-    }: LoginProps) => (event: any) => {
-        event.preventDefault();
-        const { email, password } = event.target.elements;
-
+    }: LoginProps) => (email: string, password: string) => {
         if (type === 'register')
             AuthThunkActions.registerAndLogin(
-                email.value,
-                password.value,
+                email,
+                password,
                 setOpenLogin!
             )(dispatch);
 
         setIsAnonymous(false);
 
         AuthThunkActions.login(
-            email.value,
-            password.value,
+            email,
+            password,
             setOpenLogin,
             history
         )(dispatch);

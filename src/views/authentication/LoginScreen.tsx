@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { RouterProps } from 'react-router';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
+import { Button } from 'components';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { AuthService, login } from 'modules/authentication';
 import { AppRoute } from 'const';
 import { useDispatch } from 'react-redux';
 import { useAuthHook } from 'modules/authentication/hooks';
+import { ButtonSize, ButtonType } from 'models';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -35,6 +36,9 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function LoginScreen({ history }: RouterProps) {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -60,12 +64,12 @@ export default function LoginScreen({ history }: RouterProps) {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                <form
-                    className={classes.form}
-                    onSubmit={handleLogin({ dispatch, history })}
-                >
+                <form className={classes.form}>
                     <TextField
                         variant="outlined"
+                        onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                        ) => setEmail(event.target.value)}
                         margin="normal"
                         required
                         fullWidth
@@ -77,6 +81,9 @@ export default function LoginScreen({ history }: RouterProps) {
                     />
                     <TextField
                         variant="outlined"
+                        onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                        ) => setPassword(event.target.value)}
                         margin="normal"
                         required
                         fullWidth
@@ -87,29 +94,33 @@ export default function LoginScreen({ history }: RouterProps) {
                         autoComplete="current-password"
                     />
                     <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
+                        variant={ButtonType.Primary}
+                        size={ButtonSize.Large}
+                        additionalClasses={
+                            'btn--font-med btn--elipsoid btn--shadow-low'
+                        }
+                        handleButtonClick={handleLoginButton}
                     >
                         Sign In
                     </Button>
                     <Button
-                        onClick={handleLoginWithFacebook}
-                        fullWidth
-                        variant="contained"
-                        color="secondary"
-                        className={classes.submit}
+                        variant={ButtonType.Secondary}
+                        size={ButtonSize.Large}
+                        additionalClasses={
+                            'btn--font-med btn--elipsoid btn--shadow-low'
+                        }
+                        handleButtonClick={handleLoginWithFacebook}
                     >
                         Sign in with Facebook
                     </Button>
+
                     <Button
-                        onClick={handleAnonymousLogin}
-                        fullWidth
-                        variant="contained"
-                        color="inherit"
-                        className={classes.submit}
+                        variant={ButtonType.Neutral}
+                        size={ButtonSize.Large}
+                        additionalClasses={
+                            'btn--font-med btn--elipsoid btn--shadow-low'
+                        }
+                        handleButtonClick={handleAnonymousLogin}
                     >
                         Sign in anonymously
                     </Button>
@@ -124,4 +135,9 @@ export default function LoginScreen({ history }: RouterProps) {
             </div>
         </Container>
     );
+
+    function handleLoginButton(event: any) {
+        event.preventDefault();
+        handleLogin({ dispatch, history })(email, password);
+    }
 }

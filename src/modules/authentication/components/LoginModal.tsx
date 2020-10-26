@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -28,6 +28,8 @@ export default function LoginModal({
     setOpenLogin,
     history,
 }: Props) {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const dispatch = useDispatch();
 
     const { handleLogin } = useAuthHook(false);
@@ -41,16 +43,21 @@ export default function LoginModal({
             >
                 <DialogTitle id="form-dialog-title">{title}</DialogTitle>
                 <form
-                    onSubmit={handleLogin({
-                        dispatch,
-                        type,
-                        setOpenLogin,
-                        history,
-                    })}
+                    onSubmit={() =>
+                        handleLogin({
+                            dispatch,
+                            type,
+                            setOpenLogin,
+                            history,
+                        })(email, password)
+                    }
                 >
                     <DialogContent>
                         <TextField
                             autoFocus
+                            onChange={(
+                                event: React.ChangeEvent<HTMLInputElement>
+                            ) => setEmail(event.target.value)}
                             margin="dense"
                             id="email"
                             label="Email Address"
@@ -59,6 +66,9 @@ export default function LoginModal({
                         />
                         <TextField
                             margin="dense"
+                            onChange={(
+                                event: React.ChangeEvent<HTMLInputElement>
+                            ) => setPassword(event.target.value)}
                             id="password"
                             label="Password"
                             type="password"

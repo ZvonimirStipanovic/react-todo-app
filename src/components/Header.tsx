@@ -34,14 +34,16 @@ export const Header = ({
                 <div>
                     <Button
                         size={ButtonSize.Medium}
-                        variant={ButtonType.Header}
+                        variant={ButtonType.Primary}
+                        additionalClasses="btn--elipsoid"
                         handleButtonClick={() => setShowLoginModal(true)}
                     >
                         Log In
                     </Button>
                     <Button
                         size={ButtonSize.Medium}
-                        variant={ButtonType.Header}
+                        variant={ButtonType.Primary}
+                        additionalClasses="btn--elipsoid"
                         handleButtonClick={() => setShowRegisterModal(true)}
                     >
                         Register
@@ -52,7 +54,8 @@ export const Header = ({
             return (
                 <Button
                     size={ButtonSize.Medium}
-                    variant={ButtonType.Header}
+                    variant={ButtonType.Primary}
+                    additionalClasses="btn--elipsoid"
                     handleButtonClick={() => handleLogout()}
                 >
                     Log out
@@ -71,7 +74,9 @@ export const Header = ({
                     </p>
                 </div>
                 {showRightButtons ? (
-                    <div className="button-wrapper">{loginButtons()}</div>
+                    <div className="header--button-wrapper">
+                        {loginButtons()}
+                    </div>
                 ) : (
                     <div />
                 )}
