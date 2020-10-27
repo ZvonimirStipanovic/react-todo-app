@@ -1,104 +1,72 @@
 import React, { useState } from 'react';
 import { RouterProps } from 'react-router';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
 import { LOGIN_TOKEN } from 'modules/authentication';
 import { Task, TaskService } from 'modules/tasks';
 import { ButtonSize, ButtonType, categories } from 'models';
 import { AppRoute } from 'const';
-import { Button, Header } from 'components';
+import { Button, Header, TextField } from 'components';
 import { useAuthHook } from 'modules/authentication/hooks';
+// @ts-ignore
+import TimePicker from 'react-time-picker';
 
 export default function AddScreen({ history }: RouterProps) {
     const [title, setTitle] = useState<string>('');
     const [description, setDescription] = useState<string>('');
     const [category, setCategory] = useState<string>('Home');
-    const [time, setTime] = useState<string>('');
+    const [time, setTime] = useState<string>('08:00');
 
     const { isAnonymous } = useAuthHook(false);
 
-    const handleCategoriesChange = React.useCallback(
-        (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-            setCategory(event.target.value);
-        },
-        []
-    );
+    const handleCategoriesChange = React.useCallback((event: any) => {
+        setCategory(event.target.value);
+    }, []);
 
     return (
-        <div>
+        <div className="v--add">
             <Header
                 title="Add new todo"
                 showBackButton={true}
                 to={AppRoute.Home}
                 showRightButtons={false}
             />
-            <form style={{ margin: 16 }}>
+            <div className="v--add-wrapper">
                 <TextField
-                    id="title"
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                        setTitle(event.target.value)
-                    }
-                    label="Title"
+                    type="text"
                     placeholder="Enter a title of a todo"
-                    fullWidth
-                    margin="normal"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    variant="outlined"
+                    autoComplete="off"
+                    additionalClasses="textfield--size-lrg textfield-elipsoid"
+                    onChange={setTitle}
+                    name="title"
                 />
                 <TextField
-                    id="description"
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                        setDescription(event.target.value)
-                    }
-                    label="Description"
+                    type="text"
+                    additionalClasses="textfield--size-lrg textfield-elipsoid"
                     placeholder="Enter a description of a todo"
-                    fullWidth
-                    multiline
-                    rows={4}
-                    margin="normal"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    variant="outlined"
+                    autoComplete="off"
+                    onChange={setDescription}
+                    name="title"
                 />
-                <TextField
-                    id="category"
-                    select
-                    fullWidth
-                    margin="normal"
-                    label="Category"
-                    value={category}
-                    onChange={handleCategoriesChange}
-                    variant="outlined"
-                >
-                    <MenuItem key={categories.home} value={categories.home}>
-                        {categories.home}
-                    </MenuItem>
-                    <MenuItem key={categories.school} value={categories.school}>
-                        {categories.school}
-                    </MenuItem>
-                    <MenuItem key={categories.sport} value={categories.sport}>
-                        {categories.sport}
-                    </MenuItem>
-                    <MenuItem key={categories.work} value={categories.work}>
-                        {categories.work}
-                    </MenuItem>
-                </TextField>
-                <TextField
-                    id="time"
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                        setTime(event.target.value)
-                    }
-                    label="Time"
-                    type="time"
-                    defaultValue="07:30"
-                    fullWidth
-                    margin="normal"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
+                <div className="v--add-selection selection-elipsoid selection-shadow">
+                    <select onChange={handleCategoriesChange}>
+                        <option value={categories.home}>
+                            {categories.home}
+                        </option>
+                        <option value={categories.school}>
+                            {categories.school}
+                        </option>
+                        <option value={categories.sport}>
+                            {categories.sport}
+                        </option>
+                        <option value={categories.work}>
+                            {categories.work}
+                        </option>
+                    </select>
+                </div>
+
+                <TimePicker
+                    onChange={setTime}
+                    value={time}
+                    className="v--add-time"
                 />
                 <div className="btn--wrapper-center">
                     <Button
@@ -112,7 +80,7 @@ export default function AddScreen({ history }: RouterProps) {
                         Add
                     </Button>
                 </div>
-            </form>
+            </div>
         </div>
     );
 
