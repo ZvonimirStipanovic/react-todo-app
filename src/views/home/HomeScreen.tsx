@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { RouterProps } from 'react-router';
-import { List, Paper, TextField } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { Task, TaskService, tasksStyles, TodoListItem } from 'modules/tasks';
+import { Task, TaskService, TodoListItem } from 'modules/tasks';
 import { AppState } from 'modules/redux-store/';
 import { getActiveTasks } from 'modules/tasks/redux';
 import { AppRoute } from 'const';
-import { Button, Header } from 'components';
+import { Button, Header, TextField } from 'components';
 import { TasksActions } from 'modules/tasks/redux';
 import { useAuthHook } from 'modules/authentication/hooks';
 import { ReactComponent as Finished } from 'assets/ui-icons/finished.svg';
@@ -17,8 +16,6 @@ function HomeScreen({ history }: RouterProps) {
     const dispatch = useDispatch();
 
     const tasks = useSelector((state: AppState) => getActiveTasks(state));
-
-    const classes = tasksStyles();
 
     const [searchValue, setSearchValue] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
@@ -74,13 +71,6 @@ function HomeScreen({ history }: RouterProps) {
         [tasks, history]
     );
 
-    const onSearchChange = React.useCallback(
-        (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-            setSearchValue(event.target.value);
-        },
-        []
-    );
-
     const onCheckboxClick = React.useCallback(
         (taskId: string) => {
             const taskIndex = tasks.findIndex(
@@ -106,16 +96,7 @@ function HomeScreen({ history }: RouterProps) {
     const notLoggedText = React.useCallback(
         () =>
             isAnonymous ? (
-                <p
-                    style={{
-                        margin: 16,
-                        fontSize: 24,
-                        color: 'red',
-                        textAlign: 'center',
-                    }}
-                >
-                    YOU ARE NOT LOGGED IN
-                </p>
+                <p className="v--home-anonymous-text">YOU ARE NOT LOGGED IN</p>
             ) : null,
         [isAnonymous]
     );
@@ -140,7 +121,7 @@ function HomeScreen({ history }: RouterProps) {
             );
             if (toRender.length === 0)
                 return (
-                    <p style={{ margin: 12, color: 'gray' }}>
+                    <p className="listitem--box listitem--shadow listitem--round listitem--empty">
                         There are no todo's
                     </p>
                 );
@@ -161,7 +142,7 @@ function HomeScreen({ history }: RouterProps) {
     }, [searchValue, tasks, onDeleteItemClick, onEditClick, onCheckboxClick]);
 
     return (
-        <div className={classes.root}>
+        <div>
             <Header
                 title="HOME SCREEN"
                 history={history}
@@ -169,26 +150,17 @@ function HomeScreen({ history }: RouterProps) {
                 showRightButtons={true}
             />
             {notLoggedText()}
-            <div style={{ margin: 16 }}>
+            <div className="v--home-wapper">
                 <TextField
-                    id="search"
-                    label="Search"
+                    type="text"
+                    name="search"
                     placeholder="Search for a todo"
-                    fullWidth
-                    onChange={onSearchChange}
-                    margin="normal"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    variant="outlined"
+                    additionalClasses="textfield--size-lrg textfield--elipsoid"
+                    onChange={setSearchValue}
                 />
             </div>
 
-            {loading ? null : tasks.length < 1 ? null : (
-                <Paper style={{ margin: 16 }}>
-                    <List style={{ overflow: 'hidden' }}>{renderItems()}</List>
-                </Paper>
-            )}
+            {loading ? null : tasks.length < 1 ? null : renderItems()}
             {addButton}
         </div>
     );

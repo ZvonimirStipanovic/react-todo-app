@@ -1,6 +1,4 @@
-import { List, Paper } from '@material-ui/core';
 import React from 'react';
-import { RouterProps } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { Task, TodoListItem } from 'modules/tasks';
 import { TasksActions } from 'modules/tasks/redux/action';
@@ -10,7 +8,7 @@ import { AppState } from 'modules/redux-store';
 import { TaskService } from 'modules/tasks';
 import { AppRoute } from 'const';
 
-function FinishedTasksScreen({ history }: RouterProps) {
+function FinishedTasksScreen() {
     const dispatch = useDispatch();
 
     const tasks = useSelector((state: AppState) => getCompletedTasks(state));
@@ -23,22 +21,18 @@ function FinishedTasksScreen({ history }: RouterProps) {
                 showBackButton={true}
                 showRightButtons={false}
             />
-            {tasks.length < 1 ? null : (
-                <Paper style={{ margin: 16 }}>
-                    <List style={{ overflow: 'hidden' }}>
-                        {tasks.map((item: Task) => (
-                            <TodoListItem
-                                key={item.taskId + item.title}
-                                taskId={item.taskId}
-                                title={item.title}
-                                category={item.category}
-                                description={item.description}
-                                onDeleteClick={onDeleteItemClick}
-                            />
-                        ))}
-                    </List>
-                </Paper>
-            )}
+            {tasks.length < 1
+                ? null
+                : tasks.map((item: Task) => (
+                      <TodoListItem
+                          key={item.taskId + item.title}
+                          taskId={item.taskId}
+                          title={item.title}
+                          category={item.category}
+                          description={item.description}
+                          onDeleteClick={onDeleteItemClick}
+                      />
+                  ))}
         </div>
     );
 

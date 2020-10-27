@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-    ListItem,
-    Checkbox,
-    IconButton,
-    ListItemText,
-    ListItemSecondaryAction,
-} from '@material-ui/core';
+import { Checkbox, IconButton } from '@material-ui/core';
 import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import SportsSoccerIcon from '@material-ui/icons/SportsSoccer';
@@ -54,41 +48,38 @@ const TodoListItem = ({
     }
 
     return (
-        <ListItem>
+        <div className="listitem--box listitem--shadow listitem--round">
             {onCheckboxClick && (
                 <Checkbox
                     color="primary"
                     onClick={() => onCheckboxClick!(taskId)}
                 />
             )}
+            <div className="listitem--category">{cat}</div>
+            <div className="listitem--wrapper">
+                <div className="text--wrapper">
+                    <p className="listitem--title">{title}</p>
+                    <p className="listitem--description">{description}</p>
+                </div>
+                <div className="button-wrapper">
+                    {onEditClick && (
+                        <IconButton
+                            aria-label="Edit"
+                            onClick={() => onEditClick!(taskId)}
+                        >
+                            <EditOutlinedIcon />
+                        </IconButton>
+                    )}
 
-            <div
-                style={{
-                    margin: 16,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}
-            >
-                {cat}
-            </div>
-            <ListItemText primary={title} secondary={description} />
-            <ListItemSecondaryAction>
-                {onEditClick && (
                     <IconButton
-                        aria-label="Edit"
-                        onClick={() => onEditClick!(taskId)}
+                        aria-label="Delete"
+                        onClick={() => onDeleteClick(taskId)}
                     >
-                        <EditOutlinedIcon />
+                        <DeleteOutlineOutlinedIcon />
                     </IconButton>
-                )}
-                <IconButton
-                    aria-label="Delete"
-                    onClick={() => onDeleteClick(taskId)}
-                >
-                    <DeleteOutlineOutlinedIcon />
-                </IconButton>
-            </ListItemSecondaryAction>
-        </ListItem>
+                </div>
+            </div>
+        </div>
     );
 };
 
