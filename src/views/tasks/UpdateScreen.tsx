@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { RouterProps } from 'react-router';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
 import { Task, TaskService } from 'modules/tasks';
 import { ButtonSize, ButtonType, categories } from 'models';
 import { AppRoute } from 'const';
-import { Button, Header } from 'components';
+import { Button, Header, TextField } from 'components';
+// @ts-ignore
+import TimePicker from 'react-time-picker';
 
 export default function UpdateScreen({ history }: RouterProps) {
     const [task, setTask] = useState<Task>();
@@ -16,86 +16,73 @@ export default function UpdateScreen({ history }: RouterProps) {
     }, [history.location.state]);
 
     const handleChangeTask = React.useCallback(
-        (name: string) => (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        (name: string) => (value: string) => {
             setTask({
                 ...task,
-                [name]: event.target.value,
+                [name]: value,
+            } as Task);
+        },
+        [task]
+    );
+
+    const handleCategoriesChange = React.useCallback(
+        (event: any) => {
+            setTask({
+                ...task,
+                category: event.target.value,
             } as Task);
         },
         [task]
     );
 
     return (
-        <div>
+        <div className="v--update">
             <Header
                 title="Update Todo"
                 to={AppRoute.Home}
                 showBackButton={true}
                 showRightButtons={false}
             />
-            <form style={{ margin: 16 }}>
+            <div className="v--update-wrapper">
                 <TextField
-                    id="title"
-                    label="Title"
+                    type="text"
+                    value={task?.title}
                     placeholder="Enter a title of a todo"
-                    fullWidth
-                    value={task ? task!.title : 'unknown'}
+                    autoComplete="off"
+                    additionalClasses="textfield--size-lrg textfield-elipsoid"
                     onChange={handleChangeTask('title')}
-                    margin="normal"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    variant="outlined"
+                    name="title"
                 />
                 <TextField
-                    id="description"
-                    label="Description"
+                    type="text"
+                    value={task?.description}
+                    additionalClasses="textfield--size-lrg textfield-elipsoid"
                     placeholder="Enter a description of a todo"
-                    fullWidth
-                    multiline
-                    rows={4}
+                    autoComplete="off"
                     onChange={handleChangeTask('description')}
-                    value={task ? task!.description : 'unknown'}
-                    margin="normal"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    variant="outlined"
+                    name="title"
                 />
-                <TextField
-                    id="category"
-                    select
-                    fullWidth
-                    margin="normal"
-                    label="Category"
-                    value={task ? task!.category : 'unknown'}
-                    onChange={handleChangeTask('category')}
-                    variant="outlined"
-                >
-                    <MenuItem key={categories.home} value={categories.home}>
-                        {categories.home}
-                    </MenuItem>
-                    <MenuItem key={categories.school} value={categories.school}>
-                        {categories.school}
-                    </MenuItem>
-                    <MenuItem key={categories.sport} value={categories.sport}>
-                        {categories.sport}
-                    </MenuItem>
-                    <MenuItem key={categories.work} value={categories.work}>
-                        {categories.work}
-                    </MenuItem>
-                </TextField>
-                <TextField
-                    id="time"
-                    label="Time"
-                    type="time"
-                    value={task ? task!.time : '00:00'}
-                    fullWidth
+                <div className="v--add-selection selection-elipsoid selection-shadow">
+                    <select onChange={handleCategoriesChange}>
+                        <option value={categories.home}>
+                            {categories.home}
+                        </option>
+                        <option value={categories.school}>
+                            {categories.school}
+                        </option>
+                        <option value={categories.sport}>
+                            {categories.sport}
+                        </option>
+                        <option value={categories.work}>
+                            {categories.work}
+                        </option>
+                    </select>
+                </div>
+
+                <TimePicker
                     onChange={handleChangeTask('time')}
-                    margin="normal"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
+                    value={task?.time}
+                    className="v--add-time"
                 />
                 <div className="btn--wrapper-center">
                     <Button
@@ -109,7 +96,7 @@ export default function UpdateScreen({ history }: RouterProps) {
                         Update
                     </Button>
                 </div>
-            </form>
+            </div>
         </div>
     );
 
