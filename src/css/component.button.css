@@ -15,12 +15,8 @@
 }
 
 .btn--primary {
-    color: white;
+    color: $color-light;
     background: $color-primary;
-
-    svg {
-        fill: white;
-    }
 
     &:hover,
     &:focus {
@@ -28,13 +24,15 @@
     }
 }
 
-.btn--secondary {
-    color: white;
-    background: $color-secondary;
-
+.btn--icon {
     svg {
-        fill: white;
+        fill: currentColor;
     }
+}
+
+.btn--secondary {
+    color: $color-light;
+    background: $color-secondary;
 
     &:hover,
     &:focus {
@@ -43,7 +41,7 @@
 }
 
 .btn--neutral {
-    color: white;
+    color: $color-light;
     background: $color-neutral;
 
     &:hover,
@@ -53,15 +51,15 @@
 }
 
 .btn--font-sml {
-    font-size: 12px;
+    font-size: $font-size-sml;
 }
 
 .btn--font-med {
-    font-size: 18px;
+    font-size: $font-size-med;
 }
 
 .btn-font-lrg {
-    font-size: 24px;
+    font-size: $font-size-lrg;
 }
 
 .btn--circle {

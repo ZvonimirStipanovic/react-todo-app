@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { RouterProps } from 'react-router';
-import { List, Paper, IconButton, Grid, TextField } from '@material-ui/core';
-import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
+import { List, Paper, TextField } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { Task, TaskService, tasksStyles, TodoListItem } from 'modules/tasks';
 import { AppState } from 'modules/redux-store/';
 import { getActiveTasks } from 'modules/tasks/redux';
@@ -38,7 +36,7 @@ function HomeScreen({ history }: RouterProps) {
                     variant={ButtonType.Primary}
                     size={ButtonSize.Small}
                     handleButtonClick={() => history.push(AppRoute.Add)}
-                    additionalClasses={'btn--circle'}
+                    additionalClasses={'btn--circle btn--icon'}
                 >
                     <Add />
                 </Button>
@@ -48,7 +46,7 @@ function HomeScreen({ history }: RouterProps) {
                         history.push(AppRoute.Finished)
                     }
                     size={ButtonSize.Small}
-                    additionalClasses={'btn--circle'}
+                    additionalClasses={'btn--circle btn--icon'}
                 >
                     <Finished />
                 </Button>
