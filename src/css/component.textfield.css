@@ -1,0 +1,20 @@
+/*------------------------------------*\
+    # component.textfield
+\*------------------------------------*/
+
+.textfield {
+    width: 100%;
+    margin: calc($unit * 2) calc($unit * 2);
+}
+
+.textfield--size-lrg {
+    padding: calc($unit * 3);
+    font-size: $font-size-med;
+}
+
+.textfield--elipsoid {
+    border-radius: 2% / 20%;
+    &:focus {
+        outline: none;
+    }
+}

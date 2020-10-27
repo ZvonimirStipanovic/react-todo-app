@@ -1,0 +1,21 @@
+/*------------------------------------*\
+    # view.login
+\*------------------------------------*/
+
+.v-login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 10% 25%;
+}
+
+.v-login .title {
+    font-size: $font-size-lrg;
+}
+
+.v-login--link {
+    text-decoration: none;
+    align-self: flex-start;
+    font-size: $font-size-med;
+}
