@@ -29,7 +29,7 @@ export default function AddScreen({ history }: RouterProps) {
                 to={AppRoute.Home}
                 showRightButtons={false}
             />
-            <div className="v--add-wrapper s-top--lrg s-right--lrg s-bottom-lrg s-left--lrg">
+            <div className="v--add-wrapper">
                 <TextField
                     type="text"
                     placeholder="Enter a title of a todo"

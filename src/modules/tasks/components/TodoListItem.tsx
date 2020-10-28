@@ -48,7 +48,7 @@ const TodoListItem = ({
     }
 
     return (
-        <div className="listitem--box listitem--shadow listitem--round s-top--sml s-right--med">
+        <div className="listitem--box listitem--shadow listitem--round s-top--sml s-right--med s-left--med">
             {onCheckboxClick && (
                 <Checkbox
                     color="primary"

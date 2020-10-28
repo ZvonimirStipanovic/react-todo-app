@@ -43,7 +43,7 @@ export default function UpdateScreen({ history }: RouterProps) {
                 showBackButton={true}
                 showRightButtons={false}
             />
-            <div className="v--update-wrapper s-top--lrg s-right--lrg s-bottom-lrg s-left--lrg">
+            <div className="v--update-wrapper">
                 <TextField
                     type="text"
                     value={task?.title}
