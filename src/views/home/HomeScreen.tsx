@@ -1,29 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { RouterProps } from 'react-router';
-import Button from '@material-ui/core/Button';
-import { List, Paper, IconButton, Grid, TextField } from '@material-ui/core';
-import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import { useDispatch, useSelector } from 'react-redux';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import { Task, TaskService, tasksStyles, TodoListItem } from 'modules/tasks';
-import { logout } from 'modules/authentication';
-import LoginModal from 'modules/authentication/components/LoginModal';
+import { Task, TaskService, TodoListItem } from 'modules/tasks';
 import { AppState } from 'modules/redux-store/';
 import { getActiveTasks } from 'modules/tasks/redux';
 import { AppRoute } from 'const';
-import { Header } from 'components';
+import { Button, Header, TextField } from 'components';
 import { TasksActions } from 'modules/tasks/redux';
 import { useAuthHook } from 'modules/authentication/hooks';
+import { ReactComponent as Finished } from 'assets/ui-icons/finished.svg';
+import { ReactComponent as Add } from 'assets/ui-icons/add.svg';
+import { ButtonSize, ButtonType } from 'models';
 
 function HomeScreen({ history }: RouterProps) {
     const dispatch = useDispatch();
 
     const tasks = useSelector((state: AppState) => getActiveTasks(state));
 
-    const classes = tasksStyles();
-
-    const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
-    const [showRegisterModal, setShowRegisterModal] = useState<boolean>(false);
     const [searchValue, setSearchValue] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -33,94 +26,30 @@ function HomeScreen({ history }: RouterProps) {
         setLoading(false);
     }, []);
 
-    const handleLoginButton = React.useCallback(
-        () => setShowLoginModal(true),
-        []
-    );
-
-    const handleRegisterButton = React.useCallback(
-        () => setShowRegisterModal(true),
-        []
-    );
-
-    const loginModal = React.useMemo(
-        () => (
-            <LoginModal
-                open={showLoginModal}
-                buttonTitle="Log in"
-                title="Log in"
-                type="login"
-                setOpenLogin={(val: boolean) => setShowLoginModal(val)}
-            />
-        ),
-        [showLoginModal]
-    );
-
-    const registerModal = React.useMemo(
-        () => (
-            <LoginModal
-                open={showRegisterModal}
-                buttonTitle="Register"
-                title="Register"
-                type="register"
-                setOpenLogin={(val: boolean) => setShowRegisterModal(val)}
-            />
-        ),
-        [showRegisterModal]
-    );
-
-    const handleLogout = React.useCallback(() => {
-        logout();
-        history.push(AppRoute.Login);
-    }, [history]);
-
-    const topRightButtons = React.useMemo(
-        () =>
-            isAnonymous ? (
-                <>
-                    <Button
-                        color="inherit"
-                        onClick={handleLoginButton}
-                        style={{ marginRight: 8 }}
-                    >
-                        Log in
-                    </Button>
-                    <Button color="inherit" onClick={handleRegisterButton}>
-                        Register
-                    </Button>
-                </>
-            ) : (
-                <Button color="inherit" onClick={handleLogout}>
-                    Log out
-                </Button>
-            ),
-        [isAnonymous, handleLoginButton, handleRegisterButton, handleLogout]
-    );
-
-    const onAddClick = React.useCallback(() => history.push(AppRoute.Add), [
-        history,
-    ]);
-
     const addButton = React.useMemo(
         () => (
-            <Grid container justify="flex-end" alignItems="flex-end">
-                <IconButton
-                    aria-label="Add"
-                    onClick={onAddClick}
-                    style={{ margin: 16 }}
+            <div className="btn--wrapper-end">
+                <Button
+                    variant={ButtonType.Primary}
+                    size={ButtonSize.Small}
+                    handleButtonClick={() => history.push(AppRoute.Add)}
+                    additionalClasses={'btn--circle btn--icon s-right--med'}
                 >
-                    <AddCircleOutlinedIcon color="primary" fontSize="large" />
-                </IconButton>
-                <IconButton
-                    onClick={() => history.push(AppRoute.Finished)}
-                    style={{ margin: 16 }}
-                    aria-label="Done"
+                    <Add />
+                </Button>
+                <Button
+                    variant={ButtonType.Secondary}
+                    handleButtonClick={(event: any) =>
+                        history.push(AppRoute.Finished)
+                    }
+                    size={ButtonSize.Small}
+                    additionalClasses={'btn--circle btn--icon s-right--med'}
                 >
-                    <CheckCircleOutlineIcon color="primary" fontSize="large" />
-                </IconButton>
-            </Grid>
+                    <Finished />
+                </Button>
+            </div>
         ),
-        [onAddClick, history]
+        [history]
     );
 
     const onDeleteItemClick = React.useCallback(
@@ -140,13 +69,6 @@ function HomeScreen({ history }: RouterProps) {
             history.push(AppRoute.Update, { task });
         },
         [tasks, history]
-    );
-
-    const onSearchChange = React.useCallback(
-        (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-            setSearchValue(event.target.value);
-        },
-        []
     );
 
     const onCheckboxClick = React.useCallback(
@@ -174,14 +96,7 @@ function HomeScreen({ history }: RouterProps) {
     const notLoggedText = React.useCallback(
         () =>
             isAnonymous ? (
-                <p
-                    style={{
-                        margin: 16,
-                        fontSize: 24,
-                        color: 'red',
-                        textAlign: 'center',
-                    }}
-                >
+                <p className="v--home-anonymous-text t-warning t-center">
                     YOU ARE NOT LOGGED IN
                 </p>
             ) : null,
@@ -208,7 +123,7 @@ function HomeScreen({ history }: RouterProps) {
             );
             if (toRender.length === 0)
                 return (
-                    <p style={{ margin: 12, color: 'gray' }}>
+                    <p className="listitem--box listitem--shadow listitem--round listitem--empty">
                         There are no todo's
                     </p>
                 );
@@ -229,37 +144,27 @@ function HomeScreen({ history }: RouterProps) {
     }, [searchValue, tasks, onDeleteItemClick, onEditClick, onCheckboxClick]);
 
     return (
-        <div className={classes.root}>
+        <div>
             <Header
-                title="Home screen"
+                title="HOME SCREEN"
+                history={history}
                 showBackButton={false}
-                topRightButtons={topRightButtons}
-                titleStyle={classes.title}
+                showRightButtons={true}
             />
             {notLoggedText()}
-            {loginModal}
-            {registerModal}
-            <div style={{ margin: 16 }}>
+            <div className="v--home-wapper">
                 <TextField
-                    id="search"
-                    label="Search"
+                    type="text"
+                    name="search"
                     placeholder="Search for a todo"
-                    fullWidth
-                    onChange={onSearchChange}
-                    margin="normal"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    variant="outlined"
+                    additionalClasses="textfield--size-lrg textfield--elipsoid"
+                    onChange={setSearchValue}
                 />
+                <div className="v--home-button-wrapper">
+                    {loading ? null : tasks.length < 1 ? null : renderItems()}
+                    {addButton}
+                </div>
             </div>
-
-            {loading ? null : tasks.length < 1 ? null : (
-                <Paper style={{ margin: 16 }}>
-                    <List style={{ overflow: 'hidden' }}>{renderItems()}</List>
-                </Paper>
-            )}
-            {addButton}
         </div>
     );
 }

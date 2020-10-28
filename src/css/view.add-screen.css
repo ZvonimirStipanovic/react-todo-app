@@ -1,0 +1,21 @@
+/*------------------------------------*\
+    # view.add-screen
+\*------------------------------------*/
+
+.v--add {
+}
+
+.v--add-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 768px;
+    margin: 0 auto;
+    padding: calc($unit * 4) calc($unit * 4);
+}
+
+.v--add-time {
+    width: 450px;
+    padding: calc($unit * 4) calc($unit * 5);
+}

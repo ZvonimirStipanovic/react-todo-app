@@ -1,3 +1,5 @@
+import 'css/app.css';
+import 'normalize.css';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MainRouter } from 'modules/router';

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -9,6 +9,7 @@ import {
 import Button from '@material-ui/core/Button';
 import { useDispatch } from 'react-redux';
 import { useAuthHook } from '../hooks';
+import * as H from 'history';
 
 interface Props {
     title: string;
@@ -16,6 +17,7 @@ interface Props {
     open: boolean;
     type: string;
     setOpenLogin: (val: boolean) => void;
+    history?: H.History;
 }
 
 export default function LoginModal({
@@ -24,8 +26,12 @@ export default function LoginModal({
     open,
     type,
     setOpenLogin,
+    history,
 }: Props) {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const dispatch = useDispatch();
+
     const { handleLogin } = useAuthHook(false);
 
     return (
@@ -36,10 +42,13 @@ export default function LoginModal({
                 aria-labelledby="form-dialog-title"
             >
                 <DialogTitle id="form-dialog-title">{title}</DialogTitle>
-                <form onSubmit={handleLogin({ dispatch, type })}>
+                <div>
                     <DialogContent>
                         <TextField
                             autoFocus
+                            onChange={(
+                                event: React.ChangeEvent<HTMLInputElement>
+                            ) => setEmail(event.target.value)}
                             margin="dense"
                             id="email"
                             label="Email Address"
@@ -48,6 +57,9 @@ export default function LoginModal({
                         />
                         <TextField
                             margin="dense"
+                            onChange={(
+                                event: React.ChangeEvent<HTMLInputElement>
+                            ) => setPassword(event.target.value)}
                             id="password"
                             label="Password"
                             type="password"
@@ -61,11 +73,22 @@ export default function LoginModal({
                         >
                             Cancel
                         </Button>
-                        <Button type="submit" color="primary">
+                        <Button
+                            type="submit"
+                            color="primary"
+                            onClick={() =>
+                                handleLogin({
+                                    dispatch,
+                                    type,
+                                    setOpenLogin,
+                                    history,
+                                })(email, password)
+                            }
+                        >
                             {buttonTitle}
                         </Button>
                     </DialogActions>
-                </form>
+                </div>
             </Dialog>
         </div>
     );

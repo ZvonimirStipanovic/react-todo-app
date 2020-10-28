@@ -1,0 +1,43 @@
+/*------------------------------------*\
+    # view.login
+\*------------------------------------*/
+
+.v-login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: calc($unit * 3) calc($unit * 10);
+    max-width: 768px;
+    margin: 0 auto;
+    height: 100vh;
+}
+
+.v-login-title {
+    font-family: $ff-lora;
+    font-size: $font-size-lrg;
+}
+
+.v-login--link {
+    text-decoration: none;
+    align-self: flex-start;
+    font-family: $ff-roboto;
+    font-size: $font-size-med;
+}
+
+.v-login-button-wrapper {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    @media screen and (max-width: 1030px) {
+        flex-direction: column;
+    }
+}
+
+.v-login-button-wrapper > button:first-child {
+    @media screen and (min-width: 1030px) and (max-width: 1340px) {
+        flex: 1 0 100%;
+    }
+}

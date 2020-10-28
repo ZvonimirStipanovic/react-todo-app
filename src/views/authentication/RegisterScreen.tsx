@@ -1,39 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { RouterProps } from 'react-router';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import { Header } from 'components';
+import { Button, Header, TextField } from 'components';
 import { useAuthHook } from 'modules/authentication/hooks';
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        paper: {
-            marginTop: theme.spacing(8),
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-        },
-        avatar: {
-            margin: theme.spacing(1),
-            backgroundColor: theme.palette.secondary.main,
-        },
-        form: {
-            width: '100%',
-            marginTop: theme.spacing(1),
-        },
-        submit: {
-            margin: theme.spacing(3, 0, 2),
-        },
-    })
-);
+import { AppRoute } from 'const';
+import { ButtonSize, ButtonType } from 'models';
 
 export default function RegisterScreen({ history }: RouterProps) {
-    const classes = useStyles();
-
-    const onBackClick = () => history.goBack();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const { handleRegister } = useAuthHook();
 
@@ -42,50 +16,41 @@ export default function RegisterScreen({ history }: RouterProps) {
             <Header
                 title="Register"
                 showBackButton={true}
-                onBackClick={onBackClick}
+                to={AppRoute.Home}
+                showRightButtons={false}
             />
-            <Container component="main" maxWidth="xs">
-                <div className={classes.paper}>
-                    <Typography component="h1" variant="h5">
-                        Register
-                    </Typography>
-                    <form
-                        className={classes.form}
-                        onSubmit={handleRegister(history)}
-                    >
-                        <TextField
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
-                            autoFocus
-                        />
-                        <TextField
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                        />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            className={classes.submit}
-                        >
-                            Register
-                        </Button>
-                    </form>
-                </div>
-            </Container>
+            <div className="v-register">
+                <h1 className="title">Register</h1>
+                <TextField
+                    type="text"
+                    name="email"
+                    placeholder="Email Address"
+                    additionalClasses="textfield--size-lrg textfield--elipsoid "
+                    onChange={setEmail}
+                />
+                <TextField
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    additionalClasses="textfield--size-lrg textfield--elipsoid "
+                    onChange={setPassword}
+                />
+                <Button
+                    variant={ButtonType.Primary}
+                    size={ButtonSize.Large}
+                    additionalClasses={
+                        'btn--font-med btn--elipsoid btn--shadow-low'
+                    }
+                    handleButtonClick={handleRegisterButton}
+                >
+                    Register
+                </Button>
+            </div>
         </div>
     );
+
+    function handleRegisterButton(event: any) {
+        event.preventDefault();
+        handleRegister(history)(email, password);
+    }
 }

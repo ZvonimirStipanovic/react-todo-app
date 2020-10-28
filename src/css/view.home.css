@@ -1,0 +1,23 @@
+/*------------------------------------*\
+    # view.home
+\*------------------------------------*/
+
+.v--home-wapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 768px;
+    justify-content: center;
+    margin: 0 auto;
+    padding: calc($unit * 2);
+}
+
+.v--home-anonymous-text {
+    padding: calc($unit * 2) calc($unit * 8);
+    font-family: $ff-lora;
+    font-size: $font-size-lrg;
+}
+
+.v--home-button-wrapper {
+    width: 100%;
+}

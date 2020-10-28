@@ -1,0 +1,30 @@
+/*------------------------------------*\
+    # utils.type
+\*------------------------------------*/
+
+.t {
+}
+
+.t-bg-primary {
+    background-color: $color-primary;
+}
+
+.t-bg-secondary {
+    background-color: $color-secondary;
+}
+
+.t-bg-neutral {
+    background-color: $color-neutral;
+}
+
+.t-light {
+    color: $color-light;
+}
+
+.t-warning {
+    color: $color-warning;
+}
+
+.t-center {
+    text-align: center;
+}

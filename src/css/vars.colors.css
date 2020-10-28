@@ -1,0 +1,14 @@
+/*------------------------------------*\
+    # vars.colors
+\*------------------------------------*/
+
+$color-primary: rgb(66, 84, 178);
+$color-secondary: #f02056;
+$color-neutral: #808080;
+$color-warning: #cc0000;
+
+$color-light: #ffffff;
+
+$color-light-primary: #8f9bd6;
+$color-light-secondary: #f67999;
+$color-light-neutral: #cccccc;

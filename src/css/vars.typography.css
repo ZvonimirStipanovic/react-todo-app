@@ -1,0 +1,10 @@
+/*------------------------------------*\
+    # vars.typography
+\*------------------------------------*/
+
+$font-size-sml: 12px;
+$font-size-med: 18px;
+$font-size-lrg: 24px;
+
+$ff-lora: 'Lora', serif;
+$ff-roboto: 'Roboto', sans-serif;

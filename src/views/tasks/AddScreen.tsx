@@ -1,119 +1,100 @@
 import React, { useState } from 'react';
 import { RouterProps } from 'react-router';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import Button from '@material-ui/core/Button';
 import { LOGIN_TOKEN } from 'modules/authentication';
 import { Task, TaskService } from 'modules/tasks';
-import { categories } from 'models';
+import { ButtonSize, ButtonType, categories } from 'models';
 import { AppRoute } from 'const';
-import { Header } from 'components';
+import { Button, Header, TextField } from 'components';
 import { useAuthHook } from 'modules/authentication/hooks';
+// @ts-ignore
+import TimePicker from 'react-time-picker';
 
 export default function AddScreen({ history }: RouterProps) {
+    const [title, setTitle] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
     const [category, setCategory] = useState<string>('Home');
+    const [time, setTime] = useState<string>('08:00');
 
-    const onBackClick = () => history.goBack();
     const { isAnonymous } = useAuthHook(false);
 
-    const handleCategoriesChange = React.useCallback(
-        (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-            setCategory(event.target.value);
-        },
-        []
-    );
+    const handleCategoriesChange = React.useCallback((event: any) => {
+        setCategory(event.target.value);
+    }, []);
 
     return (
-        <div>
+        <div className="v--add">
             <Header
                 title="Add new todo"
                 showBackButton={true}
-                onBackClick={onBackClick}
+                to={AppRoute.Home}
+                showRightButtons={false}
             />
-            <form style={{ margin: 16 }} onSubmit={handleAddTodo}>
+            <div className="v--add-wrapper">
                 <TextField
-                    id="title"
-                    label="Title"
+                    type="text"
                     placeholder="Enter a title of a todo"
-                    fullWidth
-                    margin="normal"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    variant="outlined"
+                    autoComplete="off"
+                    additionalClasses="textfield--size-lrg textfield--elipsoid"
+                    onChange={setTitle}
+                    name="title"
                 />
                 <TextField
-                    id="description"
-                    label="Description"
+                    type="text"
+                    additionalClasses="textfield--size-lrg textfield--elipsoid"
                     placeholder="Enter a description of a todo"
-                    fullWidth
-                    multiline
-                    rows={4}
-                    margin="normal"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    variant="outlined"
+                    autoComplete="off"
+                    onChange={setDescription}
+                    name="title"
                 />
-                <TextField
-                    id="category"
-                    select
-                    fullWidth
-                    margin="normal"
-                    label="Category"
-                    value={category}
-                    onChange={handleCategoriesChange}
-                    variant="outlined"
-                >
-                    <MenuItem key={categories.home} value={categories.home}>
-                        {categories.home}
-                    </MenuItem>
-                    <MenuItem key={categories.school} value={categories.school}>
-                        {categories.school}
-                    </MenuItem>
-                    <MenuItem key={categories.sport} value={categories.sport}>
-                        {categories.sport}
-                    </MenuItem>
-                    <MenuItem key={categories.work} value={categories.work}>
-                        {categories.work}
-                    </MenuItem>
-                </TextField>
-                <TextField
-                    id="time"
-                    label="Time"
-                    type="time"
-                    defaultValue="07:30"
-                    fullWidth
-                    margin="normal"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
+                <div className="selection-elipsoid selection-shadow s-top--med">
+                    <select onChange={handleCategoriesChange}>
+                        <option value={categories.home}>
+                            {categories.home}
+                        </option>
+                        <option value={categories.school}>
+                            {categories.school}
+                        </option>
+                        <option value={categories.sport}>
+                            {categories.sport}
+                        </option>
+                        <option value={categories.work}>
+                            {categories.work}
+                        </option>
+                    </select>
+                </div>
+
+                <TimePicker
+                    onChange={setTime}
+                    value={time}
+                    className="v--add-time s-top--med s-right--med s-bottom-med s-left--med"
                 />
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    style={{ height: 40, marginTop: 16 }}
-                >
-                    SUBMIT
-                </Button>
-            </form>
+                <div className="btn--wrapper-center">
+                    <Button
+                        variant={ButtonType.Primary}
+                        size={ButtonSize.Large}
+                        additionalClasses={
+                            'btn--font-med btn--elipsoid btn--shadow-low btn--size-med'
+                        }
+                        handleButtonClick={handleAddTodo}
+                    >
+                        Add
+                    </Button>
+                </div>
+            </div>
         </div>
     );
 
     async function handleAddTodo(event: any) {
         event.preventDefault();
-        const { title, description, time } = event.target.elements;
         const userId = await localStorage.getItem(LOGIN_TOKEN);
         const date = new Date().toISOString();
         const task = new Task(
             userId!,
             date,
-            title.value,
-            description.value,
+            title,
+            description,
             category,
-            time.value,
+            time,
             false
         );
         TaskService.addTask(task, isAnonymous).then(() =>
