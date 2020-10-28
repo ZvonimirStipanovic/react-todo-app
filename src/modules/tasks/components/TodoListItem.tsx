@@ -48,14 +48,16 @@ const TodoListItem = ({
     }
 
     return (
-        <div className="listitem--box listitem--shadow listitem--round">
+        <div className="listitem--box listitem--shadow listitem--round s-top--sml s-right--med">
             {onCheckboxClick && (
                 <Checkbox
                     color="primary"
                     onClick={() => onCheckboxClick!(taskId)}
                 />
             )}
-            <div className="listitem--category">{cat}</div>
+            <div className="listitem--category s-top--sml s-right--sml">
+                {cat}
+            </div>
             <div className="listitem--wrapper">
                 <div className="text--wrapper">
                     <p className="listitem--title">{title}</p>

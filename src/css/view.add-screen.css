@@ -10,37 +10,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin: calc($unit * 4) 5%;
-}
-
-.v--add-selection  {
-}
-
-.v--add-selection select {
-    background-color: $color-primary;
-    color: $color-light;
-    padding: calc($unit * 4) calc($unit * 5);
-    margin: calc($unit * 3);
-    width: 450px;
-    outline: none;
-    font-size: $font-size-med;
-}
-
-.selection-elipsoid select {
-    border: none;
-    border-radius: 2% / 20%;
-}
-
-.selection-shadow select {
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
-}
-
-.v--add-selection select option {
-    padding: 30px;
 }
 
 .v--add-time {
     width: 450px;
     padding: calc($unit * 4) calc($unit * 5);
-    margin: calc($unit * 3);
 }

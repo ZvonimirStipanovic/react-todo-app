@@ -104,7 +104,6 @@ export class FireStoreService<T extends any> {
                 .collection(Collections.Tasks)
                 .doc(task.taskId)
                 .update(task);
-            console.log('SUCC');
             return true;
         } catch (e) {
             return false;

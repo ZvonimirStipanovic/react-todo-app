@@ -43,27 +43,30 @@ export default function UpdateScreen({ history }: RouterProps) {
                 showBackButton={true}
                 showRightButtons={false}
             />
-            <div className="v--update-wrapper">
+            <div className="v--update-wrapper s-top--lrg s-right--lrg s-bottom-lrg s-left--lrg">
                 <TextField
                     type="text"
                     value={task?.title}
                     placeholder="Enter a title of a todo"
                     autoComplete="off"
-                    additionalClasses="textfield--size-lrg textfield-elipsoid"
+                    additionalClasses="textfield--size-lrg textfield--elipsoid"
                     onChange={handleChangeTask('title')}
                     name="title"
                 />
                 <TextField
                     type="text"
                     value={task?.description}
-                    additionalClasses="textfield--size-lrg textfield-elipsoid"
+                    additionalClasses="textfield--size-lrg textfield--elipsoid"
                     placeholder="Enter a description of a todo"
                     autoComplete="off"
                     onChange={handleChangeTask('description')}
                     name="title"
                 />
-                <div className="v--add-selection selection-elipsoid selection-shadow">
-                    <select onChange={handleCategoriesChange}>
+                <div className="selection-elipsoid selection-shadow s-top--med">
+                    <select
+                        onChange={handleCategoriesChange}
+                        value={task?.category}
+                    >
                         <option value={categories.home}>
                             {categories.home}
                         </option>
@@ -82,7 +85,7 @@ export default function UpdateScreen({ history }: RouterProps) {
                 <TimePicker
                     onChange={handleChangeTask('time')}
                     value={task?.time}
-                    className="v--add-time"
+                    className="v--add-time s-top--med s-right--med s-bottom-med s-left--med"
                 />
                 <div className="btn--wrapper-center">
                     <Button

@@ -13,7 +13,7 @@ export const BackButton: React.FC<Props> = ({ to }) => {
             size={ButtonSize.Small}
             variant={ButtonType.Primary}
             to={to}
-            additionalClasses="btn--circle btn--icon"
+            additionalClasses="btn--circle btn--icon s-right--med"
         >
             <Left>Back</Left>
         </Button>

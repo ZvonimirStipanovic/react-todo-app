@@ -33,7 +33,7 @@ function HomeScreen({ history }: RouterProps) {
                     variant={ButtonType.Primary}
                     size={ButtonSize.Small}
                     handleButtonClick={() => history.push(AppRoute.Add)}
-                    additionalClasses={'btn--circle btn--icon'}
+                    additionalClasses={'btn--circle btn--icon s-right--med'}
                 >
                     <Add />
                 </Button>
@@ -43,7 +43,7 @@ function HomeScreen({ history }: RouterProps) {
                         history.push(AppRoute.Finished)
                     }
                     size={ButtonSize.Small}
-                    additionalClasses={'btn--circle btn--icon'}
+                    additionalClasses={'btn--circle btn--icon s-right--med'}
                 >
                     <Finished />
                 </Button>
@@ -96,7 +96,9 @@ function HomeScreen({ history }: RouterProps) {
     const notLoggedText = React.useCallback(
         () =>
             isAnonymous ? (
-                <p className="v--home-anonymous-text">YOU ARE NOT LOGGED IN</p>
+                <p className="v--home-anonymous-text t-warning t-center">
+                    YOU ARE NOT LOGGED IN
+                </p>
             ) : null,
         [isAnonymous]
     );
@@ -158,10 +160,11 @@ function HomeScreen({ history }: RouterProps) {
                     additionalClasses="textfield--size-lrg textfield--elipsoid"
                     onChange={setSearchValue}
                 />
+                <div className="v--home-button-wrapper">
+                    {loading ? null : tasks.length < 1 ? null : renderItems()}
+                    {addButton}
+                </div>
             </div>
-
-            {loading ? null : tasks.length < 1 ? null : renderItems()}
-            {addButton}
         </div>
     );
 }

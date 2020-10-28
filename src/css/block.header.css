@@ -4,7 +4,6 @@
 
 .header {
     position: relative;
-    background-color: $color-primary;
     padding: 0 calc($unit * 3);
     align-items: center;
     overflow: hidden;
@@ -27,10 +26,6 @@
 .title {
     cursor: default;
     margin: auto;
-}
-
-.title--header-white {
-    color: $color-light;
 }
 
 .title--header-size {

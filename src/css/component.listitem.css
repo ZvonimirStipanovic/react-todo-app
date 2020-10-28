@@ -7,7 +7,6 @@
     align-items: center;
     border: 1px solid grey;
     padding: $unit $unit;
-    margin: calc($unit * 2) calc($unit * 5);
 }
 
 .listitem--round {
@@ -15,7 +14,6 @@
 }
 
 .listitem--category {
-    margin: $unit calc($unit * 2);
     align-items: center;
     justify-content: center;
 }
@@ -36,7 +34,7 @@
 .listitem--wrapper .text--wrapper {
     display: flex;
     flex-direction: column;
-    margin: 0 calc($unit * 3);
+    padding: 0 calc($unit * 3);
 }
 
 .listitem--wrapper .button-wrapper {

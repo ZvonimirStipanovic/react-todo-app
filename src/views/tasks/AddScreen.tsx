@@ -29,24 +29,24 @@ export default function AddScreen({ history }: RouterProps) {
                 to={AppRoute.Home}
                 showRightButtons={false}
             />
-            <div className="v--add-wrapper">
+            <div className="v--add-wrapper s-top--lrg s-right--lrg s-bottom-lrg s-left--lrg">
                 <TextField
                     type="text"
                     placeholder="Enter a title of a todo"
                     autoComplete="off"
-                    additionalClasses="textfield--size-lrg textfield-elipsoid"
+                    additionalClasses="textfield--size-lrg textfield--elipsoid"
                     onChange={setTitle}
                     name="title"
                 />
                 <TextField
                     type="text"
-                    additionalClasses="textfield--size-lrg textfield-elipsoid"
+                    additionalClasses="textfield--size-lrg textfield--elipsoid"
                     placeholder="Enter a description of a todo"
                     autoComplete="off"
                     onChange={setDescription}
                     name="title"
                 />
-                <div className="v--add-selection selection-elipsoid selection-shadow">
+                <div className="selection-elipsoid selection-shadow s-top--med">
                     <select onChange={handleCategoriesChange}>
                         <option value={categories.home}>
                             {categories.home}
@@ -66,7 +66,7 @@ export default function AddScreen({ history }: RouterProps) {
                 <TimePicker
                     onChange={setTime}
                     value={time}
-                    className="v--add-time"
+                    className="v--add-time s-top--med s-right--med s-bottom-med s-left--med"
                 />
                 <div className="btn--wrapper-center">
                     <Button

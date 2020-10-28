@@ -7,12 +7,14 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin: calc($unit * 2) 5%;
+    padding: calc($unit * 2) 5%;
 }
 
 .v--home-anonymous-text {
-    margin: calc($unit * 5) calc($unit * 8);
+    padding: calc($unit * 2) calc($unit * 8);
     font-size: $font-size-lrg;
-    color: $color-warning;
-    text-align: center;
+}
+
+.v--home-button-wrapper {
+    width: 100%;
 }

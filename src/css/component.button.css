@@ -11,15 +11,13 @@
     outline: none;
     cursor: pointer;
     background: transparent;
-    margin: $unit $unit;
+    color: $color-light;
 }
 
 .btn--primary {
-    color: $color-light;
-    background: $color-primary;
-
     &:hover,
     &:focus {
+        transition: background-color 0.5s ease-out;
         background-color: $color-light-primary;
     }
 }
@@ -31,21 +29,17 @@
 }
 
 .btn--secondary {
-    color: $color-light;
-    background: $color-secondary;
-
     &:hover,
     &:focus {
+        transition: background-color 0.5s ease-out;
         background-color: $color-light-secondary;
     }
 }
 
 .btn--neutral {
-    color: $color-light;
-    background: $color-neutral;
-
     &:hover,
     &:focus {
+        transition: background-color 0.5s ease-out;
         background-color: $color-light-neutral;
     }
 }
@@ -72,7 +66,6 @@
 
 .btn--size-sml {
     padding: calc($unit * 2) calc($unit * 2);
-    margin-right: calc($unit * 5);
 }
 
 .btn--size-med {

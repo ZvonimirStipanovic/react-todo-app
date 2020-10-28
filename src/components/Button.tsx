@@ -20,7 +20,7 @@ export const Button: React.FC<Props> = ({
 }) => {
     return to ? (
         <Link
-            className={`btn ${buttonType()} ${buttonSize()} ${additionalClasses}`}
+            className={`btn ${buttonType()} ${buttonSize()} s-top--sml s-right--sml s-left--sml${additionalClasses}`}
             to={to}
         >
             {children}
@@ -28,7 +28,7 @@ export const Button: React.FC<Props> = ({
     ) : (
         <button
             onClick={handleButtonClick}
-            className={`btn ${buttonType()} ${buttonSize()} ${additionalClasses}`}
+            className={`btn ${buttonType()} ${buttonSize()} s-top--sml s-right--sml s-left--sml ${additionalClasses}`}
         >
             {children}
         </button>
@@ -37,11 +37,11 @@ export const Button: React.FC<Props> = ({
     function buttonType() {
         switch (variant) {
             case ButtonType.Primary:
-                return 'btn--primary';
+                return 'btn--primary t-bg-primary';
             case ButtonType.Secondary:
-                return 'btn--secondary';
+                return 'btn--secondary t-bg-secondary';
             case ButtonType.Neutral:
-                return 'btn--neutral';
+                return 'btn--neutral t-bg-neutral';
             default:
                 return;
         }

@@ -32,7 +32,7 @@ export default function LoginScreen({ history }: RouterProps) {
 
     return (
         <div className="v-login">
-            <h1 className="title"> Sign in</h1>
+            <h1 className="v-login-title"> Sign in</h1>
             <TextField
                 type="text"
                 name="email"
