@@ -73,7 +73,7 @@
 }
 
 .btn--size-med {
-    padding: calc($unit * 2) calc($unit * 5);
+    padding: calc($unit * 3) calc($unit * 10);
 }
 
 .btn--size-lrg {

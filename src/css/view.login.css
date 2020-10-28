@@ -21,3 +21,11 @@
     font-family: $ff-roboto;
     font-size: $font-size-med;
 }
+
+.v-login-button-wrapper {
+    display: flex;
+
+    @media screen and (max-width: 747px) {
+        flex-direction: column;
+    }
+}

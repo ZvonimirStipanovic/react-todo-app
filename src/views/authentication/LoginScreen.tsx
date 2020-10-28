@@ -47,36 +47,38 @@ export default function LoginScreen({ history }: RouterProps) {
                 additionalClasses="textfield--size-lrg textfield--elipsoid "
                 onChange={setPassword}
             />
-            <Button
-                variant={ButtonType.Primary}
-                size={ButtonSize.Large}
-                additionalClasses={
-                    'btn--font-med btn--elipsoid btn--shadow-low s-top--med'
-                }
-                handleButtonClick={handleLoginButton}
-            >
-                Sign In
-            </Button>
-            <Button
-                variant={ButtonType.Secondary}
-                size={ButtonSize.Large}
-                additionalClasses={
-                    'btn--font-med btn--elipsoid btn--shadow-low s-top--med'
-                }
-                handleButtonClick={handleLoginWithFacebook}
-            >
-                Sign in with Facebook
-            </Button>
-            <Button
-                variant={ButtonType.Neutral}
-                size={ButtonSize.Large}
-                additionalClasses={
-                    'btn--font-med btn--elipsoid btn--shadow-low s-top--med'
-                }
-                handleButtonClick={handleAnonymousLogin}
-            >
-                Sign in anonymously
-            </Button>
+            <div className="v-login-button-wrapper">
+                <Button
+                    variant={ButtonType.Primary}
+                    size={ButtonSize.Medium}
+                    additionalClasses={
+                        'btn--font-large btn--elipsoid btn--shadow-low s-top--med'
+                    }
+                    handleButtonClick={handleLoginButton}
+                >
+                    Sign In
+                </Button>
+                <Button
+                    variant={ButtonType.Secondary}
+                    size={ButtonSize.Medium}
+                    additionalClasses={
+                        'btn--font-large btn--elipsoid btn--shadow-low s-top--med'
+                    }
+                    handleButtonClick={handleLoginWithFacebook}
+                >
+                    Sign in with Facebook
+                </Button>
+                <Button
+                    variant={ButtonType.Neutral}
+                    size={ButtonSize.Medium}
+                    additionalClasses={
+                        'btn--font-large btn--elipsoid btn--shadow-low s-top--med'
+                    }
+                    handleButtonClick={handleAnonymousLogin}
+                >
+                    Sign in anonymously
+                </Button>
+            </div>
             <a href="/register" className="v-login--link s-top--med">
                 Don't have an account? Sign Up
             </a>
