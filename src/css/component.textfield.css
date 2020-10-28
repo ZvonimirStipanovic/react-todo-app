@@ -4,6 +4,7 @@
 
 .textfield {
     width: 100%;
+    font-family: $ff-roboto;
     margin: calc($unit * 2) calc($unit * 2);
 }
 

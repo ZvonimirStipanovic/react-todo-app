@@ -1,3 +1,6 @@
+/** Import: fonts */
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@600&family=Roboto:ital,wght@1,300&display=swap');
+
 /** Import: variables */
 @import 'vars.colors.css';
 @import 'vars.globals.css';

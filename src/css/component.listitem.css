@@ -20,6 +20,7 @@
 
 .listitem--empty {
     padding: calc($unit * 3) calc($unit * 4);
+    font-family: $ff-lora;
     font-size: $font-size-med;
 }
 
@@ -43,10 +44,12 @@
 }
 
 .listitem--title {
+    font-family: $ff-lora;
     font-size: $font-size-med;
 }
 
 .listitem--description {
+    font-family: $ff-roboto;
     font-size: $font-size-sml;
 }
 

@@ -24,6 +24,7 @@
 }
 
 .title {
+    font-family: $ff-lora;
     cursor: default;
     margin: auto;
 }

@@ -11,11 +11,13 @@
 }
 
 .v-login-title {
+    font-family: $ff-lora;
     font-size: $font-size-lrg;
 }
 
 .v-login--link {
     text-decoration: none;
     align-self: flex-start;
+    font-family: $ff-roboto;
     font-size: $font-size-med;
 }

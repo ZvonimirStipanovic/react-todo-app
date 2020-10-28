@@ -12,6 +12,7 @@
 
 .v--home-anonymous-text {
     padding: calc($unit * 2) calc($unit * 8);
+    font-family: $ff-lora;
     font-size: $font-size-lrg;
 }
 

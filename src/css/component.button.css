@@ -11,6 +11,7 @@
     outline: none;
     cursor: pointer;
     background: transparent;
+    font-family: $ff-lora;
     color: $color-light;
 }
 
@@ -45,14 +46,17 @@
 }
 
 .btn--font-sml {
+    font-family: $ff-roboto;
     font-size: $font-size-sml;
 }
 
 .btn--font-med {
+    font-family: $ff-lora;
     font-size: $font-size-med;
 }
 
 .btn--font-lrg {
+    font-family: $ff-lora;
     font-size: $font-size-lrg;
 }
 

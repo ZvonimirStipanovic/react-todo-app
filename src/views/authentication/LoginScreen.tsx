@@ -51,7 +51,7 @@ export default function LoginScreen({ history }: RouterProps) {
                 variant={ButtonType.Primary}
                 size={ButtonSize.Large}
                 additionalClasses={
-                    'btn--font-med btn--elipsoid btn--shadow-low'
+                    'btn--font-med btn--elipsoid btn--shadow-low s-top--med'
                 }
                 handleButtonClick={handleLoginButton}
             >
@@ -61,7 +61,7 @@ export default function LoginScreen({ history }: RouterProps) {
                 variant={ButtonType.Secondary}
                 size={ButtonSize.Large}
                 additionalClasses={
-                    'btn--font-med btn--elipsoid btn--shadow-low'
+                    'btn--font-med btn--elipsoid btn--shadow-low s-top--med'
                 }
                 handleButtonClick={handleLoginWithFacebook}
             >
@@ -71,13 +71,13 @@ export default function LoginScreen({ history }: RouterProps) {
                 variant={ButtonType.Neutral}
                 size={ButtonSize.Large}
                 additionalClasses={
-                    'btn--font-med btn--elipsoid btn--shadow-low'
+                    'btn--font-med btn--elipsoid btn--shadow-low s-top--med'
                 }
                 handleButtonClick={handleAnonymousLogin}
             >
                 Sign in anonymously
             </Button>
-            <a href="/register" className="v-login--link">
+            <a href="/register" className="v-login--link s-top--med">
                 Don't have an account? Sign Up
             </a>
         </div>
