@@ -24,6 +24,7 @@
 @import 'view.home.css';
 @import 'view.add-screen.css';
 @import 'view.update-screen.css';
+@import 'view.finished.css';
 
 /** Import: utils */
 @import 'utils.type.css';

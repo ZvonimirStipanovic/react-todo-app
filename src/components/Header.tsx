@@ -67,17 +67,11 @@ export const Header = ({
     return (
         <header className="header t-bg-primary">
             <div className="wrapper">
-                {showBackButton && to ? <BackButton to={to} /> : <div />}
+                {showBackButton && to && <BackButton to={to} />}
                 <div className="title-wrapper">
                     <p className="title title--header-size t-light">{title}</p>
                 </div>
-                {showRightButtons ? (
-                    <div className="header--button-wrapper">
-                        {loginButtons()}
-                    </div>
-                ) : (
-                    <div />
-                )}
+                {showRightButtons ? loginButtons() : <div />}
             </div>
             <LoginModal
                 open={showLoginModal}

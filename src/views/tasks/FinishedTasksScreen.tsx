@@ -21,18 +21,20 @@ function FinishedTasksScreen() {
                 showBackButton={true}
                 showRightButtons={false}
             />
-            {tasks.length < 1
-                ? null
-                : tasks.map((item: Task) => (
-                      <TodoListItem
-                          key={item.taskId + item.title}
-                          taskId={item.taskId}
-                          title={item.title}
-                          category={item.category}
-                          description={item.description}
-                          onDeleteClick={onDeleteItemClick}
-                      />
-                  ))}
+            <div className="v-finished-wrapper">
+                {tasks.length < 1
+                    ? null
+                    : tasks.map((item: Task) => (
+                          <TodoListItem
+                              key={item.taskId + item.title}
+                              taskId={item.taskId}
+                              title={item.title}
+                              category={item.category}
+                              description={item.description}
+                              onDeleteClick={onDeleteItemClick}
+                          />
+                      ))}
+            </div>
         </div>
     );
 

@@ -6,8 +6,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    max-width: 768px;
     justify-content: center;
-    padding: calc($unit * 2) 5%;
+    margin: 0 auto;
+    padding: calc($unit * 2);
 }
 
 .v--home-anonymous-text {
